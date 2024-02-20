@@ -1,0 +1,25 @@
+<Application
+    x:Class="Atc.LogViewer.Wpf.App.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Exit="ApplicationExit"
+    Startup="ApplicationStartup">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Atc.Wpf.Theming;component/Styles/Default.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Atc.Wpf.Controls;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Fluent;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="CriticalBrush" Color="Red" />
+            <SolidColorBrush x:Key="ErrorBrush" Color="Crimson" />
+            <SolidColorBrush x:Key="WarningBrush" Color="Goldenrod" />
+            <SolidColorBrush x:Key="InformationBrush" Color="DodgerBlue" />
+            <SolidColorBrush x:Key="DebugBrush" Color="CadetBlue" />
+            <SolidColorBrush x:Key="TraceBrush" Color="Gray" />
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

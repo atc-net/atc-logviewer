@@ -1,0 +1,132 @@
+<fluent:StatusBar
+    x:Class="Atc.LogViewer.Wpf.App.UserControls.StatusBarView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="urn:fluent-ribbon"
+    xmlns:local="clr-namespace:Atc.LogViewer.Wpf.App.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:StatusBarViewModel}"
+    d:DesignHeight="25"
+    d:DesignWidth="500"
+    ContextMenu="{x:Null}"
+    mc:Ignorable="d">
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="10,0" Text="All:" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.Count, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="0,-2,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="|" />
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse
+                Width="12"
+                Height="12"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Fill="{StaticResource TraceBrush}" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TraceCount, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalTraceCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="0,-2,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="|" />
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse
+                Width="12"
+                Height="12"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Fill="{StaticResource DebugBrush}" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.DebugCount, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalDebugCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="0,-2,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="|" />
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse
+                Width="12"
+                Height="12"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Fill="{StaticResource InformationBrush}" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.InformationCount, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalInformationCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="0,-2,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="|" />
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse
+                Width="12"
+                Height="12"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Fill="{StaticResource WarningBrush}" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.WarningCount, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalWarningCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="0,-2,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="|" />
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse
+                Width="12"
+                Height="12"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Fill="{StaticResource ErrorBrush}" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.ErrorCount, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalErrorCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="0,-2,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="|" />
+    </fluent:StatusBarItem>
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <Ellipse
+                Width="12"
+                Height="12"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Fill="{StaticResource CriticalBrush}" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.CriticalCount, StringFormat=N0, FallbackValue=0}" />
+            <TextBlock Margin="10,0" Text="/" />
+            <TextBlock Text="{Binding Path=LogEntriesStats.TotalCriticalCount, StringFormat=N0, FallbackValue=0}" />
+        </StackPanel>
+    </fluent:StatusBarItem>
+
+</fluent:StatusBar>

@@ -1,0 +1,106 @@
+<UserControl
+    x:Class="Atc.LogViewer.Wpf.App.UserControls.HighlightEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
+    xmlns:atcValueConverters="https://github.com/atc-net/atc-wpf/tree/main/schemas/value-converters"
+    xmlns:controls="clr-namespace:Atc.LogViewer.Wpf.App.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Atc.LogViewer.Wpf.App.Models"
+    d:DataContext="{d:DesignInstance Type=controls:HighlightEditorViewModel,
+                                     IsDesignTimeCreatable=True}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <atcValueConverters:ObjectNotNullToVisibilityVisibleValueConverter x:Key="ObjectNotNullToVisibilityVisibleConverter" />
+        <atcValueConverters:HexColorToColorKeyValueConverter x:Key="HexColorToColorKeyConverter" />
+    </UserControl.Resources>
+
+    <DockPanel>
+
+        <atc:UniformSpacingPanel
+            Margin="0,10"
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Top"
+            Orientation="Horizontal"
+            Spacing="10">
+            <Button Command="{Binding Path=AddCommand}" Content="Add" />
+            <Button Command="{Binding Path=DeleteCommand}" Content="Delete" />
+        </atc:UniformSpacingPanel>
+
+        <Grid
+            Height="270"
+            Margin="0,20,0,0"
+            DockPanel.Dock="Bottom">
+
+            <GroupBox Padding="10" Header=" ">
+                <atc:UniformSpacingPanel
+                    Orientation="Vertical"
+                    Spacing="10"
+                    Visibility="{Binding Path=SelectedHighlight, Converter={StaticResource ObjectNotNullToVisibilityVisibleConverter}}">
+
+                    <atc:LabelTextBox
+                        IsMandatory="True"
+                        LabelText="Text"
+                        Text="{Binding Path=SelectedHighlight.Text, FallbackValue=''}" />
+
+                    <atc:LabelCheckBox IsChecked="{Binding Path=SelectedHighlight.IgnoreCasing, FallbackValue=False}" LabelText="Ignore Casing" />
+
+                    <atc:LabelWellKnownColorSelector LabelText="Foreground" SelectedKey="{Binding Path=SelectedHighlight.Foreground, FallbackValue=Transparent, Converter={StaticResource HexColorToColorKeyConverter}}" />
+
+                    <atc:LabelWellKnownColorSelector LabelText="Background" SelectedKey="{Binding Path=SelectedHighlight.Background, FallbackValue=Transparent, Converter={StaticResource HexColorToColorKeyConverter}}" />
+
+                </atc:UniformSpacingPanel>
+            </GroupBox>
+
+        </Grid>
+
+        <GroupBox Header=" ">
+            <ListView
+                ItemsSource="{Binding Path=Highlights}"
+                SelectedItem="{Binding Path=SelectedHighlight}"
+                SelectionMode="Single">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn
+                            Width="200"
+                            DisplayMemberBinding="{Binding Path=Text}"
+                            Header="Text" />
+                        <GridViewColumn Width="90" Header="Ignore Casing">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type models:HighlightViewModel}">
+                                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Path=IgnoreCasing}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Foreground">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type models:HighlightViewModel}">
+                                    <Rectangle
+                                        Width="150"
+                                        Height="16"
+                                        HorizontalAlignment="Center"
+                                        Fill="{Binding Path=Foreground}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Background">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type models:HighlightViewModel}">
+                                    <Rectangle
+                                        Width="150"
+                                        Height="16"
+                                        HorizontalAlignment="Center"
+                                        Fill="{Binding Path=Background}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </GroupBox>
+
+    </DockPanel>
+
+</UserControl>

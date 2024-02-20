@@ -1,0 +1,23 @@
+namespace Atc.LogAnalyzer;
+
+public interface ILogAnalyzer
+{
+    event Action<AtcLogEntry>? CollectedEntry;
+
+    event Action<AtcLogEntry[]>? CollectedEntries;
+
+    Task CollectAndMonitorFolder(
+        LogFileCollectorType logFileCollectorType,
+        DirectoryInfo directory,
+        LogFileCollectorConfig config,
+        CancellationToken cancellationToken);
+
+    public void SetFilter(
+        LogFilter filter);
+
+    AtcLogEntry[] GetFilteredLogEntries();
+
+    LogStatistics GetLogStatistics();
+
+    void ClearLogEntries();
+}

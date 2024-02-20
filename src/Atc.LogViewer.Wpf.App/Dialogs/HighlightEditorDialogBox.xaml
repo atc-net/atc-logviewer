@@ -1,0 +1,67 @@
+<atcTheming:NiceDialogBox
+    x:Class="Atc.LogViewer.Wpf.App.Dialogs.HighlightEditorDialogBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
+    xmlns:atcTheming="clr-namespace:Atc.Wpf.Theming.Themes.Dialogs;assembly=Atc.Wpf.Theming"
+    xmlns:controls="clr-namespace:Atc.LogViewer.Wpf.App.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogs="clr-namespace:Atc.LogViewer.Wpf.App.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="750"
+    Height="800"
+    d:DataContext="{d:DesignInstance Type=dialogs:HighlightEditorDialogBox,
+                                     IsDesignTimeCreatable=True}"
+    mc:Ignorable="d">
+
+    <DockPanel>
+
+        <Border
+            x:Name="ContentTop"
+            Height="50"
+            Background="{DynamicResource AtcApps.Brushes.ThemeBackground1}"
+            BorderBrush="{DynamicResource AtcApps.Brushes.Accent}"
+            BorderThickness="0,0,0,1"
+            DockPanel.Dock="Top">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Text="Highlights" />
+        </Border>
+
+        <Border
+            Height="50"
+            Background="{DynamicResource AtcApps.Brushes.ThemeBackground1}"
+            BorderBrush="{DynamicResource AtcApps.Brushes.Accent}"
+            BorderThickness="0,1,0,0"
+            DockPanel.Dock="Bottom">
+            <atc:UniformSpacingPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="20">
+                <Button
+                    Width="100"
+                    Height="30"
+                    Click="OnOk"
+                    Content="OK"
+                    IsDefault="True" />
+                <Button
+                    Width="100"
+                    Height="30"
+                    Click="OnCancel"
+                    Content="Cancel"
+                    IsCancel="True" />
+            </atc:UniformSpacingPanel>
+        </Border>
+
+        <ScrollViewer
+            Padding="30"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
+            <controls:HighlightEditorView DataContext="{Binding Path=HighlightEditorViewModel}" />
+        </ScrollViewer>
+
+    </DockPanel>
+
+</atcTheming:NiceDialogBox>
