@@ -120,21 +120,24 @@
                                 LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.AngryMonster}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource CriticalBrush}}"
                                 Style="{StaticResource ToggleButtonStyle}" />
                             <StackPanel Margin="10" Orientation="Horizontal">
-                                <fluent:TextBox
+                                <TextBox
                                     Width="400"
+                                    Height="40"
+                                    Padding="5"
+                                    VerticalContentAlignment="Center"
+                                    Background="{DynamicResource AtcApps.Brushes.ThemeBackground1}"
                                     KeyDown="OnFilterTextKeyDown"
                                     Text="{Binding Path=FilterText, UpdateSourceTrigger=Explicit}" />
                                 <fluent:Button
-                                    Width="24"
-                                    Height="24"
+                                    Width="40"
+                                    Height="40"
                                     Margin="10,0,0,0"
                                     Command="{Binding Path=ClearFilterTextCommand}">
                                     <fluent:Button.LargeIcon>
                                         <Image
-                                            Width="16"
-                                            Height="16"
-                                            Margin="-10,-15,0,0"
-                                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Delete}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource InformationBrush}}" />
+                                            Width="32"
+                                            Height="32"
+                                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Delete}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}" />
                                     </fluent:Button.LargeIcon>
                                 </fluent:Button>
                             </StackPanel>
@@ -145,7 +148,7 @@
                         <fluent:Button
                             Command="{Binding Path=EditHighlightsCommand}"
                             Header="Highlights"
-                            Icon="{Binding Source={x:Static fontIcons:IcoFontType.Abc}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                            Icon="{Binding Source={x:Static fontIcons:IcoFontType.Abc}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Indigo500}}"
                             KeyTip="H" />
                     </fluent:RibbonGroupBox>
                 </fluent:RibbonTabItem>
