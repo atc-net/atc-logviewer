@@ -134,6 +134,13 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         if (!e.Handled &&
             Keyboard.Modifiers == ModifierKeys.Control &&
+            e.Key == Key.N)
+        {
+            _ = NewProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        if (!e.Handled &&
+            Keyboard.Modifiers == ModifierKeys.Control &&
             e.Key == Key.P)
         {
             _ = OpenProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);

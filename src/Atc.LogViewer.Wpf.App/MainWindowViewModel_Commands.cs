@@ -6,6 +6,8 @@ namespace Atc.LogViewer.Wpf.App;
 [SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "OK.")]
 public partial class MainWindowViewModel
 {
+    public IRelayCommandAsync NewProfileCommand => new RelayCommandAsync(NewProfileCommandHandler);
+
     public IRelayCommandAsync OpenProfileCommand => new RelayCommandAsync(OpenProfileCommandHandler);
 
     public IRelayCommandAsync SaveProfileCommand => new RelayCommandAsync(SaveProfileCommandHandler, CanSaveProfileCommandHandler);
@@ -15,6 +17,66 @@ public partial class MainWindowViewModel
     public IRelayCommandAsync OpenApplicationSettingsCommand => new RelayCommandAsync(OpenApplicationSettingsCommandHandler);
 
     public IRelayCommand EditHighlightsCommand => new RelayCommand(EditHighlightsCommandHandler);
+    private async Task NewProfileCommandHandler()
+    {
+        var dialogBox = DialogBoxFactory.CreateNewProfile();
+        var dialogResult = dialogBox.ShowDialog();
+
+        if (dialogResult != true)
+        {
+            var data = dialogBox.Data.GetKeyValues();
+
+            var name = data["Name"].ToString()!;
+            if (!name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                name += ".json";
+            }
+
+            var defaultLogFolder = data["DefaultLogFolder"].ToString()!;
+
+            if (!Enum<LogFileCollectorType>.TryParse(
+                    data["DefaultCollector"].ToString()!,
+                    ignoreCase: false,
+                    out var defaultCollectorType))
+            {
+                var warningDialogBox = DialogBoxFactory.CreateWarningOption("Default Collector - was not selected");
+                warningDialogBox.ShowDialog();
+                return;
+            }
+
+            var file = new FileInfo(Path.Combine(App.LogViewerProgramDataProfilesDirectory.FullName, name));
+            if (file.Exists)
+            {
+                var overrideDialogBox = new QuestionDialogBox(
+                    Application.Current.MainWindow!,
+                    "File exist - override it?");
+
+                var overrideDialogResult = overrideDialogBox.ShowDialog();
+                if (overrideDialogResult != true)
+                {
+                    ProfileViewModel = new ProfileViewModel
+                    {
+                        DefaultLogFolder = defaultLogFolder,
+                        DefaultCollectorType = defaultCollectorType,
+                    };
+
+                    profileFile = file;
+                    await SaveProfileCommandHandler().ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                ProfileViewModel = new ProfileViewModel
+                {
+                    DefaultLogFolder = defaultLogFolder,
+                    DefaultCollectorType = defaultCollectorType,
+                };
+
+                profileFile = file;
+                await SaveProfileCommandHandler().ConfigureAwait(false);
+            }
+        }
+    }
 
     private async Task OpenProfileCommandHandler()
     {
@@ -40,10 +102,17 @@ public partial class MainWindowViewModel
         => profileFile is not null;
 
     private Task SaveProfileCommandHandler()
-        => SaveProfileFile(
+    {
+        if (!CanSaveProfileCommandHandler())
+        {
+            return Task.CompletedTask;
+        }
+
+        return SaveProfileFile(
             profileFile!,
             ProfileViewModel,
             CancellationToken.None);
+    }
 
     private async Task OpenLogFolderCommandHandler()
     {

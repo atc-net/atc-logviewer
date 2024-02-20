@@ -56,6 +56,11 @@
                     <fluent:Backstage Header="Application" KeyTip="A">
                         <fluent:BackstageTabControl>
                             <fluent:Button
+                                Command="{Binding Path=NewProfileCommand}"
+                                Header="New Profile"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.ContactAdd}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="N" />
+                            <fluent:Button
                                 Command="{Binding Path=OpenProfileCommand}"
                                 Header="Open Profile"
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
