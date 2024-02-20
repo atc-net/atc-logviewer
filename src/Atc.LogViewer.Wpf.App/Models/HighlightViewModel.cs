@@ -4,8 +4,8 @@ public class HighlightViewModel : ViewModelBase
 {
     private string text = string.Empty;
     private bool ignoreCasing;
-    private SolidColorBrush foreground = new(Colors.White);
-    private SolidColorBrush background = new(Colors.DarkGray);
+    private SolidColorBrush foreground = new(Colors.Green);
+    private SolidColorBrush background = new(Colors.Transparent);
 
     public string Text
     {
