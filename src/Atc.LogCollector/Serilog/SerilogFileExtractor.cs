@@ -65,19 +65,20 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
         var errorSubLineCount = 0;
         for (var subLineNumber = 1; subLineNumber < 120; subLineNumber++)
         {
-            if (lineNumber + subLineNumber >= lines.Length)
+            var lineOffset = lineNumber + subLineNumber;
+            if (lineOffset >= lines.Length - 1)
             {
                 break;
             }
 
-            var subLine = lines[lineNumber + subLineNumber];
+            var subLine = lines[lineOffset];
             if (char.IsDigit(subLine[0]))
             {
-                continue;
+                errorSubLineCount--;
+                break;
             }
 
             errorSubLineCount = subLineNumber + 1;
-            break;
         }
 
         var sb = new StringBuilder();
