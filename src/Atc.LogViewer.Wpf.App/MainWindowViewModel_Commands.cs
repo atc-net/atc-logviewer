@@ -25,7 +25,7 @@ public partial class MainWindowViewModel
 
     public IRelayCommand ClearFilterTextCommand => new RelayCommand(ClearFilterTextCommandHandler, CanClearFilterTextCommandHandler);
 
-    public IRelayCommand EditHighlightsCommand => new RelayCommand(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
+    public IRelayCommandAsync EditHighlightsCommand => new RelayCommandAsync(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
 
     private async Task NewProfileCommandHandler()
     {
@@ -191,7 +191,7 @@ public partial class MainWindowViewModel
     private bool CanEditHighlightsCommandHandler()
         => ProfileViewModel is not null;
 
-    private void EditHighlightsCommandHandler()
+    private async Task EditHighlightsCommandHandler()
     {
         if (!CanEditHighlightsCommandHandler())
         {
@@ -215,5 +215,7 @@ public partial class MainWindowViewModel
         }
 
         ProfileViewModel.Highlights = highlightEditorDialogBox.HighlightEditorViewModel.Highlights;
+
+        await ApplyFilter().ConfigureAwait(false);
     }
 }
