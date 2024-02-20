@@ -1,3 +1,4 @@
+// ReSharper disable MemberCanBeMadeStatic.Local
 namespace Atc.LogViewer.Wpf.App;
 
 [SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - partial class")]
@@ -15,6 +16,10 @@ public partial class MainWindowViewModel
     public IRelayCommandAsync OpenLogFolderCommand => new RelayCommandAsync(OpenLogFolderCommandHandler);
 
     public IRelayCommandAsync OpenApplicationSettingsCommand => new RelayCommandAsync(OpenApplicationSettingsCommandHandler);
+
+    public IRelayCommand<string> SetMessageToFilterTextCommand => new RelayCommand<string>(SetMessageToFilterTextCommandHandler);
+
+    public IRelayCommand<string> CopyMessageToClipboardCommand => new RelayCommand<string>(CopyMessageToClipboardCommandHandler);
 
     public IRelayCommand ClearFilterTextCommand => new RelayCommand(ClearFilterTextCommandHandler, CanClearFilterTextCommandHandler);
 
@@ -143,6 +148,19 @@ public partial class MainWindowViewModel
     private Task OpenApplicationSettingsCommandHandler()
     {
         throw new NotImplementedException();
+    }
+
+    private void SetMessageToFilterTextCommandHandler(
+        string obj)
+        => FilterText = obj;
+
+    private void CopyMessageToClipboardCommandHandler(
+        string obj)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            Clipboard.SetText(obj);
+        });
     }
 
     private bool CanClearFilterTextCommandHandler()

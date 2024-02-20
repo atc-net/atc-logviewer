@@ -114,11 +114,6 @@
                                 IsChecked="{Binding Path=IsCriticalEnabled}"
                                 LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.AngryMonster}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource CriticalBrush}}"
                                 Style="{StaticResource ToggleButtonStyle}" />
-                            <fluent:TextBox
-                                Width="400"
-                                Margin="10"
-                                KeyDown="OnFilterTextKeyDown"
-                                Text="{Binding Path=FilterText, UpdateSourceTrigger=Explicit}" />
                             <StackPanel Margin="10" Orientation="Horizontal">
                                 <fluent:TextBox
                                     Width="400"
@@ -138,6 +133,7 @@
                                     </fluent:Button.LargeIcon>
                                 </fluent:Button>
                             </StackPanel>
+
                         </StackPanel>
                     </fluent:RibbonGroupBox>
                     <fluent:RibbonGroupBox Header="Profile">
@@ -187,7 +183,26 @@
                                             Background="{Binding Path=HighlightBackground}"
                                             Foreground="{Binding Path=HighlightForeground}"
                                             Text="{Binding Path=Message}"
-                                            TextWrapping="Wrap" />
+                                            TextWrapping="Wrap">
+                                            <TextBlock.Tag>
+                                                <Binding Path="DataContext" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+                                            </TextBlock.Tag>
+                                            <TextBlock.ContextMenu>
+                                                <!--  ReSharper disable Xaml.BindingWithContextNotResolved  -->
+                                                <ContextMenu>
+                                                    <MenuItem
+                                                        Command="{Binding Path=PlacementTarget.Tag.SetMessageToFilterTextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        CommandParameter="{Binding Path=PlacementTarget.DataContext.Message, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        Header="Filter on item message" />
+                                                    <MenuItem
+                                                        Command="{Binding Path=PlacementTarget.Tag.CopyMessageToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        CommandParameter="{Binding Path=PlacementTarget.DataContext.Message, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                        Header="Copy to Clipboard"
+                                                        InputGestureText="Ctrl+C" />
+                                                    <!--  ReSharper restore Xaml.BindingWithContextNotResolved  -->
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
