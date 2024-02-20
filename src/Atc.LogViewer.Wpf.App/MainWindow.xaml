@@ -119,6 +119,25 @@
                                 Margin="10"
                                 KeyDown="OnFilterTextKeyDown"
                                 Text="{Binding Path=FilterText, UpdateSourceTrigger=Explicit}" />
+                            <StackPanel Margin="10" Orientation="Horizontal">
+                                <fluent:TextBox
+                                    Width="400"
+                                    KeyDown="OnFilterTextKeyDown"
+                                    Text="{Binding Path=FilterText, UpdateSourceTrigger=Explicit}" />
+                                <fluent:Button
+                                    Width="24"
+                                    Height="24"
+                                    Margin="10,0,0,0"
+                                    Command="{Binding Path=ClearFilterTextCommand}">
+                                    <fluent:Button.LargeIcon>
+                                        <Image
+                                            Width="16"
+                                            Height="16"
+                                            Margin="-10,-15,0,0"
+                                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Delete}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource InformationBrush}}" />
+                                    </fluent:Button.LargeIcon>
+                                </fluent:Button>
+                            </StackPanel>
                         </StackPanel>
                     </fluent:RibbonGroupBox>
                     <fluent:RibbonGroupBox Header="Profile">

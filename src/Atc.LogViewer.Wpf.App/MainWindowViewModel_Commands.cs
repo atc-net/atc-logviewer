@@ -16,6 +16,8 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync OpenApplicationSettingsCommand => new RelayCommandAsync(OpenApplicationSettingsCommandHandler);
 
+    public IRelayCommand ClearFilterTextCommand => new RelayCommand(ClearFilterTextCommandHandler, CanClearFilterTextCommandHandler);
+
     public IRelayCommand EditHighlightsCommand => new RelayCommand(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
 
     private async Task NewProfileCommandHandler()
@@ -142,6 +144,12 @@ public partial class MainWindowViewModel
     {
         throw new NotImplementedException();
     }
+
+    private bool CanClearFilterTextCommandHandler()
+        => !string.IsNullOrEmpty(FilterText);
+
+    private void ClearFilterTextCommandHandler()
+        => FilterText = string.Empty;
 
     private bool CanEditHighlightsCommandHandler()
         => ProfileViewModel is not null;
