@@ -16,7 +16,8 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync OpenApplicationSettingsCommand => new RelayCommandAsync(OpenApplicationSettingsCommandHandler);
 
-    public IRelayCommand EditHighlightsCommand => new RelayCommand(EditHighlightsCommandHandler);
+    public IRelayCommand EditHighlightsCommand => new RelayCommand(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
+
     private async Task NewProfileCommandHandler()
     {
         var dialogBox = DialogBoxFactory.CreateNewProfile();
@@ -142,8 +143,16 @@ public partial class MainWindowViewModel
         throw new NotImplementedException();
     }
 
+    private bool CanEditHighlightsCommandHandler()
+        => ProfileViewModel is not null;
+
     private void EditHighlightsCommandHandler()
     {
+        if (!CanEditHighlightsCommandHandler())
+        {
+            return;
+        }
+
         var dialogBox = new HighlightEditorDialogBox
         {
             HighlightEditorViewModel = new HighlightEditorViewModel(ProfileViewModel.Highlights),
