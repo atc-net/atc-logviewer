@@ -66,6 +66,11 @@
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
                                 KeyTip="P" />
                             <fluent:Button
+                                Command="{Binding Path=OpenLastUsedProfileCommand}"
+                                Header="Open last used Profile"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="Ctrl+R" />
+                            <fluent:Button
                                 Command="{Binding Path=OpenLogFolderCommand}"
                                 Header="Open Log Folder"
                                 Icon="{Binding Source={x:Static fontIcons:FontAwesomeRegularType.FolderOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"

@@ -27,6 +27,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         ProfileViewModel = new ProfileViewModel();
         StatusBarViewModel = statusBarViewModel;
 
+        LoadRecentOpenFiles();
+
         this.logAnalyzer.SetFilter(
             new LogFilter(
                 IsTraceEnabled,
@@ -44,6 +46,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     public ProfileViewModel ProfileViewModel { get; set; }
 
     public StatusBarViewModel StatusBarViewModel { get; set; }
+
+    public ObservableCollectionEx<RecentOpenFileViewModel> RecentOpenFiles { get; } = new();
 
     public ObservableCollectionEx<AtcLogEntryEx> LogEntries { get; } = new();
 
@@ -144,6 +148,13 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             e.Key == Key.P)
         {
             _ = OpenProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        if (!e.Handled &&
+            Keyboard.Modifiers == ModifierKeys.Control &&
+            e.Key == Key.R)
+        {
+            _ = OpenLastUsedProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
         }
 
         if (!e.Handled &&

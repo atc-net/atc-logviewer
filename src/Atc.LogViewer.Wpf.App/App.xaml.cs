@@ -11,6 +11,8 @@ public partial class App
 
     public static DirectoryInfo LogViewerCommonApplicationDataDirectory => new(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ATC"), "atc-logviewer"));
 
+    public static DirectoryInfo LogViewerProgramDataRecentProfilesDirectory => LogViewerCommonApplicationDataDirectory;
+
     public static DirectoryInfo LogViewerProgramDataProfilesDirectory => new(Path.Combine(LogViewerCommonApplicationDataDirectory.FullName, "Profiles"));
 
     public static JsonSerializerOptions JsonSerializerOptions

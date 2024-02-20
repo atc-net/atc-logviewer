@@ -11,6 +11,8 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync OpenProfileCommand => new RelayCommandAsync(OpenProfileCommandHandler);
 
+    public IRelayCommandAsync OpenLastUsedProfileCommand => new RelayCommandAsync(OpenLastUsedProfileCommandHandler, CanOpenLastUsedProfileCommandHandler);
+
     public IRelayCommandAsync SaveProfileCommand => new RelayCommandAsync(SaveProfileCommandHandler, CanSaveProfileCommandHandler);
 
     public IRelayCommandAsync OpenLogFolderCommand => new RelayCommandAsync(OpenLogFolderCommandHandler);
@@ -104,6 +106,23 @@ public partial class MainWindowViewModel
         await LoadProfileFile(
             new FileInfo(openFileDialog.FileName),
             CancellationToken.None).ConfigureAwait(true);
+    }
+
+    private bool CanOpenLastUsedProfileCommandHandler()
+        => RecentOpenFiles is not null &&
+           RecentOpenFiles.Any();
+
+    private async Task OpenLastUsedProfileCommandHandler()
+    {
+        if (!CanOpenLastUsedProfileCommandHandler())
+        {
+            return;
+        }
+
+        await LoadProfileFile(
+            new FileInfo(RecentOpenFiles[0].File),
+            CancellationToken.None)
+            .ConfigureAwait(false);
     }
 
     private bool CanSaveProfileCommandHandler()
