@@ -41,13 +41,20 @@ public static class DialogBoxFactory
 
     public static InfoDialogBox CreateWarningOption(
         string message)
-    {
-        return new InfoDialogBox(
+        => new(
             Application.Current.MainWindow!,
             new DialogBoxSettings(DialogBoxType.Ok, LogCategoryType.Warning)
             {
                 TitleBarText = "Invalid options",
             },
             message);
-    }
+
+    public static InfoDialogBox CreateWarningHighlight()
+        => new(
+            Application.Current.MainWindow!,
+            new DialogBoxSettings(DialogBoxType.Ok, LogCategoryType.Warning)
+            {
+                TitleBarText = "Invalid highlight",
+            },
+            "All highlight must have a text");
 }

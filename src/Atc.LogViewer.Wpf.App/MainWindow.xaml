@@ -34,6 +34,11 @@
                 <Setter Property="SelectedContentMargin" Value="0" />
             </Style>
 
+            <Style x:Key="ButtonStyle" TargetType="{x:Type fluent:Button}">
+                <Setter Property="Margin" Value="2,0" />
+                <Setter Property="MinWidth" Value="70" />
+            </Style>
+
             <Style x:Key="ToggleButtonStyle" TargetType="{x:Type fluent:ToggleButton}">
                 <Setter Property="Margin" Value="2,0" />
                 <Setter Property="MinWidth" Value="70" />
@@ -57,22 +62,22 @@
                         <fluent:BackstageTabControl>
                             <fluent:Button
                                 Command="{Binding Path=NewProfileCommand}"
-                                Header="New Profile"
+                                Header="New profile"
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.ContactAdd}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
                                 KeyTip="N" />
                             <fluent:Button
                                 Command="{Binding Path=OpenProfileCommand}"
-                                Header="Open Profile"
+                                Header="Open profile"
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
                                 KeyTip="P" />
                             <fluent:Button
                                 Command="{Binding Path=OpenLastUsedProfileCommand}"
-                                Header="Open last used Profile"
+                                Header="Open last used profile"
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
-                                KeyTip="Ctrl+R" />
+                                KeyTip="R" />
                             <fluent:Button
                                 Command="{Binding Path=OpenLogFolderCommand}"
-                                Header="Open Log Folder"
+                                Header="Open log folder"
                                 Icon="{Binding Source={x:Static fontIcons:FontAwesomeRegularType.FolderOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
                                 KeyTip="O" />
                             <Separator />
@@ -86,7 +91,7 @@
                 </fluent:Ribbon.Menu>
 
                 <!--  Tabs  -->
-                <fluent:RibbonTabItem Header="Home">
+                <fluent:RibbonTabItem Header="Home" KeyTip="H">
                     <fluent:RibbonGroupBox Header="Filter">
                         <StackPanel Orientation="Horizontal">
                             <fluent:ToggleButton
@@ -144,12 +149,27 @@
 
                         </StackPanel>
                     </fluent:RibbonGroupBox>
-                    <fluent:RibbonGroupBox Header="Profile">
+                    <fluent:RibbonGroupBox Header="Focus">
                         <fluent:Button
                             Command="{Binding Path=EditHighlightsCommand}"
-                            Header="Highlights"
-                            Icon="{Binding Source={x:Static fontIcons:IcoFontType.Abc}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Indigo500}}"
-                            KeyTip="H" />
+                            Header="Follow Tail"
+                            Icon="{Binding Source={x:Static fontIcons:IcoFontType.Abc}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}"
+                            KeyTip="H"
+                            Style="{StaticResource ButtonStyle}" />
+                        <Grid Width="70" Margin="2,0">
+                            <StackPanel
+                                Width="55"
+                                Margin="0,9,0,0"
+                                Orientation="Vertical">
+                                <atc:ToggleSwitch
+                                    Margin="5,-2,0,0"
+                                    IsOn="{Binding Path=FollowTail}"
+                                    OffContent=""
+                                    OnContent="" />
+                                <TextBlock Margin="0,2,0,0" Text="Follow Tail" />
+                            </StackPanel>
+                        </Grid>
+
                     </fluent:RibbonGroupBox>
                 </fluent:RibbonTabItem>
 
@@ -161,11 +181,13 @@
                 Rows="*">
                 <ListView
                     AlternationCount="0"
+                    ContextMenuOpening="OnContextMenuOpening"
                     FontFamily="Modern"
-                    ItemsSource="{Binding Path=LogEntries}"
-                    KeyDown="OnListViewKeyDown">
+                    ItemsSource="{Binding LogEntries}"
+                    KeyDown="OnListViewKeyDown"
+                    VirtualizingStackPanel.IsVirtualizing="False">
                     <b:Interaction.Behaviors>
-                        <behaviors:AutoScrollListViewBehavior />
+                        <behaviors:AutoScrollListViewBehavior IsEnabled="{Binding Path=FollowTail}" ScrollDirection="Bottom" />
                     </b:Interaction.Behaviors>
                     <ListView.View>
                         <GridView>
@@ -191,26 +213,7 @@
                                             Background="{Binding Path=HighlightBackground}"
                                             Foreground="{Binding Path=HighlightForeground}"
                                             Text="{Binding Path=Message}"
-                                            TextWrapping="Wrap">
-                                            <TextBlock.Tag>
-                                                <Binding Path="DataContext" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
-                                            </TextBlock.Tag>
-                                            <TextBlock.ContextMenu>
-                                                <!--  ReSharper disable Xaml.BindingWithContextNotResolved  -->
-                                                <ContextMenu>
-                                                    <MenuItem
-                                                        Command="{Binding Path=PlacementTarget.Tag.SetMessageToFilterTextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                        CommandParameter="{Binding Path=PlacementTarget.DataContext.Message, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                        Header="Filter on item message" />
-                                                    <MenuItem
-                                                        Command="{Binding Path=PlacementTarget.Tag.CopyMessageToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                        CommandParameter="{Binding Path=PlacementTarget.DataContext.Message, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                                                        Header="Copy to Clipboard"
-                                                        InputGestureText="Ctrl+C" />
-                                                    <!--  ReSharper restore Xaml.BindingWithContextNotResolved  -->
-                                                </ContextMenu>
-                                            </TextBlock.ContextMenu>
-                                        </TextBlock>
+                                            TextWrapping="Wrap" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

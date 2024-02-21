@@ -6,6 +6,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private readonly ILogAnalyzer logAnalyzer;
     private BitmapImage? icon;
     private FileInfo? profileFile;
+    private bool followTail = true;
     private bool isTraceEnabled = true;
     private bool isDebugEnabled = true;
     private bool isInfoEnabled = true;
@@ -64,6 +65,16 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     public ObservableCollectionEx<RecentOpenFileViewModel> RecentOpenFiles { get; } = new();
 
     public ObservableCollectionEx<AtcLogEntryEx> LogEntries { get; } = new();
+
+    public bool FollowTail
+    {
+        get => followTail;
+        set
+        {
+            followTail = value;
+            RaisePropertyChanged();
+        }
+    }
 
     public bool IsTraceEnabled
     {

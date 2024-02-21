@@ -525,6 +525,7 @@ dotnet_diagnostic.MA0049.severity = none                # File should match
 dotnet_diagnostic.S1450.severity = none                	# Remove the field 'XXX' and declare it as a local variable in the relevant methods
 dotnet_diagnostic.S2094.severity = none                	# Remove this empty class, write its code or make it an "interface"
 dotnet_diagnostic.S2234.severity = none                	# Parameters to '.ctor' have the same names but not the same order as the method arguments
+dotnet_diagnostic.S2589.severity = none                	# Change this condition so that it does not always evaluate to 'True'
 dotnet_diagnostic.S4136.severity = none                 # All 'XXX' method overloads should be adjacent
 dotnet_diagnostic.S4487.severity = none                	# Remove unread private field
 

@@ -1,3 +1,4 @@
+// ReSharper disable LoopCanBeConvertedToQuery
 namespace Atc.LogViewer.Wpf.App.Dialogs;
 
 /// <summary>
@@ -18,6 +19,23 @@ public partial class HighlightEditorDialogBox
         object sender,
         RoutedEventArgs e)
     {
+        if (HighlightEditorViewModel.Highlights is null)
+        {
+            return;
+        }
+
+        foreach (var highlight in HighlightEditorViewModel.Highlights)
+        {
+            if (!string.IsNullOrEmpty(highlight.Text))
+            {
+                continue;
+            }
+
+            var dialogBox = DialogBoxFactory.CreateWarningHighlight();
+            dialogBox.ShowDialog();
+            return;
+        }
+
         DialogResult = true;
         Close();
     }

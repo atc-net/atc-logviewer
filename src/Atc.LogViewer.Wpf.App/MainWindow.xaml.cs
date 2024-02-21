@@ -82,4 +82,40 @@ public partial class MainWindow
             Clipboard.SetText(selectedItem.Message);
         }
     }
+
+    private void OnContextMenuOpening(
+        object sender,
+        ContextMenuEventArgs e)
+    {
+        if (e.OriginalSource is not FrameworkElement { DataContext: AtcLogEntryEx item } sourceElement)
+        {
+            return;
+        }
+
+        if (DataContext is not MainWindowViewModel viewModel)
+        {
+            return;
+        }
+
+        var contextMenu = new ContextMenu();
+
+        contextMenu.Items.Add(
+            new MenuItem
+            {
+                Header = "Filter on item message",
+                Command = viewModel.SetMessageToFilterTextCommand,
+                CommandParameter = item.Message,
+            });
+
+        contextMenu.Items.Add(
+            new MenuItem
+            {
+                Header = "Copy to Clipboard",
+                Command = viewModel.CopyMessageToClipboardCommand,
+                CommandParameter = item.Message,
+                InputGestureText = "Ctrl+C",
+            });
+
+        sourceElement.ContextMenu = contextMenu;
+    }
 }

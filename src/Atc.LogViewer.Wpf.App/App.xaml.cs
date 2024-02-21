@@ -8,6 +8,10 @@ public partial class App
 {
     private readonly ILogger<App> logger;
     private readonly IHost host;
+    private IConfiguration? configuration;
+
+    [SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded", Justification = "OK.")]
+    public static readonly BitmapImage DefaultIcon = new(new Uri("pack://application:,,,/Resources/AppIcon.ico", UriKind.Absolute));
 
     public static DirectoryInfo LogViewerCommonApplicationDataDirectory => new(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ATC"), "atc-logviewer"));
 
@@ -39,6 +43,15 @@ public partial class App
                     .SetMinimumLevel(LogLevel.Trace)
                     .AddDebug();
             })
+            .ConfigureAppConfiguration(
+                configurationBuilder =>
+                {
+                    configuration = configurationBuilder
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .AddEnvironmentVariables()
+                        .Build();
+                })
             .ConfigureServices((_, services) =>
             {
                 services.AddSingleton<ILog4NetFileExtractor, Log4NetFileExtractor>();
@@ -146,13 +159,24 @@ public partial class App
     {
         logger.LogInformation("App starting");
 
-        await host.StartAsync();
+        await host
+            .StartAsync()
+            .ConfigureAwait(false);
+
+        var applicationOptions = new ApplicationOptions();
+        configuration!
+            .GetRequiredSection(ApplicationOptions.SectionName)
+            .Bind(applicationOptions);
 
         CultureManager.SetCultures(
             GlobalizationConstants.EnglishCultureInfo,
             GlobalizationConstants.EnglishCultureInfo);
 
-        ThemeManager.Current.ChangeTheme(Current, "Dark.Blue");
+        var theme = string.IsNullOrEmpty(applicationOptions.Theme)
+            ? "Light.Steel"
+            : applicationOptions.Theme;
+
+        ThemeManager.Current.ChangeTheme(Current, theme);
 
         if (!Directory.Exists(LogViewerCommonApplicationDataDirectory.FullName))
         {
@@ -179,7 +203,9 @@ public partial class App
     {
         logger.LogInformation("App closing");
 
-        await host.StopAsync();
+        await host
+            .StopAsync()
+            .ConfigureAwait(false);
 
         host.Dispose();
 
