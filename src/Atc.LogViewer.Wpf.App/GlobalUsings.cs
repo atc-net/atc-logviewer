@@ -7,6 +7,7 @@ global using System.Windows;
 global using System.Windows.Controls;
 global using System.Windows.Input;
 global using System.Windows.Media;
+global using System.Windows.Media.Imaging;
 global using System.Windows.Threading;
 
 global using Atc.Helpers;
@@ -37,6 +38,7 @@ global using Atc.Wpf.Translation;
 
 global using ControlzEx.Theming;
 
+global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;

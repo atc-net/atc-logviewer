@@ -4,6 +4,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 {
     private readonly ILogger<MainWindowViewModel> logger;
     private readonly ILogAnalyzer logAnalyzer;
+    private BitmapImage? icon;
     private FileInfo? profileFile;
     private bool isTraceEnabled = true;
     private bool isDebugEnabled = true;
@@ -24,6 +25,9 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         this.logger = logger;
         this.logAnalyzer = logAnalyzer;
+
+        Icon = App.DefaultIcon;
+
         ProfileViewModel = new ProfileViewModel();
         StatusBarViewModel = statusBarViewModel;
 
@@ -41,6 +45,16 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
+    }
+
+    public BitmapImage? Icon
+    {
+        get => icon;
+        set
+        {
+            icon = value;
+            RaisePropertyChanged();
+        }
     }
 
     public ProfileViewModel ProfileViewModel { get; set; }
