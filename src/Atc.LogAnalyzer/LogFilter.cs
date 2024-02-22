@@ -8,5 +8,5 @@ public record LogFilter(
     bool LogLevelError,
     bool LogLevelCritical,
     string IncludeText,
-    DateTime? StartTime,
-    DateTime? EndTime);
+    DateTime? DateTimeFrom,
+    DateTime? DateTimeTo);

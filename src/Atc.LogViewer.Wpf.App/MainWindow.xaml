@@ -38,12 +38,12 @@
 
             <Style x:Key="ButtonStyle" TargetType="{x:Type fluent:Button}">
                 <Setter Property="Margin" Value="2,0" />
-                <Setter Property="MinWidth" Value="70" />
+                <Setter Property="MinWidth" Value="60" />
             </Style>
 
             <Style x:Key="ToggleButtonStyle" TargetType="{x:Type fluent:ToggleButton}">
                 <Setter Property="Margin" Value="2,0" />
-                <Setter Property="MinWidth" Value="70" />
+                <Setter Property="MinWidth" Value="60" />
             </Style>
         </ResourceDictionary>
     </atc:NiceWindow.Resources>
@@ -107,7 +107,7 @@
                                 LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.FrogTracks}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource DebugBrush}}"
                                 Style="{StaticResource ToggleButtonStyle}" />
                             <fluent:ToggleButton
-                                Header="Information"
+                                Header="Info"
                                 IsChecked="{Binding Path=IsInfoEnabled}"
                                 LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.InfoCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource InformationBrush}}"
                                 Style="{StaticResource ToggleButtonStyle}" />
@@ -126,29 +126,58 @@
                                 IsChecked="{Binding Path=IsCriticalEnabled}"
                                 LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.AngryMonster}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource CriticalBrush}}"
                                 Style="{StaticResource ToggleButtonStyle}" />
-                            <StackPanel Margin="10" Orientation="Horizontal">
-                                <TextBox
-                                    Width="400"
-                                    Height="40"
-                                    Padding="5"
-                                    VerticalContentAlignment="Center"
-                                    Background="{DynamicResource AtcApps.Brushes.ThemeBackground1}"
-                                    KeyDown="OnFilterTextKeyDown"
-                                    Text="{Binding Path=FilterText, UpdateSourceTrigger=Explicit}" />
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Margin="10" Orientation="Horizontal">
+                                    <TextBox
+                                        Width="400"
+                                        Height="40"
+                                        VerticalContentAlignment="Center"
+                                        Background="{DynamicResource AtcApps.Brushes.ThemeBackground1}"
+                                        KeyDown="OnFilterTextKeyDown"
+                                        Text="{Binding Path=FilterText, UpdateSourceTrigger=Explicit}" />
+                                    <fluent:Button
+                                        Width="40"
+                                        Height="40"
+                                        Margin="-40,0,0,0"
+                                        Command="{Binding Path=ClearFilterTextCommand}">
+                                        <fluent:Button.LargeIcon>
+                                            <Image
+                                                Width="32"
+                                                Height="32"
+                                                Source="{Binding Source={x:Static fontIcons:IcoFontType.Delete}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}" />
+                                        </fluent:Button.LargeIcon>
+                                    </fluent:Button>
+                                </StackPanel>
+                                <atc:UniformSpacingPanel
+                                    Width="280"
+                                    Margin="10,6"
+                                    Orientation="Vertical"
+                                    Spacing="10">
+                                    <atc:LabelDateTimePicker
+                                        HideAreas="All"
+                                        LabelText="From"
+                                        LabelWidthNumber="50"
+                                        LabelWidthSizeDefinition="Pixel"
+                                        SelectedDate="{Binding Path=FilterDateTimeFrom, Mode=TwoWay}" />
+                                    <atc:LabelDateTimePicker
+                                        HideAreas="All"
+                                        LabelText="To"
+                                        LabelWidthNumber="50"
+                                        LabelWidthSizeDefinition="Pixel"
+                                        SelectedDate="{Binding Path=FilterDateTimeTo, Mode=TwoWay}" />
+                                </atc:UniformSpacingPanel>
                                 <fluent:Button
-                                    Width="40"
-                                    Height="40"
-                                    Margin="10,0,0,0"
-                                    Command="{Binding Path=ClearFilterTextCommand}">
+                                    Command="{Binding Path=ClearFilterCommand}"
+                                    Header="Clear"
+                                    Style="{StaticResource ButtonStyle}">
                                     <fluent:Button.LargeIcon>
                                         <Image
                                             Width="32"
                                             Height="32"
-                                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Delete}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}" />
+                                            Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.FilterRemoveOutline}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}" />
                                     </fluent:Button.LargeIcon>
                                 </fluent:Button>
                             </StackPanel>
-
                         </StackPanel>
                     </fluent:RibbonGroupBox>
                     <fluent:RibbonGroupBox Header="Focus">

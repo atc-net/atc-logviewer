@@ -13,6 +13,4 @@ public record AtcLogEntryEx(
         TimeStamp,
         LogLevel,
         MessageShort,
-        MessageFull)
-{
-}
+        MessageFull);

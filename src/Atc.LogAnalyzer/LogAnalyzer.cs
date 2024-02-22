@@ -38,8 +38,8 @@ public sealed class LogAnalyzer : ILogAnalyzer
             LogLevelError: true,
             LogLevelCritical: true,
             IncludeText: string.Empty,
-            StartTime: null,
-            EndTime: null);
+            DateTimeFrom: null,
+            DateTimeTo: null);
 
         this.log4NetFileCollector.CollectedEntry += OnCollectedEntry;
         this.log4NetFileCollector.CollectedFileDone += OnCollectedFileDone;
@@ -125,9 +125,9 @@ public sealed class LogAnalyzer : ILogAnalyzer
                           (entry.LogLevel == LogLevel.Error && logFilter.LogLevelError) ||
                           (entry.LogLevel == LogLevel.Critical && logFilter.LogLevelCritical))
                          &&
-                         (!logFilter.StartTime.HasValue || entry.TimeStamp >= logFilter.StartTime.Value) // Check for StartTime
+                         (!logFilter.DateTimeFrom.HasValue || entry.TimeStamp >= logFilter.DateTimeFrom.Value)
                          &&
-                         (!logFilter.EndTime.HasValue || entry.TimeStamp <= logFilter.EndTime.Value) // Check for EndTime
+                         (!logFilter.DateTimeTo.HasValue || entry.TimeStamp <= logFilter.DateTimeTo.Value)
                          &&
                          (logFilter.IncludeText.Length == 0 ||
                           entry.MessageFull.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase)))

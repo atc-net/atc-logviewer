@@ -25,6 +25,8 @@ public partial class MainWindowViewModel
 
     public IRelayCommand ClearFilterTextCommand => new RelayCommand(ClearFilterTextCommandHandler, CanClearFilterTextCommandHandler);
 
+    public IRelayCommand ClearFilterCommand => new RelayCommand(ClearFilterCommandHandler, CanClearFilterCommandHandler);
+
     public IRelayCommandAsync EditHighlightsCommand => new RelayCommandAsync(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
 
     private async Task NewProfileCommandHandler()
@@ -189,6 +191,18 @@ public partial class MainWindowViewModel
 
     private void ClearFilterTextCommandHandler()
         => FilterText = string.Empty;
+
+    private bool CanClearFilterCommandHandler()
+        => !string.IsNullOrEmpty(FilterText) ||
+           FilterDateTimeFrom is not null ||
+           FilterDateTimeTo is not null;
+
+    private void ClearFilterCommandHandler()
+    {
+        FilterText = string.Empty;
+        FilterDateTimeFrom = null;
+        FilterDateTimeTo = null;
+    }
 
     private bool CanEditHighlightsCommandHandler()
         => ProfileViewModel is not null;

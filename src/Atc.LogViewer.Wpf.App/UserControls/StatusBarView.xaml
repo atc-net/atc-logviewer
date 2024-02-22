@@ -8,11 +8,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:StatusBarViewModel}"
     d:DesignHeight="25"
-    d:DesignWidth="500"
+    d:DesignWidth="600"
     ContextMenu="{x:Null}"
     mc:Ignorable="d">
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="All counts">
         <StackPanel Orientation="Horizontal">
             <TextBlock Margin="10,0" Text="All:" />
             <TextBlock Text="{Binding Path=LogEntriesStats.Count, StringFormat=N0, FallbackValue=0}" />
@@ -25,7 +28,10 @@
         <TextBlock Text="|" />
     </fluent:StatusBarItem>
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="Trace counts">
         <StackPanel Orientation="Horizontal">
             <Ellipse
                 Width="12"
@@ -43,7 +49,10 @@
         <TextBlock Text="|" />
     </fluent:StatusBarItem>
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="Debug counts">
         <StackPanel Orientation="Horizontal">
             <Ellipse
                 Width="12"
@@ -61,7 +70,10 @@
         <TextBlock Text="|" />
     </fluent:StatusBarItem>
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="Information counts">
         <StackPanel Orientation="Horizontal">
             <Ellipse
                 Width="12"
@@ -79,7 +91,10 @@
         <TextBlock Text="|" />
     </fluent:StatusBarItem>
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="Warning counts">
         <StackPanel Orientation="Horizontal">
             <Ellipse
                 Width="12"
@@ -97,7 +112,10 @@
         <TextBlock Text="|" />
     </fluent:StatusBarItem>
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="Error counts">
         <StackPanel Orientation="Horizontal">
             <Ellipse
                 Width="12"
@@ -115,7 +133,10 @@
         <TextBlock Text="|" />
     </fluent:StatusBarItem>
 
-    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+    <fluent:StatusBarItem
+        Margin="10,0"
+        HorizontalAlignment="Left"
+        ToolTip="Critical counts">
         <StackPanel Orientation="Horizontal">
             <Ellipse
                 Width="12"

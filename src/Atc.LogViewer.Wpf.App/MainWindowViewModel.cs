@@ -7,6 +7,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private BitmapImage? icon;
     private FileInfo? profileFile;
     private bool followTail = true;
+    private AtcLogEntryEx? selectedLogEntry;
     private bool isTraceEnabled = true;
     private bool isDebugEnabled = true;
     private bool isInfoEnabled = true;
@@ -14,7 +15,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private bool isErrorEnabled = true;
     private bool isCriticalEnabled = true;
     private string filterText = string.Empty;
-    private AtcLogEntryEx? selectedLogEntry;
+    private DateTime? filterDateTimeFrom;
+    private DateTime? filterDateTimeTo;
 
     public MainWindowViewModel(
         ILogger<MainWindowViewModel> logger,
@@ -44,8 +46,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 IsErrorEnabled,
                 IsCriticalEnabled,
                 FilterText,
-                StartTime: null,
-                EndTime: null));
+                FilterDateTimeFrom,
+                FilterDateTimeTo));
 
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
@@ -166,6 +168,28 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         }
     }
 
+    public DateTime? FilterDateTimeFrom
+    {
+        get => filterDateTimeFrom;
+        set
+        {
+            filterDateTimeFrom = value;
+            RaisePropertyChanged();
+            _ = ApplyFilter();
+        }
+    }
+
+    public DateTime? FilterDateTimeTo
+    {
+        get => filterDateTimeTo;
+        set
+        {
+            filterDateTimeTo = value;
+            RaisePropertyChanged();
+            _ = ApplyFilter();
+        }
+    }
+
     public new void OnKeyDown(
         object sender,
         KeyEventArgs e)
@@ -262,8 +286,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 IsErrorEnabled,
                 IsCriticalEnabled,
                 FilterText,
-                StartTime: null,
-                EndTime: null));
+                FilterDateTimeFrom,
+                FilterDateTimeTo));
 
         var filteredEntries = logAnalyzer.GetFilteredLogEntries();
 
