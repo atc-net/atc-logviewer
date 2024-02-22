@@ -2,7 +2,7 @@ namespace Atc.LogCollector;
 
 public record AtcLogEntry(
     string SourceIdentifier,
-    DateTime DateTime,
+    DateTime TimeStamp,
     LogLevel LogLevel,
     string MessageShort,
     string MessageFull);

@@ -2,7 +2,7 @@ namespace Atc.LogViewer.Wpf.App.Models;
 
 public record AtcLogEntryEx(
     string SourceIdentifier,
-    DateTime DateTime,
+    DateTime TimeStamp,
     LogLevel LogLevel,
     string MessageShort,
     string MessageFull,
@@ -10,7 +10,7 @@ public record AtcLogEntryEx(
     Brush HighlightBackground)
     : AtcLogEntry(
         SourceIdentifier,
-        DateTime,
+        TimeStamp,
         LogLevel,
         MessageShort,
         MessageFull)

@@ -43,7 +43,9 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 IsWarningEnabled,
                 IsErrorEnabled,
                 IsCriticalEnabled,
-                FilterText));
+                FilterText,
+                StartTime: null,
+                EndTime: null));
 
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
@@ -176,28 +178,32 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             Keyboard.Modifiers == ModifierKeys.Control &&
             e.Key == Key.N)
         {
-            _ = NewProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+            _ = NewProfileCommandHandler()
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         if (!e.Handled &&
             Keyboard.Modifiers == ModifierKeys.Control &&
             e.Key == Key.P)
         {
-            _ = OpenProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+            _ = OpenProfileCommandHandler()
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         if (!e.Handled &&
             Keyboard.Modifiers == ModifierKeys.Control &&
             e.Key == Key.R)
         {
-            _ = OpenLastUsedProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+            _ = OpenLastUsedProfileCommandHandler()
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         if (!e.Handled &&
             Keyboard.Modifiers == ModifierKeys.Control &&
             e.Key == Key.O)
         {
-            _ = OpenLogFolderCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+            _ = OpenLogFolderCommandHandler()
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         if (!e.Handled &&
@@ -205,7 +211,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             e.Key == Key.S &&
             CanSaveProfileCommandHandler())
         {
-            _ = SaveProfileCommandHandler().ConfigureAwait(continueOnCapturedContext: false);
+            _ = SaveProfileCommandHandler()
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 
@@ -243,7 +250,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
     private async Task ApplyFilter()
     {
-        await SetIsBusy(value: true, delayInMs: 10).ConfigureAwait(false);
+        await SetIsBusy(value: true, delayInMs: 10)
+            .ConfigureAwait(continueOnCapturedContext: false);
 
         logAnalyzer.SetFilter(
             new LogFilter(
@@ -253,7 +261,9 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 IsWarningEnabled,
                 IsErrorEnabled,
                 IsCriticalEnabled,
-                FilterText));
+                FilterText,
+                StartTime: null,
+                EndTime: null));
 
         var filteredEntries = logAnalyzer.GetFilteredLogEntries();
 
@@ -287,22 +297,23 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 stringComparison = StringComparison.OrdinalIgnoreCase;
             }
 
-            if (logEntry.MessageFull.Contains(highlight.Text, stringComparison))
+            if (!logEntry.MessageFull.Contains(highlight.Text, stringComparison))
             {
-                foreground = highlight.Foreground;
-                background = highlight.Background;
-                break;
+                continue;
             }
+
+            foreground = highlight.Foreground;
+            background = highlight.Background;
+            break;
         }
 
-        var logEntryEx = new AtcLogEntryEx(
+        return new AtcLogEntryEx(
             logEntry.SourceIdentifier,
-            logEntry.DateTime,
+            logEntry.TimeStamp,
             logEntry.LogLevel,
             logEntry.MessageShort,
             logEntry.MessageFull,
             foreground,
             background);
-        return logEntryEx;
     }
 }

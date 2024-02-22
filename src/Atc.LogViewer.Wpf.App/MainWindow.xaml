@@ -154,7 +154,7 @@
                     <fluent:RibbonGroupBox Header="Focus">
                         <fluent:Button
                             Command="{Binding Path=EditHighlightsCommand}"
-                            Header="Follow Tail"
+                            Header="Highlights"
                             Icon="{Binding Source={x:Static fontIcons:IcoFontType.Abc}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}"
                             KeyTip="H"
                             Style="{StaticResource ButtonStyle}" />
@@ -197,7 +197,7 @@
                         <GridView>
                             <GridViewColumn
                                 Width="Auto"
-                                DisplayMemberBinding="{Binding Path=DateTime, StringFormat='yyyy-MM-dd HH:mm:ss.fff'}"
+                                DisplayMemberBinding="{Binding Path=TimeStamp, StringFormat='yyyy-MM-dd HH:mm:ss.fff'}"
                                 Header="Date/Time" />
                             <GridViewColumn Width="Auto">
                                 <GridViewColumn.CellTemplate>
@@ -234,13 +234,13 @@
                         FontFamily="Modern"
                         Text="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
                         TextWrapping="Wrap"
-                        Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=False, FallbackValue=''}" />
+                        Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=False, FallbackValue=Collapsed}" />
                     <atc:JsonViewer
                         BorderBrush="Transparent"
                         Data="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
                         ShowActionAndInformationBar="False"
                         SuppressErrorMessages="True"
-                        Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=True, FallbackValue=''}" />
+                        Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=True, FallbackValue=Collapsed}" />
                 </Grid>
             </atc:GridEx>
             <!--  ::::::::::::::::::::::::::::::::::::::::::::::  -->

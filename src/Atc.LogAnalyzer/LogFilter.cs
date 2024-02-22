@@ -7,4 +7,6 @@ public record LogFilter(
     bool LogLevelWarning,
     bool LogLevelError,
     bool LogLevelCritical,
-    string IncludeText);
+    string IncludeText,
+    DateTime? StartTime,
+    DateTime? EndTime);

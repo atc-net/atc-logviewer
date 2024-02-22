@@ -71,7 +71,8 @@ public partial class MainWindowViewModel
                     };
 
                     profileFile = file;
-                    await SaveProfileCommandHandler().ConfigureAwait(false);
+                    await SaveProfileCommandHandler()
+                        .ConfigureAwait(continueOnCapturedContext: false);
                 }
             }
             else
@@ -83,7 +84,8 @@ public partial class MainWindowViewModel
                 };
 
                 profileFile = file;
-                await SaveProfileCommandHandler().ConfigureAwait(false);
+                await SaveProfileCommandHandler()
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
     }
@@ -122,7 +124,7 @@ public partial class MainWindowViewModel
         await LoadProfileFile(
             new FileInfo(RecentOpenFiles[0].File),
             CancellationToken.None)
-            .ConfigureAwait(false);
+            .ConfigureAwait(continueOnCapturedContext: false);
     }
 
     private bool CanSaveProfileCommandHandler()
@@ -216,6 +218,7 @@ public partial class MainWindowViewModel
 
         ProfileViewModel.Highlights = highlightEditorDialogBox.HighlightEditorViewModel.Highlights;
 
-        await ApplyFilter().ConfigureAwait(false);
+        await ApplyFilter()
+            .ConfigureAwait(continueOnCapturedContext: false);
     }
 }

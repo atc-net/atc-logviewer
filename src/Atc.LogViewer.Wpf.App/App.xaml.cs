@@ -161,7 +161,7 @@ public partial class App
 
         await host
             .StartAsync()
-            .ConfigureAwait(false);
+            .ConfigureAwait(continueOnCapturedContext: false);
 
         var applicationOptions = new ApplicationOptions();
         configuration!
@@ -205,7 +205,7 @@ public partial class App
 
         await host
             .StopAsync()
-            .ConfigureAwait(false);
+            .ConfigureAwait(continueOnCapturedContext: false);
 
         host.Dispose();
 

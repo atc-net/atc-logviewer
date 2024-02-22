@@ -37,7 +37,9 @@ public sealed class LogAnalyzer : ILogAnalyzer
             LogLevelWarning: true,
             LogLevelError: true,
             LogLevelCritical: true,
-            IncludeText: string.Empty);
+            IncludeText: string.Empty,
+            StartTime: null,
+            EndTime: null);
 
         this.log4NetFileCollector.CollectedEntry += OnCollectedEntry;
         this.log4NetFileCollector.CollectedFileDone += OnCollectedFileDone;
@@ -73,16 +75,29 @@ public sealed class LogAnalyzer : ILogAnalyzer
         switch (logFileCollectorType)
         {
             case LogFileCollectorType.Log4Net:
-                CollectAndMonitorFolderForLog4Net(directory, cancellationToken);
+                CollectAndMonitorFolderForLog4Net(
+                    directory,
+                    config,
+                    cancellationToken);
                 break;
             case LogFileCollectorType.NLog:
-                CollectAndMonitorFolderForNLog(directory, cancellationToken);
+                CollectAndMonitorFolderForNLog(
+                    directory,
+                    config,
+                    cancellationToken);
                 break;
             case LogFileCollectorType.Serilog:
-                await CollectAndMonitorFolderForSerilog(directory, config, cancellationToken).ConfigureAwait(false);
+                await CollectAndMonitorFolderForSerilog(
+                        directory,
+                        config,
+                        cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 break;
             case LogFileCollectorType.Syslog:
-                CollectAndMonitorFolderForSyslog(directory, cancellationToken);
+                CollectAndMonitorFolderForSyslog(
+                    directory,
+                    config,
+                    cancellationToken);
                 break;
             default:
                 throw new SwitchCaseDefaultException(logFileCollectorType);
@@ -110,8 +125,13 @@ public sealed class LogAnalyzer : ILogAnalyzer
                           (entry.LogLevel == LogLevel.Error && logFilter.LogLevelError) ||
                           (entry.LogLevel == LogLevel.Critical && logFilter.LogLevelCritical))
                          &&
+                         (!logFilter.StartTime.HasValue || entry.TimeStamp >= logFilter.StartTime.Value) // Check for StartTime
+                         &&
+                         (!logFilter.EndTime.HasValue || entry.TimeStamp <= logFilter.EndTime.Value) // Check for EndTime
+                         &&
                          (logFilter.IncludeText.Length == 0 ||
                           entry.MessageFull.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase)))
+            .OrderBy(x => x.TimeStamp)
             .ToArray();
 
     public LogStatistics GetLogStatistics()
@@ -210,7 +230,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
         if (CollectedEntries is not null)
         {
             var entries = logEntryBuffer
-                .OrderBy(x => x.DateTime)
+                .OrderBy(x => x.TimeStamp)
                 .ToArray();
 
             CollectedEntries.Invoke(entries);
@@ -221,6 +241,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     private void CollectAndMonitorFolderForLog4Net(
         DirectoryInfo directory,
+        LogFileCollectorConfig config,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -228,6 +249,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     private void CollectAndMonitorFolderForNLog(
         DirectoryInfo directory,
+        LogFileCollectorConfig config,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -237,10 +259,14 @@ public sealed class LogAnalyzer : ILogAnalyzer
         DirectoryInfo directory,
         LogFileCollectorConfig config,
         CancellationToken cancellationToken)
-        => serilogFileCollector.CollectAndMonitorFolder(directory, config, cancellationToken);
+        => serilogFileCollector.CollectAndMonitorFolder(
+            directory,
+            config,
+            cancellationToken);
 
     private void CollectAndMonitorFolderForSyslog(
         DirectoryInfo directory,
+        LogFileCollectorConfig config,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

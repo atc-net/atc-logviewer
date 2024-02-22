@@ -56,7 +56,8 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         {
             var foundValidLogEntries = await ReadAndParseLines(
                 file,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             if (!foundValidLogEntries)
             {
@@ -77,7 +78,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             tailFile.Start();
 
             MonitoredFiles.TryAdd(file.FullName, tailFile);
-        }).ConfigureAwait(false);
+        }).ConfigureAwait(continueOnCapturedContext: false);
 
         CollectedFilesDone?.Invoke(files.ToArray());
     }
@@ -179,7 +180,8 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
     {
         var lines = await FileHelper.ReadAllTextToLinesAsync(
             file,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken)
+            .ConfigureAwait(continueOnCapturedContext: false);
 
         if (lines.Length == 0)
         {

@@ -113,7 +113,7 @@ public partial class MainWindowViewModel
                     defaultDirectory,
                     logFileCollectorConfig,
                     cancellationToken)
-                    .ConfigureAwait(false);
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
         catch (Exception ex)
@@ -140,7 +140,7 @@ public partial class MainWindowViewModel
 
             await FileHelper
                 .WriteAllTextAsync(file, profileJson, cancellationToken)
-                .ConfigureAwait(false);
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
         catch (Exception ex)
         {
@@ -168,7 +168,7 @@ public partial class MainWindowViewModel
                 directory,
                 config,
                 cancellationToken)
-            .ConfigureAwait(false);
+            .ConfigureAwait(continueOnCapturedContext: false);
 
         IsBusy = false;
     }

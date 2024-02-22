@@ -8,6 +8,11 @@ public class JsonFormatVisibilityVisibleValueConverter : IValueConverter
         object? parameter,
         CultureInfo culture)
     {
+        if (value is null)
+        {
+            return Visibility.Collapsed;
+        }
+
         var isJson = value is string stringValue &&
                      stringValue.IsFormatJson();
 
