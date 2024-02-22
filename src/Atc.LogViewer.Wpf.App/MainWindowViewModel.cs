@@ -14,6 +14,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private bool isErrorEnabled = true;
     private bool isCriticalEnabled = true;
     private string filterText = string.Empty;
+    private AtcLogEntryEx? selectedLogEntry;
 
     public MainWindowViewModel(
         ILogger<MainWindowViewModel> logger,
@@ -65,6 +66,16 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     public ObservableCollectionEx<RecentOpenFileViewModel> RecentOpenFiles { get; } = new();
 
     public ObservableCollectionEx<AtcLogEntryEx> LogEntries { get; } = new();
+
+    public AtcLogEntryEx? SelectedLogEntry
+    {
+        get => selectedLogEntry;
+        set
+        {
+            selectedLogEntry = value;
+            RaisePropertyChanged();
+        }
+    }
 
     public bool FollowTail
     {
@@ -276,7 +287,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 stringComparison = StringComparison.OrdinalIgnoreCase;
             }
 
-            if (logEntry.Message.Contains(highlight.Text, stringComparison))
+            if (logEntry.MessageFull.Contains(highlight.Text, stringComparison))
             {
                 foreground = highlight.Foreground;
                 background = highlight.Background;
@@ -288,7 +299,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             logEntry.SourceIdentifier,
             logEntry.DateTime,
             logEntry.LogLevel,
-            logEntry.Message,
+            logEntry.MessageShort,
+            logEntry.MessageFull,
             foreground,
             background);
         return logEntryEx;

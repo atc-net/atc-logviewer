@@ -4,4 +4,5 @@ public record AtcLogEntry(
     string SourceIdentifier,
     DateTime DateTime,
     LogLevel LogLevel,
-    string Message);
+    string MessageShort,
+    string MessageFull);

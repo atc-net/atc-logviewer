@@ -20,10 +20,10 @@
 
   <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.428" />
-    <PackageReference Include="Atc.Wpf" Version="2.0.406" />
-    <PackageReference Include="Atc.Wpf.Controls" Version="2.0.406" />
-    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.406" />
-    <PackageReference Include="Atc.Wpf.Theming" Version="2.0.406" />
+    <PackageReference Include="Atc.Wpf" Version="2.0.408" />
+    <PackageReference Include="Atc.Wpf.Controls" Version="2.0.408" />
+    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.408" />
+    <PackageReference Include="Atc.Wpf.Theming" Version="2.0.408" />
     <PackageReference Include="Fluent.Ribbon" Version="10.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />

@@ -3,6 +3,7 @@ namespace Atc.LogCollector.Serilog;
 
 public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 {
+    private const int MessageShortMaxLength = 160;
     private readonly ISerilogFileExtractor serilogFileExtractor;
     private readonly string[] defaultLogExtensions = ["log", "txt"];
 
@@ -201,11 +202,22 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             if (extractor.HasSubLines(lines, lineNumber))
             {
                 var errorMessageWithSubLines = extractor.GetMessageWithSubLines(
-                    logEntry.Message,
+                    logEntry.MessageShort,
                     lines,
                     ref lineNumber);
 
-                logEntry = logEntry with { Message = errorMessageWithSubLines };
+                logEntry = logEntry with { MessageFull = errorMessageWithSubLines };
+
+                if (logEntry.MessageFull.IsFormatJson())
+                {
+                    logEntry = logEntry with { MessageShort = "[JSON]" };
+                }
+            }
+
+            if (logEntry.MessageShort.Length > MessageShortMaxLength)
+            {
+                var cutMessage = string.Concat(logEntry.MessageShort.AsSpan(0, MessageShortMaxLength), "...");
+                logEntry = logEntry with { MessageShort = cutMessage };
             }
 
             CollectedEntry?.Invoke(logEntry);

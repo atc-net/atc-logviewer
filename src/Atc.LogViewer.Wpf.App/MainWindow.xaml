@@ -13,6 +13,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Atc.LogViewer.Wpf.App.Models"
     xmlns:userControls="clr-namespace:Atc.LogViewer.Wpf.App.UserControls"
+    xmlns:valueConverters="clr-namespace:Atc.LogViewer.Wpf.App.ValueConverters"
     Title="..:: ATC Log.Viewer ::.."
     Width="1500"
     Height="1000"
@@ -26,6 +27,7 @@
         <ResourceDictionary>
             <atcValueConverters:FontIconImageSourceValueConverter x:Key="FontIconImageConverter" />
             <atcValueConverters:LogLevelToBrushValueConverter x:Key="LogLevelToBrushConverter" />
+            <valueConverters:JsonFormatVisibilityVisibleValueConverter x:Key="JsonFormatVisibilityConverter" />
 
             <Style
                 x:Key="{x:Type fluent:BackstageTabControl}"
@@ -178,14 +180,16 @@
             <atc:GridEx
                 Grid.Row="1"
                 Columns="*"
-                Rows="*">
+                Rows="4*,5,1*">
                 <ListView
+                    Grid.Row="0"
                     AlternationCount="0"
                     ContextMenuOpening="OnContextMenuOpening"
                     FontFamily="Modern"
                     ItemsSource="{Binding LogEntries}"
                     KeyDown="OnListViewKeyDown"
-                    VirtualizingStackPanel.IsVirtualizing="False">
+                    SelectedItem="{Binding Path=SelectedLogEntry}"
+                    SelectionMode="Single">
                     <b:Interaction.Behaviors>
                         <behaviors:AutoScrollListViewBehavior IsEnabled="{Binding Path=FollowTail}" ScrollDirection="Bottom" />
                     </b:Interaction.Behaviors>
@@ -212,7 +216,7 @@
                                         <TextBlock
                                             Background="{Binding Path=HighlightBackground}"
                                             Foreground="{Binding Path=HighlightForeground}"
-                                            Text="{Binding Path=Message}"
+                                            Text="{Binding Path=MessageShort}"
                                             TextWrapping="Wrap" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -224,6 +228,20 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
+                <Grid Grid.Row="2" Margin="10">
+                    <TextBlock
+                        FontFamily="Modern"
+                        Text="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=False, FallbackValue=''}" />
+                    <atc:JsonViewer
+                        BorderBrush="Transparent"
+                        Data="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
+                        ShowActionAndInformationBar="False"
+                        SuppressErrorMessages="True"
+                        Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=True, FallbackValue=''}" />
+                </Grid>
             </atc:GridEx>
             <!--  ::::::::::::::::::::::::::::::::::::::::::::::  -->
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBarViewModel}" />

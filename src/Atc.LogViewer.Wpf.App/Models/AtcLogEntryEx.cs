@@ -4,9 +4,15 @@ public record AtcLogEntryEx(
     string SourceIdentifier,
     DateTime DateTime,
     LogLevel LogLevel,
-    string Message,
+    string MessageShort,
+    string MessageFull,
     Brush HighlightForeground,
     Brush HighlightBackground)
-    : AtcLogEntry(SourceIdentifier, DateTime, LogLevel, Message)
+    : AtcLogEntry(
+        SourceIdentifier,
+        DateTime,
+        LogLevel,
+        MessageShort,
+        MessageFull)
 {
 }

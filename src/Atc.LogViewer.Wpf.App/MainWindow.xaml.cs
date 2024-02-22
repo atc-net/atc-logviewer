@@ -79,7 +79,7 @@ public partial class MainWindow
         var listView = sender as ListView;
         if (listView?.SelectedItem is AtcLogEntryEx selectedItem)
         {
-            Clipboard.SetText(selectedItem.Message);
+            Clipboard.SetText(selectedItem.MessageShort);
         }
     }
 
@@ -104,7 +104,7 @@ public partial class MainWindow
             {
                 Header = "Filter on item message",
                 Command = viewModel.SetMessageToFilterTextCommand,
-                CommandParameter = item.Message,
+                CommandParameter = item.MessageShort,
             });
 
         contextMenu.Items.Add(
@@ -112,7 +112,7 @@ public partial class MainWindow
             {
                 Header = "Copy to Clipboard",
                 Command = viewModel.CopyMessageToClipboardCommand,
-                CommandParameter = item.Message,
+                CommandParameter = item.MessageShort,
                 InputGestureText = "Ctrl+C",
             });
 

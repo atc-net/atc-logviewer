@@ -35,6 +35,7 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
                 sourceIdentifier,
                 dateTime,
                 logLevel,
+                message,
                 message);
         }
         catch

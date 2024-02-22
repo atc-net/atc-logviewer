@@ -111,7 +111,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
                           (entry.LogLevel == LogLevel.Critical && logFilter.LogLevelCritical))
                          &&
                          (logFilter.IncludeText.Length == 0 ||
-                          entry.Message.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase)))
+                          entry.MessageFull.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase)))
             .ToArray();
 
     public LogStatistics GetLogStatistics()
@@ -182,7 +182,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
         }
 
         if (logFilter.IncludeText.Length > 0 &&
-            !logEntry.Message.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase))
+            !logEntry.MessageFull.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
