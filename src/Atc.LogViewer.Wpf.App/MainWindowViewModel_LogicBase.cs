@@ -177,21 +177,55 @@ public partial class MainWindowViewModel
     {
         var logStatistics = logAnalyzer.GetLogStatistics();
 
+        long criticalCount = 0;
+        long errorCount = 0;
+        long warningCount = 0;
+        long informationCount = 0;
+        long debugCount = 0;
+        long traceCount = 0;
+
+        foreach (var logLevel in LogEntries.Select(x => x.LogLevel))
+        {
+            switch (logLevel)
+            {
+                case LogLevel.Critical:
+                    criticalCount++;
+                    break;
+                case LogLevel.Error:
+                    errorCount++;
+                    break;
+                case LogLevel.Warning:
+                    warningCount++;
+                    break;
+                case LogLevel.Information:
+                    informationCount++;
+                    break;
+                case LogLevel.Debug:
+                    debugCount++;
+                    break;
+                case LogLevel.Trace:
+                    traceCount++;
+                    break;
+                default:
+                    throw new SwitchCaseDefaultException(logLevel);
+            }
+        }
+
         Messenger.Default.Send(
             new LogEntriesStatsMessage(
                 Count: logStatistics.Count,
                 TotalCount: LogEntries.Count,
-                CriticalCount: LogEntries.Count(x => x.LogLevel == LogLevel.Critical),
+                CriticalCount: criticalCount,
                 TotalCriticalCount: logStatistics.CriticalCount,
-                ErrorCount: LogEntries.Count(x => x.LogLevel == LogLevel.Error),
+                ErrorCount: errorCount,
                 TotalErrorCount: logStatistics.ErrorCount,
-                WarningCount: LogEntries.Count(x => x.LogLevel == LogLevel.Warning),
+                WarningCount: warningCount,
                 TotalWarningCount: logStatistics.WarningCount,
-                InformationCount: LogEntries.Count(x => x.LogLevel == LogLevel.Information),
+                InformationCount: informationCount,
                 TotalInformationCount: logStatistics.InformationCount,
-                DebugCount: LogEntries.Count(x => x.LogLevel == LogLevel.Debug),
+                DebugCount: debugCount,
                 TotalDebugCount: logStatistics.DebugCount,
-                TraceCount: LogEntries.Count(x => x.LogLevel == LogLevel.Trace),
+                TraceCount: traceCount,
                 TotalTraceCount: logStatistics.TraceCount));
     }
 }
