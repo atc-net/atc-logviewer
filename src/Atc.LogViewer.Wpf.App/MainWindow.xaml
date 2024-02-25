@@ -149,17 +149,19 @@
                                     </fluent:Button>
                                 </StackPanel>
                                 <atc:UniformSpacingPanel
-                                    Width="280"
+                                    Width="300"
                                     Margin="10,6"
                                     Orientation="Vertical"
                                     Spacing="10">
                                     <atc:LabelDateTimePicker
+                                        CustomCulture="{Binding Path=DateTimePickerUiCulture}"
                                         HideAreas="All"
                                         LabelText="From"
                                         LabelWidthNumber="50"
                                         LabelWidthSizeDefinition="Pixel"
                                         SelectedDate="{Binding Path=FilterDateTimeFrom, Mode=TwoWay}" />
                                     <atc:LabelDateTimePicker
+                                        CustomCulture="{Binding Path=DateTimePickerUiCulture}"
                                         HideAreas="All"
                                         LabelText="To"
                                         LabelWidthNumber="50"

@@ -81,6 +81,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         }
     }
 
+    public static CultureInfo DateTimePickerUiCulture => GlobalizationConstants.DanishCultureInfo;
+
     public bool FollowTail
     {
         get => followTail;
