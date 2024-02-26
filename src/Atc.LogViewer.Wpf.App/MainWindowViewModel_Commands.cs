@@ -29,6 +29,8 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync EditHighlightsCommand => new RelayCommandAsync(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
 
+    public IRelayCommand<ViewMode> ChangeViewModeCommand => new RelayCommand<ViewMode>(ChangeViewModeCommandHandler, CanChangeViewModeCommandHandler);
+
     private async Task NewProfileCommandHandler()
     {
         var dialogBox = DialogBoxFactory.CreateNewProfile();
@@ -235,4 +237,12 @@ public partial class MainWindowViewModel
         await ApplyFilter()
             .ConfigureAwait(continueOnCapturedContext: false);
     }
+
+    private bool CanChangeViewModeCommandHandler(
+        ViewMode obj)
+        => ViewMode != obj;
+
+    private void ChangeViewModeCommandHandler(
+        ViewMode obj)
+        => ViewMode = obj;
 }

@@ -25,6 +25,7 @@
     <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.424" />
     <PackageReference Include="Atc.Wpf.Theming" Version="2.0.424" />
     <PackageReference Include="Fluent.Ribbon" Version="10.0.4" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />

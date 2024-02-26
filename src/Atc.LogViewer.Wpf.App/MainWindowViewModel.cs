@@ -8,6 +8,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private FileInfo? profileFile;
     private bool followTail = true;
     private AtcLogEntryEx? selectedLogEntry;
+    private ViewMode viewMode;
     private bool isTraceEnabled = true;
     private bool isDebugEnabled = true;
     private bool isInfoEnabled = true;
@@ -33,6 +34,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         Icon = App.DefaultIcon;
 
         ProfileViewModel = new ProfileViewModel();
+        ChartLogLevelPieViewModel = new ChartLogLevelPieViewModel();
         StatusBarViewModel = statusBarViewModel;
 
         LoadRecentOpenFiles();
@@ -65,6 +67,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
     public ProfileViewModel ProfileViewModel { get; set; }
 
+    public ChartLogLevelPieViewModel ChartLogLevelPieViewModel { get; set; }
+
     public StatusBarViewModel StatusBarViewModel { get; set; }
 
     public ObservableCollectionEx<RecentOpenFileViewModel> RecentOpenFiles { get; } = new();
@@ -82,6 +86,16 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     }
 
     public static CultureInfo DateTimePickerUiCulture => GlobalizationConstants.DanishCultureInfo;
+
+    public ViewMode ViewMode
+    {
+        get => viewMode;
+        set
+        {
+            viewMode = value;
+            RaisePropertyChanged();
+        }
+    }
 
     public bool FollowTail
     {

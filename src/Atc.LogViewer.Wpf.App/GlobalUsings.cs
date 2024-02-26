@@ -40,8 +40,16 @@ global using Atc.Wpf.Translation;
 
 global using ControlzEx.Theming;
 
+global using LiveChartsCore;
+global using LiveChartsCore.Measure;
+global using LiveChartsCore.SkiaSharpView;
+global using LiveChartsCore.SkiaSharpView.Painting;
+global using LiveChartsCore.SkiaSharpView.VisualElements;
+
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Win32;
+
+global using SkiaSharp;
