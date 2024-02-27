@@ -35,6 +35,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         ProfileViewModel = new ProfileViewModel();
         ChartLogLevelPieViewModel = new ChartLogLevelPieViewModel();
+        ChartTimelineViewModel = new ChartTimelineViewModel(LogEntries);
         StatusBarViewModel = statusBarViewModel;
 
         LoadRecentOpenFiles();
@@ -68,6 +69,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     public ProfileViewModel ProfileViewModel { get; set; }
 
     public ChartLogLevelPieViewModel ChartLogLevelPieViewModel { get; set; }
+
+    public ChartTimelineViewModel ChartTimelineViewModel { get; set; }
 
     public StatusBarViewModel StatusBarViewModel { get; set; }
 

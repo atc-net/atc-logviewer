@@ -1,4 +1,5 @@
 // ReSharper disable MemberCanBeMadeStatic.Local
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 namespace Atc.LogViewer.Wpf.App;
 
 [SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - partial class")]
@@ -244,5 +245,13 @@ public partial class MainWindowViewModel
 
     private void ChangeViewModeCommandHandler(
         ViewMode obj)
-        => ViewMode = obj;
+    {
+        ViewMode = obj;
+        switch (obj)
+        {
+            case ViewMode.ChartTimeline:
+                ChartTimelineViewModel.RefreshChart();
+                break;
+        }
+    }
 }

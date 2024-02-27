@@ -214,7 +214,6 @@
                             CommandParameter="{x:Static app:ViewMode.ListView}"
                             Header="List View"
                             Icon="{Binding Source={x:Static fontIcons:IcoFontType.List}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Blue500}}"
-                            KeyTip="L"
                             Style="{StaticResource ButtonStyle}" />
                     </fluent:RibbonGroupBox>
                     <fluent:RibbonGroupBox Header="Charts">
@@ -223,14 +222,12 @@
                             CommandParameter="{x:Static app:ViewMode.ChartLogLevelPie}"
                             Header="Log Level Distribution"
                             Icon="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.ChartPie}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Blue500}}"
-                            KeyTip="P"
                             Style="{StaticResource ButtonStyle}" />
                         <fluent:Button
                             Command="{Binding Path=ChangeViewModeCommand}"
-                            CommandParameter="{x:Static app:ViewMode.ChartLogLevelBar}"
-                            Header="XXX"
+                            CommandParameter="{x:Static app:ViewMode.ChartTimeline}"
+                            Header="Timeline Distribution"
                             Icon="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.ChartBar}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Blue500}}"
-                            KeyTip="B"
                             Style="{StaticResource ButtonStyle}" />
                     </fluent:RibbonGroupBox>
                 </fluent:RibbonTabItem>
@@ -310,7 +307,53 @@
                     Columns="*"
                     Rows="*"
                     Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ChartLogLevelPie}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Visible}">
-                    <wpf:PieChart Title="{Binding Path=ChartLogLevelPieViewModel.Title}" Series="{Binding ChartLogLevelPieViewModel.Series}" />
+                    <atc:GridEx Columns="*,10,*" Rows="*">
+                        <wpf:PieChart
+                            Title="{Binding Path=ChartLogLevelPieViewModel.FilteredTitle}"
+                            Grid.Column="0"
+                            Series="{Binding ChartLogLevelPieViewModel.FilteredSeries}" />
+                        <wpf:PieChart
+                            Title="{Binding Path=ChartLogLevelPieViewModel.TotalTitle}"
+                            Grid.Column="2"
+                            Series="{Binding ChartLogLevelPieViewModel.TotalSeries}" />
+                    </atc:GridEx>
+                </atc:GridEx>
+                <!--  ChartTimeline  -->
+                <atc:GridEx
+                    Columns="*"
+                    Rows="*"
+                    Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ChartTimeline}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Visible}">
+                    <atc:GridEx Columns="*,220" Rows="*">
+                        <wpf:CartesianChart
+                            Title="{Binding Path=ChartTimelineViewModel.Title}"
+                            Grid.Column="0"
+                            Series="{Binding ChartTimelineViewModel.Series}"
+                            XAxes="{Binding ChartTimelineViewModel.XAxis}"
+                            YAxes="{Binding ChartTimelineViewModel.YAxis}" />
+                        <atc:UniformSpacingPanel
+                            Grid.Column="2"
+                            Margin="10"
+                            Orientation="Vertical"
+                            Spacing="10">
+                            <atc:LabelComboBox
+                                HideAreas="AsteriskAndInformation"
+                                Items="{Binding Path=ChartTimelineViewModel.Intervals}"
+                                LabelText="Intervals"
+                                Orientation="Vertical"
+                                SelectedKey="{Binding Path=ChartTimelineViewModel.SelectedInterval}" />
+                            <atc:GridEx Columns="*, Auto">
+                                <Button
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding Path=ChartTimelineViewModel.RefreshCommand}">
+                                    <Image
+                                        Width="32"
+                                        Height="32"
+                                        Source="{Binding Source={x:Static fontIcons:IcoFontType.Refresh}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Blue500}}" />
+                                </Button>
+                            </atc:GridEx>
+                        </atc:UniformSpacingPanel>
+                    </atc:GridEx>
                 </atc:GridEx>
             </Grid>
             <!--  ::::::::::::::::::::::::::::::::::::::::::::::  -->

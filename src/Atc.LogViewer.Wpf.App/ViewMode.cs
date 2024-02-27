@@ -4,5 +4,5 @@ public enum ViewMode
 {
     ListView,
     ChartLogLevelPie,
-    ChartLogLevelBar,
+    ChartTimeline,
 }

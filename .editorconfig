@@ -515,6 +515,7 @@ dotnet_diagnostic.CA1003.severity = none                # Change the event 'XXX'
 dotnet_diagnostic.CA1031.severity = none                # Do not catch general execptions
 dotnet_diagnostic.CA1711.severity = none                # Either replace the suffix 'Ex' in type name
 dotnet_diagnostic.CA1724.severity = none                # Type name App conflicts
+dotnet_diagnostic.CA1819.severity = none                # Properties should not return arrays
 dotnet_diagnostic.CA1848.severity = none                # Logging performance
 dotnet_diagnostic.CA2227.severity = none                # Change 'XXX' to be read-only by removing the property setter
 dotnet_diagnostic.CA2254.severity = none                # Logging performance
