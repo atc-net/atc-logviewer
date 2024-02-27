@@ -4,6 +4,9 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 {
     private readonly ILogger<MainWindowViewModel> logger;
     private readonly ILogAnalyzer logAnalyzer;
+    private readonly IGitHubReleaseService gitHubReleaseService;
+    private readonly ICheckForUpdatesBoxDialogViewModel checkForUpdatesBoxDialogViewModel;
+    private string? newVersionIsAvailable;
     private BitmapImage? icon;
     private FileInfo? profileFile;
     private bool followTail = true;
@@ -22,14 +25,20 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     public MainWindowViewModel(
         ILogger<MainWindowViewModel> logger,
         ILogAnalyzer logAnalyzer,
+        IGitHubReleaseService gitHubReleaseService,
+        ICheckForUpdatesBoxDialogViewModel checkForUpdatesBoxDialogViewModel,
         StatusBarViewModel statusBarViewModel)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(logAnalyzer);
+        ArgumentNullException.ThrowIfNull(gitHubReleaseService);
+        ArgumentNullException.ThrowIfNull(checkForUpdatesBoxDialogViewModel);
         ArgumentNullException.ThrowIfNull(statusBarViewModel);
 
         this.logger = logger;
         this.logAnalyzer = logAnalyzer;
+        this.gitHubReleaseService = gitHubReleaseService;
+        this.checkForUpdatesBoxDialogViewModel = checkForUpdatesBoxDialogViewModel;
 
         Icon = App.DefaultIcon;
 
@@ -54,6 +63,22 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
+
+        Task.Factory.StartNew(
+            async () => await CheckForUpdates().ConfigureAwait(false),
+            CancellationToken.None,
+            TaskCreationOptions.LongRunning,
+            TaskScheduler.Default);
+    }
+
+    public string? NewVersionIsAvailable
+    {
+        get => newVersionIsAvailable;
+        set
+        {
+            newVersionIsAvailable = value;
+            OnPropertyChanged();
+        }
     }
 
     public BitmapImage? Icon

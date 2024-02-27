@@ -67,6 +67,8 @@ public partial class App
                 services.AddSingleton<ISyslogFileCollector, SyslogFileCollector>();
 
                 services.AddSingleton<ILogAnalyzer, LogAnalyzer.LogAnalyzer>();
+                services.AddSingleton<IGitHubReleaseService, GitHubReleaseService>();
+                services.AddSingleton<ICheckForUpdatesBoxDialogViewModel, CheckForUpdatesBoxDialogViewModel>();
                 services.AddSingleton<StatusBarViewModel>();
                 services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();

@@ -86,6 +86,15 @@
                                 KeyTip="O" />
                             <Separator />
                             <fluent:Button
+                                Command="{Binding Path=OpenApplicationCheckForUpdatesCommand}"
+                                Header="Check for updates"
+                                Icon="{Binding Source={x:Static fontIcons:FontBootstrapType.Download}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}" />
+                            <fluent:Button
+                                Command="{Binding Path=OpenApplicationAboutCommand}"
+                                Header="About"
+                                Icon="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.InfoCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}" />
+                            <Separator />
+                            <fluent:Button
                                 Command="{Binding Path=ApplicationExitCommand}"
                                 Header="Exit"
                                 Icon="{Binding Source={x:Static fontIcons:FontAwesomeRegularType.TimesCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
@@ -234,128 +243,158 @@
 
             </fluent:Ribbon>
             <!--  ::::::::::::::::::::::::::::::::::::::::::::::  -->
-            <Grid Grid.Row="1">
-                <!--  ListView  -->
-                <atc:GridEx
-                    Columns="*"
-                    Rows="4*,5,1*"
-                    Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ListView}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Collapsed}">
-                    <ListView
-                        Grid.Row="0"
-                        AlternationCount="0"
-                        ContextMenuOpening="OnContextMenuOpening"
-                        FontFamily="Modern"
-                        ItemsSource="{Binding LogEntries}"
-                        KeyDown="OnListViewKeyDown"
-                        SelectedItem="{Binding Path=SelectedLogEntry}"
-                        SelectionMode="Single">
-                        <b:Interaction.Behaviors>
-                            <behaviors:AutoScrollListViewBehavior IsEnabled="{Binding Path=FollowTail}" ScrollDirection="Bottom" />
-                        </b:Interaction.Behaviors>
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    Width="Auto"
-                                    DisplayMemberBinding="{Binding Path=TimeStamp, StringFormat='yyyy-MM-dd HH:mm:ss.fff'}"
-                                    Header="Date/Time" />
-                                <GridViewColumn Width="Auto">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate DataType="{x:Type models:AtcLogEntryEx}">
-                                            <Ellipse
-                                                Width="16"
-                                                Height="16"
-                                                VerticalAlignment="Center"
-                                                Fill="{Binding Path=LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Width="1000" Header="Message">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate DataType="{x:Type models:AtcLogEntryEx}">
-                                            <TextBlock
-                                                Background="{Binding Path=HighlightBackground}"
-                                                Foreground="{Binding Path=HighlightForeground}"
-                                                Text="{Binding Path=MessageShort}"
-                                                TextWrapping="Wrap" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn
-                                    Width="280"
-                                    DisplayMemberBinding="{Binding Path=SourceIdentifier}"
-                                    Header="Source Identifier" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
-                    <Grid Grid.Row="2" Margin="10">
-                        <TextBlock
+            <atc:GridEx Grid.Row="1" Rows="Auto,*">
+                <StackPanel
+                    Grid.Row="0"
+                    Background="DarkOrange"
+                    Visibility="{Binding Path=NewVersionIsAvailable, Converter={StaticResource StringNullOrEmptyToVisibilityCollapsedValueConverter}}">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <atc:ImageButton Command="{Binding Path=OpenApplicationCheckForUpdatesCommand}" Content="{Binding Path=NewVersionIsAvailable, FallbackValue='New version of the installer is available'}">
+                            <atc:ImageButton.Resources>
+                                <Style TargetType="{x:Type atc:ImageButton}">
+                                    <Setter Property="Margin" Value="0,5" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type atc:ImageButton}">
+                                                <Border x:Name="Border" Background="Transparent">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Border" Property="Opacity" Value="0.5" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </atc:ImageButton.Resources>
+                        </atc:ImageButton>
+                    </StackPanel>
+                </StackPanel>
+                <Grid Grid.Row="1">
+                    <!--  ListView  -->
+                    <atc:GridEx
+                        Columns="*"
+                        Rows="4*,5,1*"
+                        Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ListView}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Collapsed}">
+                        <ListView
+                            Grid.Row="0"
+                            AlternationCount="0"
+                            ContextMenuOpening="OnContextMenuOpening"
                             FontFamily="Modern"
-                            Text="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
-                            TextWrapping="Wrap"
-                            Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=False, FallbackValue=Collapsed}" />
-                        <atc:JsonViewer
-                            BorderBrush="Transparent"
-                            Data="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
-                            ShowActionAndInformationBar="False"
-                            SuppressErrorMessages="True"
-                            Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=True, FallbackValue=Collapsed}" />
-                    </Grid>
-                </atc:GridEx>
-                <!--  ChartLogLevelPie  -->
-                <atc:GridEx
-                    Columns="*"
-                    Rows="*"
-                    Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ChartLogLevelPie}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Visible}">
-                    <atc:GridEx Columns="*,10,*" Rows="*">
-                        <wpf:PieChart
-                            Title="{Binding Path=ChartLogLevelPieViewModel.FilteredTitle}"
-                            Grid.Column="0"
-                            Series="{Binding ChartLogLevelPieViewModel.FilteredSeries}" />
-                        <wpf:PieChart
-                            Title="{Binding Path=ChartLogLevelPieViewModel.TotalTitle}"
-                            Grid.Column="2"
-                            Series="{Binding ChartLogLevelPieViewModel.TotalSeries}" />
+                            ItemsSource="{Binding LogEntries}"
+                            KeyDown="OnListViewKeyDown"
+                            SelectedItem="{Binding Path=SelectedLogEntry}"
+                            SelectionMode="Single">
+                            <b:Interaction.Behaviors>
+                                <behaviors:AutoScrollListViewBehavior IsEnabled="{Binding Path=FollowTail}" ScrollDirection="Bottom" />
+                            </b:Interaction.Behaviors>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=TimeStamp, StringFormat='yyyy-MM-dd HH:mm:ss.fff'}"
+                                        Header="Date/Time" />
+                                    <GridViewColumn Width="Auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type models:AtcLogEntryEx}">
+                                                <Ellipse
+                                                    Width="16"
+                                                    Height="16"
+                                                    VerticalAlignment="Center"
+                                                    Fill="{Binding Path=LogLevel, Converter={StaticResource LogLevelToBrushConverter}}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="1000" Header="Message">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type models:AtcLogEntryEx}">
+                                                <TextBlock
+                                                    Background="{Binding Path=HighlightBackground}"
+                                                    Foreground="{Binding Path=HighlightForeground}"
+                                                    Text="{Binding Path=MessageShort}"
+                                                    TextWrapping="Wrap" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn
+                                        Width="280"
+                                        DisplayMemberBinding="{Binding Path=SourceIdentifier}"
+                                        Header="Source Identifier" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
+                        <Grid Grid.Row="2" Margin="10">
+                            <TextBlock
+                                FontFamily="Modern"
+                                Text="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
+                                TextWrapping="Wrap"
+                                Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=False, FallbackValue=Collapsed}" />
+                            <atc:JsonViewer
+                                BorderBrush="Transparent"
+                                Data="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
+                                ShowActionAndInformationBar="False"
+                                SuppressErrorMessages="True"
+                                Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=True, FallbackValue=Collapsed}" />
+                        </Grid>
                     </atc:GridEx>
-                </atc:GridEx>
-                <!--  ChartTimeline  -->
-                <atc:GridEx
-                    Columns="*"
-                    Rows="*"
-                    Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ChartTimeline}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Visible}">
-                    <atc:GridEx Columns="*,220" Rows="*">
-                        <wpf:CartesianChart
-                            Title="{Binding Path=ChartTimelineViewModel.Title}"
-                            Grid.Column="0"
-                            Series="{Binding ChartTimelineViewModel.Series}"
-                            XAxes="{Binding ChartTimelineViewModel.XAxis}"
-                            YAxes="{Binding ChartTimelineViewModel.YAxis}" />
-                        <atc:UniformSpacingPanel
-                            Grid.Column="2"
-                            Margin="10"
-                            Orientation="Vertical"
-                            Spacing="10">
-                            <atc:LabelComboBox
-                                HideAreas="AsteriskAndInformation"
-                                Items="{Binding Path=ChartTimelineViewModel.Intervals}"
-                                LabelText="Intervals"
+                    <!--  ChartLogLevelPie  -->
+                    <atc:GridEx
+                        Columns="*"
+                        Rows="*"
+                        Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ChartLogLevelPie}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Visible}">
+                        <atc:GridEx Columns="*,10,*" Rows="*">
+                            <wpf:PieChart
+                                Title="{Binding Path=ChartLogLevelPieViewModel.FilteredTitle}"
+                                Grid.Column="0"
+                                Series="{Binding ChartLogLevelPieViewModel.FilteredSeries}" />
+                            <wpf:PieChart
+                                Title="{Binding Path=ChartLogLevelPieViewModel.TotalTitle}"
+                                Grid.Column="2"
+                                Series="{Binding ChartLogLevelPieViewModel.TotalSeries}" />
+                        </atc:GridEx>
+                    </atc:GridEx>
+                    <!--  ChartTimeline  -->
+                    <atc:GridEx
+                        Columns="*"
+                        Rows="*"
+                        Visibility="{Binding Path=ViewMode, ConverterParameter={x:Static app:ViewMode.ChartTimeline}, Converter={StaticResource ViewModeVisibilityConverter}, FallbackValue=Visible}">
+                        <atc:GridEx Columns="*,220" Rows="*">
+                            <wpf:CartesianChart
+                                Title="{Binding Path=ChartTimelineViewModel.Title}"
+                                Grid.Column="0"
+                                Series="{Binding ChartTimelineViewModel.Series}"
+                                XAxes="{Binding ChartTimelineViewModel.XAxis}"
+                                YAxes="{Binding ChartTimelineViewModel.YAxis}" />
+                            <atc:UniformSpacingPanel
+                                Grid.Column="2"
+                                Margin="10"
                                 Orientation="Vertical"
-                                SelectedKey="{Binding Path=ChartTimelineViewModel.SelectedInterval}" />
-                            <atc:GridEx Columns="*, Auto">
-                                <Button
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Center"
-                                    Command="{Binding Path=ChartTimelineViewModel.RefreshCommand}">
-                                    <Image
-                                        Width="32"
-                                        Height="32"
-                                        Source="{Binding Source={x:Static fontIcons:IcoFontType.Refresh}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Blue500}}" />
-                                </Button>
-                            </atc:GridEx>
-                        </atc:UniformSpacingPanel>
+                                Spacing="10">
+                                <atc:LabelComboBox
+                                    HideAreas="AsteriskAndInformation"
+                                    Items="{Binding Path=ChartTimelineViewModel.Intervals}"
+                                    LabelText="Intervals"
+                                    Orientation="Vertical"
+                                    SelectedKey="{Binding Path=ChartTimelineViewModel.SelectedInterval}" />
+                                <atc:GridEx Columns="*, Auto">
+                                    <Button
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Center"
+                                        Command="{Binding Path=ChartTimelineViewModel.RefreshCommand}">
+                                        <Image
+                                            Width="32"
+                                            Height="32"
+                                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Refresh}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Blue500}}" />
+                                    </Button>
+                                </atc:GridEx>
+                            </atc:UniformSpacingPanel>
+                        </atc:GridEx>
                     </atc:GridEx>
-                </atc:GridEx>
-            </Grid>
+                </Grid>
+            </atc:GridEx>
             <!--  ::::::::::::::::::::::::::::::::::::::::::::::  -->
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBarViewModel}" />
             <!--  ::::::::::::::::::::::::::::::::::::::::::::::  -->

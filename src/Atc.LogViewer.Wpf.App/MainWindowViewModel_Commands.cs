@@ -18,6 +18,10 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync OpenLogFolderCommand => new RelayCommandAsync(OpenLogFolderCommandHandler);
 
+    public IRelayCommand OpenApplicationCheckForUpdatesCommand => new RelayCommand(OpenApplicationCheckForUpdatesCommandHandler, CanOpenApplicationCheckForUpdatesCommandHandler);
+
+    public IRelayCommand OpenApplicationAboutCommand => new RelayCommand(OpenApplicationAboutCommandHandler);
+
     public IRelayCommandAsync OpenApplicationSettingsCommand => new RelayCommandAsync(OpenApplicationSettingsCommandHandler);
 
     public IRelayCommand<string> SetMessageToFilterTextCommand => new RelayCommand<string>(SetMessageToFilterTextCommandHandler);
@@ -146,6 +150,20 @@ public partial class MainWindowViewModel
             profileFile!,
             ProfileViewModel,
             CancellationToken.None);
+    }
+
+    private static bool CanOpenApplicationCheckForUpdatesCommandHandler()
+        => NetworkInformationHelper.HasConnection();
+
+    private void OpenApplicationCheckForUpdatesCommandHandler()
+        => new CheckForUpdatesBoxDialog(checkForUpdatesBoxDialogViewModel).ShowDialog();
+
+    private void OpenApplicationAboutCommandHandler()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var aboutBoxDialog = new AboutBoxDialog();
+        aboutBoxDialog.IconImage.Source = App.DefaultIcon;
+        aboutBoxDialog.ShowDialog();
     }
 
     private async Task OpenLogFolderCommandHandler()
