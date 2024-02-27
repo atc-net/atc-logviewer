@@ -19,8 +19,10 @@ public class ChartTimelineViewModel : ViewModelBase
 
         Intervals = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            { nameof(ChartTimelineMode.Latest12Hours), ChartTimelineMode.Latest12Hours.GetDescription() },
             { nameof(ChartTimelineMode.Latest60Minutes), ChartTimelineMode.Latest60Minutes.GetDescription() },
+            { nameof(ChartTimelineMode.Latest12Hours), ChartTimelineMode.Latest12Hours.GetDescription() },
+            { nameof(ChartTimelineMode.Latest24Hours), ChartTimelineMode.Latest24Hours.GetDescription() },
+            { nameof(ChartTimelineMode.Latest48Hours), ChartTimelineMode.Latest48Hours.GetDescription() },
         };
 
         SelectedInterval = Intervals.First().Key;
@@ -98,7 +100,13 @@ public class ChartTimelineViewModel : ViewModelBase
         switch (SelectedInterval)
         {
             case nameof(ChartTimelineMode.Latest12Hours):
-                PopulateSeriesLatest12Hours();
+                PopulateSeriesLatestHours(12);
+                break;
+            case nameof(ChartTimelineMode.Latest24Hours):
+                PopulateSeriesLatestHours(24);
+                break;
+            case nameof(ChartTimelineMode.Latest48Hours):
+                PopulateSeriesLatestHours(48);
                 break;
             case nameof(ChartTimelineMode.Latest60Minutes):
                 PopulateSeriesLatest60Minutes();
@@ -110,12 +118,13 @@ public class ChartTimelineViewModel : ViewModelBase
         => RefreshChart();
 
     [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
-    public void PopulateSeriesLatest12Hours()
+    public void PopulateSeriesLatestHours(
+        int latestHours)
     {
         var seriesCollection = new List<StackedColumnSeries<long>>();
 
         var groupedByHour = logEntries
-            .Where(entry => entry.TimeStamp > DateTime.Now.AddHours(-12))
+            .Where(entry => entry.TimeStamp > DateTime.Now.AddHours(-latestHours))
             .GroupBy(entry => new { entry.TimeStamp.Hour, entry.LogLevel })
             .Select(group => new
             {
@@ -126,12 +135,12 @@ public class ChartTimelineViewModel : ViewModelBase
             .ToList();
 
         var now = DateTime.Now;
-        var startHour = now.AddHours(-11).Hour;
+        var startHour = now.AddHours(-latestHours + 1).Hour;
 
         foreach (var logLevel in LogLevels)
         {
-            var values = new long[12];
-            for (var i = 0; i < 12; i++)
+            var values = new long[latestHours];
+            for (var i = 0; i < latestHours; i++)
             {
                 var targetHour = (startHour + i) % 24;
                 var count = groupedByHour.Find(x => x.Hour == targetHour && x.LogLevel == logLevel)?.Count ?? 0;
@@ -159,8 +168,8 @@ public class ChartTimelineViewModel : ViewModelBase
         // ReSharper disable once CoVariantArrayConversion
         Series = seriesCollection.ToArray();
 
-        var labels = new string[12];
-        for (var i = 0; i < 12; i++)
+        var labels = new string[latestHours];
+        for (var i = 0; i < latestHours; i++)
         {
             var hour = (startHour + i) % 24;
             labels[i] = $"{hour}:00";
