@@ -16,7 +16,7 @@ public static class ViewModelExtensions
         };
     }
 
-    public static IList<HighlightOptions> ToViewModels(
+    public static IList<HighlightOptions> ToOptions(
         this ObservableCollectionEx<HighlightViewModel> highlightsViewModels)
     {
         ArgumentNullException.ThrowIfNull(highlightsViewModels);
@@ -35,7 +35,7 @@ public static class ViewModelExtensions
         {
             DefaultLogFolder = profileViewModel.DefaultLogFolder,
             DefaultCollectorType = profileViewModel.DefaultCollectorType,
-            Highlights = profileViewModel.Highlights.ToViewModels(),
+            Highlights = profileViewModel.Highlights.ToOptions(),
         };
     }
 }
