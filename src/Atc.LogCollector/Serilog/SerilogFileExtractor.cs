@@ -84,6 +84,7 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
 
         var sb = new StringBuilder();
         sb.AppendLine(rootMessage);
+
         for (var j = 0; j < errorSubLineCount; j++)
         {
             lineNumber++;
