@@ -73,6 +73,11 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
             }
 
             var subLine = lines[lineOffset];
+            if (subLine.Length == 0)
+            {
+                continue;
+            }
+
             if (char.IsDigit(subLine[0]))
             {
                 errorSubLineCount--;
