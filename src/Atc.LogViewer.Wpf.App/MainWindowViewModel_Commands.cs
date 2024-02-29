@@ -43,59 +43,59 @@ public partial class MainWindowViewModel
 
         if (dialogResult != true)
         {
-            var data = dialogBox.Data.GetKeyValues();
+            return;
+        }
 
-            var name = data["Name"].ToString()!;
-            if (!name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-            {
-                name += ".json";
-            }
+        var data = dialogBox.Data.GetKeyValues();
 
-            var defaultLogFolder = data["DefaultLogFolder"].ToString()!;
+        var name = data["Name"].ToString()!;
+        if (!name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+        {
+            name += ".json";
+        }
 
-            if (!Enum<LogFileCollectorType>.TryParse(
-                    data["DefaultCollector"].ToString()!,
-                    ignoreCase: false,
-                    out var defaultCollectorType))
-            {
-                var warningDialogBox = DialogBoxFactory.CreateWarningOption("Default Collector - was not selected");
-                warningDialogBox.ShowDialog();
-                return;
-            }
+        var defaultLogFolder = data["DefaultLogFolder"].ToString()!;
 
-            var file = new FileInfo(Path.Combine(App.LogViewerProgramDataProfilesDirectory.FullName, name));
-            if (file.Exists)
-            {
-                var overrideDialogBox = new QuestionDialogBox(
-                    Application.Current.MainWindow!,
-                    "File exist - override it?");
+        if (!Enum<LogFileCollectorType>.TryParse(
+                data["DefaultCollector"].ToString()!,
+                ignoreCase: false,
+                out var defaultCollectorType))
+        {
+            var warningDialogBox = DialogBoxFactory.CreateWarningOption("Default Collector - was not selected");
+            warningDialogBox.ShowDialog();
+            return;
+        }
 
-                var overrideDialogResult = overrideDialogBox.ShowDialog();
-                if (overrideDialogResult != true)
-                {
-                    ProfileViewModel = new ProfileViewModel
-                    {
-                        DefaultLogFolder = defaultLogFolder,
-                        DefaultCollectorType = defaultCollectorType,
-                    };
+        var file = new FileInfo(Path.Combine(App.LogViewerProgramDataProfilesDirectory.FullName, name));
+        if (file.Exists)
+        {
+            var overrideDialogBox = new QuestionDialogBox(
+                Application.Current.MainWindow!,
+                "File exist - override it?");
 
-                    profileFile = file;
-                    await SaveProfileCommandHandler()
-                        .ConfigureAwait(continueOnCapturedContext: false);
-                }
-            }
-            else
+            var overrideDialogResult = overrideDialogBox.ShowDialog();
+            if (overrideDialogResult != true)
             {
                 ProfileViewModel = new ProfileViewModel
                 {
-                    DefaultLogFolder = defaultLogFolder,
-                    DefaultCollectorType = defaultCollectorType,
+                    DefaultLogFolder = defaultLogFolder, DefaultCollectorType = defaultCollectorType,
                 };
 
                 profileFile = file;
                 await SaveProfileCommandHandler()
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
+        }
+        else
+        {
+            ProfileViewModel = new ProfileViewModel
+            {
+                DefaultLogFolder = defaultLogFolder, DefaultCollectorType = defaultCollectorType,
+            };
+
+            profileFile = file;
+            await SaveProfileCommandHandler()
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 
@@ -120,8 +120,7 @@ public partial class MainWindowViewModel
     }
 
     private bool CanOpenLastUsedProfileCommandHandler()
-        => RecentOpenFiles is not null &&
-           RecentOpenFiles.Any();
+        => RecentOpenFiles.Any();
 
     private async Task OpenLastUsedProfileCommandHandler()
     {
