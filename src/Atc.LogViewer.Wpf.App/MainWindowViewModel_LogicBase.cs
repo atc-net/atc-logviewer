@@ -214,7 +214,8 @@ public partial class MainWindowViewModel
         long debugCount = 0;
         long traceCount = 0;
 
-        foreach (var logLevel in LogEntries.Select(x => x.LogLevel))
+        var logLevels = LogEntries.Select(x => x.LogLevel).ToList();
+        foreach (var logLevel in logLevels)
         {
             switch (logLevel)
             {

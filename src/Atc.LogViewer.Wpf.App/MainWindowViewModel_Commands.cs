@@ -215,13 +215,22 @@ public partial class MainWindowViewModel
     private bool CanClearFilterCommandHandler()
         => !string.IsNullOrEmpty(FilterText) ||
            FilterDateTimeFrom is not null ||
-           FilterDateTimeTo is not null;
+           FilterDateTimeTo is not null ||
+           !string.IsNullOrEmpty(SelectedSourceSystemKey);
 
     private void ClearFilterCommandHandler()
     {
-        FilterText = string.Empty;
-        FilterDateTimeFrom = null;
-        FilterDateTimeTo = null;
+        filterText = string.Empty;
+        filterDateTimeFrom = null;
+        filterDateTimeTo = null;
+        selectedSourceSystemKey = string.Empty;
+
+        _ = ApplyFilter();
+
+        RaisePropertyChanged(nameof(FilterText));
+        RaisePropertyChanged(nameof(FilterDateTimeFrom));
+        RaisePropertyChanged(nameof(FilterDateTimeTo));
+        RaisePropertyChanged(nameof(SelectedSourceSystemKey));
     }
 
     private bool CanEditHighlightsCommandHandler()

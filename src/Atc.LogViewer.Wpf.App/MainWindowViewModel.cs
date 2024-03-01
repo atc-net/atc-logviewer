@@ -21,7 +21,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private string filterText = string.Empty;
     private DateTime? filterDateTimeFrom;
     private DateTime? filterDateTimeTo;
-    private string selectedSourceSystemKey;
+    private string selectedSourceSystemKey = string.Empty;
 
     public MainWindowViewModel(
         ILogger<MainWindowViewModel> logger,
