@@ -149,7 +149,6 @@ public sealed class LogAnalyzer : ILogAnalyzer
     public void ClearLogEntries()
         => logEntries.Clear();
 
-    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
     private void OnCollectedEntry(
         AtcLogEntry logEntry)
     {

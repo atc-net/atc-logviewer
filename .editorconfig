@@ -511,6 +511,8 @@ dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net
 ##########################################
 [*.{cs,csx,cake}]
 
+MA0051.maximum_lines_per_method = 100
+
 dotnet_diagnostic.CA1003.severity = none           	# Change the event 'XXX' to replace the type 'YYY' with a generic EventHandler
 dotnet_diagnostic.CA1031.severity = none           	# Do not catch general execptions
 dotnet_diagnostic.CA1711.severity = none           	# Either replace the suffix 'Ex' in type name

@@ -117,7 +117,6 @@ public class ChartTimelineViewModel : ViewModelBase
     private void RefreshCommandHandler()
         => RefreshChart();
 
-    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
     public void PopulateSeriesLatestHours(
         int latestHours)
     {
@@ -185,7 +184,6 @@ public class ChartTimelineViewModel : ViewModelBase
         ];
     }
 
-    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
     public void PopulateSeriesLatest60Minutes()
     {
         var seriesCollection = new List<StackedColumnSeries<long>>();
