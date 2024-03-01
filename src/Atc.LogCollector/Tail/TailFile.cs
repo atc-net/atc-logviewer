@@ -8,17 +8,19 @@ public class TailFile : IDisposable
     private readonly object syncLock = new();
     private readonly FileInfo file;
     private readonly FileSystemWatcher? fileWatcher;
-    private Thread? fileReadThread;
     private long lastMaxOffset;
+    private long numberOfLines;
     private bool isPaused = true;
     private bool isRunning;
 
     public TailFile(
-        FileInfo file)
+        FileInfo file,
+        long lastLineNumber = 0)
     {
         ArgumentNullException.ThrowIfNull(file);
 
         this.file = file;
+        numberOfLines = lastLineNumber;
 
         fileWatcher = new FileSystemWatcher(file.Directory!.FullName)
         {
@@ -46,8 +48,6 @@ public class TailFile : IDisposable
         fileWatcher.EnableRaisingEvents = true;
         isRunning = true;
         isPaused = false;
-        fileReadThread = new Thread(ReadFileChanges);
-        fileReadThread.Start();
     }
 
     public void Stop()
@@ -59,7 +59,6 @@ public class TailFile : IDisposable
 
         isRunning = false;
         fileWatcher.EnableRaisingEvents = false;
-        fileReadThread?.Join();
     }
 
     public void Pause()
@@ -100,7 +99,7 @@ public class TailFile : IDisposable
             return;
         }
 
-        ReadFileChanges();
+        ReadFileChanges(e.ChangeType);
     }
 
     private void OnDeletedOrRenamed(
@@ -113,7 +112,8 @@ public class TailFile : IDisposable
         }
     }
 
-    private void ReadFileChanges()
+    private void ReadFileChanges(
+        WatcherChangeTypes changeType)
     {
         while (isRunning && !isPaused)
         {
@@ -139,7 +139,27 @@ public class TailFile : IDisposable
 
                     while (sr.ReadLine() is { } line)
                     {
-                        LineAdded?.Invoke(new TailLine(file, line));
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            if (!sr.EndOfStream)
+                            {
+                                numberOfLines++;
+                            }
+
+                            // Enter is received as an empty line
+                            continue;
+                        }
+
+                        if (changeType == WatcherChangeTypes.Created)
+                        {
+                            numberOfLines = 0;
+                        }
+                        else
+                        {
+                            numberOfLines++;
+                        }
+
+                        LineAdded?.Invoke(new TailLine(file, numberOfLines, line));
                     }
 
                     lock (syncLock)

@@ -377,6 +377,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         return new AtcLogEntryEx(
             logEntry.SourceIdentifier,
+            logEntry.LineNumber,
             logEntry.TimeStamp,
             logEntry.LogLevel,
             logEntry.MessageShort,

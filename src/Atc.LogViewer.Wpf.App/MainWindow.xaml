@@ -331,7 +331,15 @@
                             </ListView.View>
                         </ListView>
                         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
-                        <Grid Grid.Row="2" Margin="10">
+                        <atc:UniformSpacingPanel
+                            Grid.Row="2"
+                            Margin="10"
+                            Orientation="Vertical"
+                            Spacing="10">
+                            <atc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock FontFamily="Modern" Text="LineNumber:" />
+                                <TextBlock FontFamily="Modern" Text="{Binding Path=SelectedLogEntry.LineNumber, FallbackValue=''}" />
+                            </atc:UniformSpacingPanel>
                             <TextBlock
                                 FontFamily="Modern"
                                 Text="{Binding Path=SelectedLogEntry.MessageFull, FallbackValue=''}"
@@ -343,7 +351,7 @@
                                 ShowActionAndInformationBar="False"
                                 SuppressErrorMessages="True"
                                 Visibility="{Binding Path=SelectedLogEntry.MessageFull, Converter={StaticResource JsonFormatVisibilityConverter}, ConverterParameter=True, FallbackValue=Collapsed}" />
-                        </Grid>
+                        </atc:UniformSpacingPanel>
                     </atc:GridEx>
                     <!--  ChartLogLevelPie  -->
                     <atc:GridEx

@@ -54,33 +54,22 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             options,
             async (file, _) =>
         {
-            var foundValidLogEntries = await ReadAndParseLines(
-                file,
-                cancellationToken)
+            var (isSuccessFul, lastLineNumber) = await ReadAndParseLines(
+                    file,
+                    cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            if (!foundValidLogEntries)
+            if (!isSuccessFul)
             {
                 return;
             }
 
             CollectedFileDone?.Invoke(file);
 
-            if (!DateTime.Now.ToShortDateString().Equals(
-                    file.CreationTime.ToShortDateString(),
-                    StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            var tailFile = new TailFile(file);
-            tailFile.LineAdded += OnLineAdded;
-            tailFile.Start();
-
-            MonitoredFiles.TryAdd(file.FullName, tailFile);
+            StartTailIfNeeded(file, lastLineNumber);
         }).ConfigureAwait(continueOnCapturedContext: false);
 
-        CollectedFilesDone?.Invoke(files.ToArray());
+        CollectedFilesDone?.Invoke([.. files]);
     }
 
     public void MonitorFolder(
@@ -112,7 +101,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
                 continue;
             }
 
-            var tailFile = new TailFile(file);
+            var tailFile = new TailFile(file); // TODO: lastLineNumber
             tailFile.LineAdded += OnLineAdded;
             tailFile.Start();
 
@@ -165,7 +154,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         TailLine obj)
     {
         var sourceIdentifier = Path.GetFileNameWithoutExtension(obj.File.FullName);
-        var logEntry = serilogFileExtractor.ParseRootLine(sourceIdentifier, obj.Line);
+        var logEntry = serilogFileExtractor.ParseRootLine(sourceIdentifier, obj.LineNumber, obj.Line);
 
         // TODO: Handle subLines
         if (logEntry is not null)
@@ -174,7 +163,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         }
     }
 
-    private async Task<bool> ReadAndParseLines(
+    private async Task<(bool IsSuccessFul, long LastLineNumber)> ReadAndParseLines(
         FileInfo file,
         CancellationToken cancellationToken)
     {
@@ -185,7 +174,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
         if (lines.Length == 0)
         {
-            return false;
+            return (false, 0);
         }
 
         var extractor = new SerilogFileExtractor();
@@ -195,7 +184,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         for (var lineNumber = 0; lineNumber < lines.Length; lineNumber++)
         {
             var line = lines[lineNumber];
-            var logEntry = extractor.ParseRootLine(sourceIdentifier, line);
+            var logEntry = extractor.ParseRootLine(sourceIdentifier, lineNumber + 1, line);
             if (logEntry is null)
             {
                 continue;
@@ -226,6 +215,29 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             hasAnyValidLines = true;
         }
 
-        return hasAnyValidLines;
+        var numberOfLines = lines.Length;
+        if (numberOfLines > 0 &&
+            string.IsNullOrEmpty(lines[^1]))
+        {
+            numberOfLines--;
+        }
+
+        return (hasAnyValidLines, numberOfLines);
+    }
+
+    private void StartTailIfNeeded(
+        FileInfo fileInfo,
+        long lastLineNumber)
+    {
+        if (!fileInfo.IsCreatedToday())
+        {
+            return;
+        }
+
+        var tailFile = new TailFile(fileInfo, lastLineNumber);
+        tailFile.LineAdded += OnLineAdded;
+        tailFile.Start();
+
+        MonitoredFiles.TryAdd(fileInfo.FullName, tailFile);
     }
 }

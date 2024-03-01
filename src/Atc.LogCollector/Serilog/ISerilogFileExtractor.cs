@@ -4,6 +4,7 @@ public interface ISerilogFileExtractor
 {
     AtcLogEntry? ParseRootLine(
         string sourceIdentifier,
+        long lineNumber,
         string line);
 
     bool HasSubLines(
