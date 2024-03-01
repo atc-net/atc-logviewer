@@ -9,4 +9,5 @@ public record LogFilter(
     bool LogLevelCritical,
     string IncludeText,
     DateTime? DateTimeFrom,
-    DateTime? DateTimeTo);
+    DateTime? DateTimeTo,
+    string SourceSystem);

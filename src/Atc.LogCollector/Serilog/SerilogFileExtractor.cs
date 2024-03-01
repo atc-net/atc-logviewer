@@ -4,6 +4,7 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
 {
     public AtcLogEntry? ParseRootLine(
         string sourceIdentifier,
+        string sourceSystem,
         long lineNumber,
         string line)
     {
@@ -34,6 +35,7 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
 
             return new AtcLogEntry(
                 sourceIdentifier,
+                sourceSystem,
                 lineNumber,
                 dateTime,
                 logLevel,

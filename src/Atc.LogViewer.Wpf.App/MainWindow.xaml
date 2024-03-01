@@ -184,6 +184,12 @@
                                         LabelWidthSizeDefinition="Pixel"
                                         SelectedDate="{Binding Path=FilterDateTimeTo, Mode=TwoWay}" />
                                 </atc:UniformSpacingPanel>
+                                <atc:LabelComboBox
+                                    HideAreas="All"
+                                    Items="{Binding Path=SourceSystems}"
+                                    LabelText="SourceSystem"
+                                    Orientation="Vertical"
+                                    SelectedKey="{Binding Path=SelectedSourceSystemKey}" />
                                 <fluent:Button
                                     Command="{Binding Path=ClearFilterCommand}"
                                     Header="Clear"
@@ -254,7 +260,7 @@
                     Background="DarkOrange"
                     Visibility="{Binding Path=NewVersionIsAvailable, Converter={StaticResource StringNullOrEmptyToVisibilityCollapsedValueConverter}}">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <atc:ImageButton Command="{Binding Path=OpenApplicationCheckForUpdatesCommand}" Content="{Binding Path=NewVersionIsAvailable, FallbackValue='New version of the installer is available'}">
+                        <atc:ImageButton Command="{Binding Path=OpenApplicationCheckForUpdatesCommand}" Content="{Binding Path=NewVersionIsAvailable, FallbackValue='New version of LogViewer is available'}">
                             <atc:ImageButton.Resources>
                                 <Style TargetType="{x:Type atc:ImageButton}">
                                     <Setter Property="Margin" Value="0,5" />

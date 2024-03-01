@@ -21,6 +21,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private string filterText = string.Empty;
     private DateTime? filterDateTimeFrom;
     private DateTime? filterDateTimeTo;
+    private string selectedSourceSystemKey;
 
     public MainWindowViewModel(
         ILogger<MainWindowViewModel> logger,
@@ -59,7 +60,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 IsCriticalEnabled,
                 FilterText,
                 FilterDateTimeFrom,
-                FilterDateTimeTo));
+                FilterDateTimeTo,
+                SelectedSourceSystemKey));
 
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
@@ -99,9 +101,22 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
     public StatusBarViewModel StatusBarViewModel { get; set; }
 
-    public ObservableCollectionEx<RecentOpenFileViewModel> RecentOpenFiles { get; } = new();
+    public ObservableCollectionEx<RecentOpenFileViewModel> RecentOpenFiles { get; } = [];
 
-    public ObservableCollectionEx<AtcLogEntryEx> LogEntries { get; } = new();
+    public ObservableCollectionEx<AtcLogEntryEx> LogEntries { get; } = [];
+
+    public IDictionary<string, string> SourceSystems { get; private set; } = new Dictionary<string, string>(StringComparer.Ordinal);
+
+    public string SelectedSourceSystemKey
+    {
+        get => selectedSourceSystemKey;
+        set
+        {
+            selectedSourceSystemKey = value;
+            RaisePropertyChanged();
+            _ = ApplyFilter();
+        }
+    }
 
     public AtcLogEntryEx? SelectedLogEntry
     {
@@ -289,6 +304,16 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     {
         var data = GetLogEntryEx(logEntry);
 
+        if (!SourceSystems.ContainsKey(data.SourceSystem))
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SourceSystems.Clear();
+                SourceSystems = logAnalyzer.GetSourceSystems();
+                RaisePropertyChanged(nameof(SourceSystems));
+            });
+        }
+
         Application.Current.Dispatcher.Invoke(() =>
         {
             LogEntries.Add(data);
@@ -311,6 +336,10 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             LogEntries.AddRange(data);
 
             LogEntries.SuppressOnChangedNotification = false;
+
+            SourceSystems.Clear();
+            SourceSystems = logAnalyzer.GetSourceSystems();
+            RaisePropertyChanged(nameof(SourceSystems));
         });
 
         CountLogEntriesStatsAndSend();
@@ -331,7 +360,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 IsCriticalEnabled,
                 FilterText,
                 FilterDateTimeFrom,
-                FilterDateTimeTo));
+                FilterDateTimeTo,
+                SelectedSourceSystemKey));
 
         var filteredEntries = logAnalyzer.GetFilteredLogEntries();
 
@@ -377,6 +407,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         return new AtcLogEntryEx(
             logEntry.SourceIdentifier,
+            logEntry.SourceSystem,
             logEntry.LineNumber,
             logEntry.TimeStamp,
             logEntry.LogLevel,

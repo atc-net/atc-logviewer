@@ -33,7 +33,7 @@ public partial class MainWindowViewModel
             Version.TryParse(latestVersion.ToString(), out var lv) &&
             lv.GreaterThan(cv))
         {
-            NewVersionIsAvailable = "New version of the LogViewer is available";
+            NewVersionIsAvailable = "New version of LogViewer is available";
         }
     }
 

@@ -15,6 +15,8 @@ public interface ILogAnalyzer
     public void SetFilter(
         LogFilter filter);
 
+    public IDictionary<string, string> GetSourceSystems();
+
     AtcLogEntry[] GetFilteredLogEntries();
 
     LogStatistics GetLogStatistics();

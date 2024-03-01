@@ -9,8 +9,8 @@ public sealed class LogAnalyzer : ILogAnalyzer
     private readonly INLogFileCollector nlogFileCollector;
     private readonly ISerilogFileCollector serilogFileCollector;
     private readonly ISyslogFileCollector syslogFileCollector;
-    private readonly ConcurrentBag<AtcLogEntry> logEntries = new();
-    private readonly ConcurrentBag<AtcLogEntry> logEntryBuffer = new();
+    private readonly ConcurrentBag<AtcLogEntry> logEntries = [];
+    private readonly ConcurrentBag<AtcLogEntry> logEntryBuffer = [];
     private int logEntryBufferSize = 1;
     private LogFilter logFilter;
 
@@ -39,7 +39,8 @@ public sealed class LogAnalyzer : ILogAnalyzer
             LogLevelCritical: true,
             IncludeText: string.Empty,
             DateTimeFrom: null,
-            DateTimeTo: null);
+            DateTimeTo: null,
+            SourceSystem: string.Empty);
 
         this.log4NetFileCollector.CollectedEntry += OnCollectedEntry;
         this.log4NetFileCollector.CollectedFileDone += OnCollectedFileDone;
@@ -115,6 +116,21 @@ public sealed class LogAnalyzer : ILogAnalyzer
         logFilter = filter;
     }
 
+    public IDictionary<string, string> GetSourceSystems()
+    {
+        var sourceSystems = logEntries
+            .GroupBy(x => x.SourceSystem, StringComparer.Ordinal)
+            .Select(x => x.Key)
+            .ToList();
+
+        sourceSystems = DropDownFirstItemTypeHelper.EnsureFirstItemType(sourceSystems, DropDownFirstItemType.Blank);
+
+        return sourceSystems.ToDictionary(
+            x => x,
+            x => x,
+            StringComparer.Ordinal);
+    }
+
     public AtcLogEntry[] GetFilteredLogEntries()
         => logEntries
             .Where(
@@ -130,7 +146,10 @@ public sealed class LogAnalyzer : ILogAnalyzer
                          (!logFilter.DateTimeTo.HasValue || entry.TimeStamp <= logFilter.DateTimeTo.Value)
                          &&
                          (logFilter.IncludeText.Length == 0 ||
-                          entry.MessageFull.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase)))
+                          entry.MessageFull.Contains(logFilter.IncludeText, StringComparison.OrdinalIgnoreCase))
+                         &&
+                         (logFilter.SourceSystem.Length == 0 ||
+                          entry.SourceSystem.Equals(logFilter.SourceSystem, StringComparison.Ordinal)))
             .OrderBy(x => x.TimeStamp)
             .ToArray();
 

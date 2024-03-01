@@ -154,7 +154,13 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         TailLine obj)
     {
         var sourceIdentifier = Path.GetFileNameWithoutExtension(obj.File.FullName);
-        var logEntry = serilogFileExtractor.ParseRootLine(sourceIdentifier, obj.LineNumber, obj.Line);
+        var sourceSystem = GetSourceSystemFromSourceIdentifier(sourceIdentifier);
+
+        var logEntry = serilogFileExtractor.ParseRootLine(
+            sourceIdentifier,
+            sourceSystem,
+            obj.LineNumber,
+            obj.Line);
 
         // TODO: Handle subLines
         if (logEntry is not null)
@@ -180,11 +186,12 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         var extractor = new SerilogFileExtractor();
 
         var sourceIdentifier = Path.GetFileNameWithoutExtension(file.FullName);
+        var sourceSystem = GetSourceSystemFromSourceIdentifier(sourceIdentifier);
         var hasAnyValidLines = false;
         for (var lineNumber = 0; lineNumber < lines.Length; lineNumber++)
         {
             var line = lines[lineNumber];
-            var logEntry = extractor.ParseRootLine(sourceIdentifier, lineNumber + 1, line);
+            var logEntry = extractor.ParseRootLine(sourceIdentifier, sourceSystem, lineNumber + 1, line);
             if (logEntry is null)
             {
                 continue;
