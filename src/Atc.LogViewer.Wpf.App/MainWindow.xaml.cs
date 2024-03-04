@@ -110,6 +110,22 @@ public partial class MainWindow
         contextMenu.Items.Add(
             new MenuItem
             {
+                Header = "Filter on item timestamp - from",
+                Command = viewModel.SetMessageToFilterFromCommand,
+                CommandParameter = item.TimeStamp,
+            });
+
+        contextMenu.Items.Add(
+            new MenuItem
+            {
+                Header = "Filter on item timestamp - to",
+                Command = viewModel.SetMessageToFilterToCommand,
+                CommandParameter = item.TimeStamp,
+            });
+
+        contextMenu.Items.Add(
+            new MenuItem
+            {
                 Header = "Copy to Clipboard",
                 Command = viewModel.CopyMessageToClipboardCommand,
                 CommandParameter = item.MessageShort,

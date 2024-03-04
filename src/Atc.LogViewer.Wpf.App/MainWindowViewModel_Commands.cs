@@ -26,6 +26,10 @@ public partial class MainWindowViewModel
 
     public IRelayCommand<string> SetMessageToFilterTextCommand => new RelayCommand<string>(SetMessageToFilterTextCommandHandler);
 
+    public IRelayCommand<DateTime> SetMessageToFilterFromCommand => new RelayCommand<DateTime>(SetMessageToFilterFromCommandHandler);
+
+    public IRelayCommand<DateTime> SetMessageToFilterToCommand => new RelayCommand<DateTime>(SetMessageToFilterToCommandHandler);
+
     public IRelayCommand<string> CopyMessageToClipboardCommand => new RelayCommand<string>(CopyMessageToClipboardCommandHandler);
 
     public IRelayCommand ClearFilterTextCommand => new RelayCommand(ClearFilterTextCommandHandler, CanClearFilterTextCommandHandler);
@@ -196,6 +200,14 @@ public partial class MainWindowViewModel
     private void SetMessageToFilterTextCommandHandler(
         string obj)
         => FilterText = obj;
+
+    private void SetMessageToFilterFromCommandHandler(
+        DateTime obj)
+        => FilterDateTimeFrom = obj;
+
+    private void SetMessageToFilterToCommandHandler(
+        DateTime obj)
+        => FilterDateTimeTo = obj;
 
     private void CopyMessageToClipboardCommandHandler(
         string obj)
