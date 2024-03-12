@@ -91,6 +91,10 @@
                                 KeyTip="O" />
                             <Separator />
                             <fluent:Button
+                                Command="{Binding Path=OpenApplicationSettingsCommand}"
+                                Header="Application settings"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.UiSettings}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}" />
+                            <fluent:Button
                                 Command="{Binding Path=OpenApplicationCheckForUpdatesCommand}"
                                 Header="Check for updates"
                                 Icon="{Binding Source={x:Static fontIcons:FontBootstrapType.Download}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}" />

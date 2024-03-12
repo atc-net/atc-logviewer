@@ -137,11 +137,9 @@ public partial class MainWindowViewModel
             var defaultDirectory = new DirectoryInfo(ProfileViewModel.DefaultLogFolder);
             if (defaultDirectory.Exists)
             {
-                var logFileCollectorConfig = new LogFileCollectorConfig();
-
                 await LoadLogFolder(
                     defaultDirectory,
-                    logFileCollectorConfig,
+                    ProfileViewModel.LogFileCollectorConfigViewModel.LogFileCollectorConfig,
                     cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }

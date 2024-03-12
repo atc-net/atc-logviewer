@@ -18,11 +18,11 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync OpenLogFolderCommand => new RelayCommandAsync(OpenLogFolderCommandHandler);
 
+    public IRelayCommand OpenApplicationSettingsCommand => new RelayCommand(OpenApplicationSettingsCommandHandler);
+
     public IRelayCommand OpenApplicationCheckForUpdatesCommand => new RelayCommand(OpenApplicationCheckForUpdatesCommandHandler, CanOpenApplicationCheckForUpdatesCommandHandler);
 
     public IRelayCommand OpenApplicationAboutCommand => new RelayCommand(OpenApplicationAboutCommandHandler);
-
-    public IRelayCommandAsync OpenApplicationSettingsCommand => new RelayCommandAsync(OpenApplicationSettingsCommandHandler);
 
     public IRelayCommand<string> SetMessageToFilterTextCommand => new RelayCommand<string>(SetMessageToFilterTextCommandHandler);
 
@@ -155,6 +155,21 @@ public partial class MainWindowViewModel
             CancellationToken.None);
     }
 
+    private void OpenApplicationSettingsCommandHandler()
+    {
+        var vm = new ApplicationSettingsDialogViewModel(ApplicationOptions);
+        var dialogResult = new ApplicationSettingsDialog(vm).ShowDialog();
+        if (!dialogResult.HasValue)
+        {
+            return;
+        }
+
+        if (dialogResult.Value)
+        {
+            ApplicationOptions = vm.ApplicationOptions.Clone();
+        }
+    }
+
     private static bool CanOpenApplicationCheckForUpdatesCommandHandler()
         => NetworkInformationHelper.HasConnection();
 
@@ -183,18 +198,11 @@ public partial class MainWindowViewModel
             return;
         }
 
-        var logFileCollectorConfig = new LogFileCollectorConfig();
-
         await LoadLogFolder(
             new DirectoryInfo(openFolderDialog.FolderName),
-            logFileCollectorConfig,
+            ProfileViewModel.LogFileCollectorConfigViewModel.LogFileCollectorConfig,
             CancellationToken.None)
             .ConfigureAwait(true);
-    }
-
-    private Task OpenApplicationSettingsCommandHandler()
-    {
-        throw new NotImplementedException();
     }
 
     private void SetMessageToFilterTextCommandHandler(

@@ -6,5 +6,7 @@ public class ProfileViewModel : ViewModelBase
 
     public LogFileCollectorType DefaultCollectorType { get; set; }
 
+    public LogFileCollectorConfigViewModel LogFileCollectorConfigViewModel { get; set; } = new();
+
     public ObservableCollectionEx<HighlightViewModel> Highlights { get; set; } = new();
 }

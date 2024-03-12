@@ -1,6 +1,4 @@
-﻿using Atc.Wpf.Theming.Themes.Dialogs;
-
-namespace Atc.LogViewer.Wpf.App.Dialogs;
+﻿namespace Atc.LogViewer.Wpf.App.Dialogs;
 
 public class CheckForUpdatesBoxDialogViewModel : ViewModelBase, ICheckForUpdatesBoxDialogViewModel, IDisposable
 {

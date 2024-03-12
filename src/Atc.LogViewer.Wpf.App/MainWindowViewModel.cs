@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 namespace Atc.LogViewer.Wpf.App;
 
 public partial class MainWindowViewModel : MainWindowViewModelBase
@@ -28,13 +30,15 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         ILogAnalyzer logAnalyzer,
         IGitHubReleaseService gitHubReleaseService,
         ICheckForUpdatesBoxDialogViewModel checkForUpdatesBoxDialogViewModel,
-        StatusBarViewModel statusBarViewModel)
+        StatusBarViewModel statusBarViewModel,
+        IOptions<ApplicationOptions> applicationOptions)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(logAnalyzer);
         ArgumentNullException.ThrowIfNull(gitHubReleaseService);
         ArgumentNullException.ThrowIfNull(checkForUpdatesBoxDialogViewModel);
         ArgumentNullException.ThrowIfNull(statusBarViewModel);
+        ArgumentNullException.ThrowIfNull(applicationOptions);
 
         this.logger = logger;
         this.logAnalyzer = logAnalyzer;
@@ -43,6 +47,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         Icon = App.DefaultIcon;
 
+        ApplicationOptions = new ApplicationOptionsViewModel(applicationOptions.Value);
         ProfileViewModel = new ProfileViewModel();
         ChartLogLevelPieViewModel = new ChartLogLevelPieViewModel();
         ChartTimelineViewModel = new ChartTimelineViewModel(LogEntries);
@@ -65,6 +70,12 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
+
+        if (ApplicationOptions.OpenRecentProfileFileOnStartup &&
+            RecentOpenFiles.Count > 0)
+        {
+            OpenLastUsedProfileCommand.ExecuteAsync(parameter: null);
+        }
 
         Task.Factory.StartNew(
             async () => await CheckForUpdates().ConfigureAwait(false),
@@ -92,6 +103,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             RaisePropertyChanged();
         }
     }
+
+    public ApplicationOptionsViewModel ApplicationOptions { get; set; }
 
     public ProfileViewModel ProfileViewModel { get; set; }
 

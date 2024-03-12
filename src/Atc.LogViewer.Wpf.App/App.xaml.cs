@@ -35,6 +35,8 @@ public partial class App
     /// </summary>
     public App()
     {
+        RestoreInstallerCustomAppSettingsIfNeeded();
+
         host = Host.CreateDefaultBuilder()
             .ConfigureLogging((_, logging) =>
             {
@@ -48,12 +50,19 @@ public partial class App
                 {
                     configuration = configurationBuilder
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .AddJsonFile(Constants.AppSettingsFileName, optional: false, reloadOnChange: true)
+                        .AddJsonFile(Constants.CustomAppSettingsFileName, optional: true, reloadOnChange: true)
                         .AddEnvironmentVariables()
                         .Build();
                 })
             .ConfigureServices((_, services) =>
             {
+                services
+                    .AddOptions<ApplicationOptions>()
+                    .Bind(configuration!.GetRequiredSection(ApplicationOptions.SectionName))
+                    .ValidateDataAnnotations()
+                    .ValidateOnStart();
+
                 services.AddSingleton<ILog4NetFileExtractor, Log4NetFileExtractor>();
                 services.AddSingleton<ILog4NetFileCollector, Log4NetFileCollector>();
 
@@ -212,5 +221,19 @@ public partial class App
         host.Dispose();
 
         logger.LogInformation("App closed");
+    }
+
+    private static void RestoreInstallerCustomAppSettingsIfNeeded()
+    {
+        var currentFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.CustomAppSettingsFileName));
+        var backupFile = new FileInfo(Path.Combine(LogViewerCommonApplicationDataDirectory.FullName, Constants.CustomAppSettingsFileName));
+        if (!currentFile.Exists ||
+            !backupFile.Exists ||
+            currentFile.LastWriteTime == backupFile.LastWriteTime)
+        {
+            return;
+        }
+
+        File.Copy(backupFile.FullName, currentFile.FullName, overwrite: true);
     }
 }
