@@ -1,4 +1,6 @@
-using Microsoft.Extensions.Options;
+using Atc.Wpf.Controls.SettingsControls;
+using Atc.Wpf.Theming;
+using Atc.Wpf.Theming.Helpers;
 
 namespace Atc.LogViewer.Wpf.App;
 
@@ -31,7 +33,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         IGitHubReleaseService gitHubReleaseService,
         ICheckForUpdatesBoxDialogViewModel checkForUpdatesBoxDialogViewModel,
         StatusBarViewModel statusBarViewModel,
-        IOptions<ApplicationOptions> applicationOptions)
+        IOptions<BasicApplicationOptions> applicationOptions)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(logAnalyzer);
@@ -47,7 +49,11 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         Icon = App.DefaultIcon;
 
-        ApplicationOptions = new ApplicationOptionsViewModel(applicationOptions.Value);
+        ApplicationOptions = new BasicApplicationSettingsViewModel(applicationOptions.Value)
+        {
+            ShowLanguage = false,
+        };
+
         ProfileViewModel = new ProfileViewModel();
         ChartLogLevelPieViewModel = new ChartLogLevelPieViewModel();
         ChartTimelineViewModel = new ChartTimelineViewModel(LogEntries);
@@ -71,7 +77,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         this.logAnalyzer.CollectedEntry += OnCollectedEntry;
         this.logAnalyzer.CollectedEntries += OnCollectedEntries;
 
-        if (ApplicationOptions.OpenRecentProfileFileOnStartup &&
+        if (ApplicationOptions.OpenRecentFileOnStartup &&
             RecentOpenFiles.Count > 0)
         {
             OpenLastUsedProfileCommand.ExecuteAsync(parameter: null);
@@ -104,7 +110,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         }
     }
 
-    public ApplicationOptionsViewModel ApplicationOptions { get; set; }
+    public BasicApplicationSettingsViewModel ApplicationOptions { get; set; }
 
     public ProfileViewModel ProfileViewModel { get; set; }
 
@@ -315,9 +321,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private void OnCollectedEntry(
         AtcLogEntry logEntry)
     {
-        var data = GetLogEntryEx(logEntry);
-
-        if (!SourceSystems.ContainsKey(data.SourceSystem))
+        if (!SourceSystems.ContainsKey(logEntry.SourceSystem))
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -329,7 +333,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
 
         Application.Current.Dispatcher.Invoke(() =>
         {
-            LogEntries.Add(data);
+            LogEntries.Add(GetLogEntryEx(logEntry));
         });
 
         CountLogEntriesStatsAndSend();
@@ -338,12 +342,12 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private void OnCollectedEntries(
         AtcLogEntry[] logEntries)
     {
-        var data = logEntries
-            .Select(GetLogEntryEx)
-            .ToList();
-
         Application.Current.Dispatcher.Invoke(() =>
         {
+            var data = logEntries
+                .Select(GetLogEntryEx)
+                .ToList();
+
             LogEntries.SuppressOnChangedNotification = true;
 
             LogEntries.AddRange(data);
@@ -397,7 +401,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private AtcLogEntryEx GetLogEntryEx(
         AtcLogEntry logEntry)
     {
-        var foreground = Brushes.White;
+        var foreground = ThemeManagerHelper.GetBrushByResourceKey(AtcAppsBrushKeyType.ThemeForeground);
         var background = Brushes.Transparent;
 
         foreach (var highlight in ProfileViewModel.Highlights)

@@ -82,7 +82,8 @@ public partial class MainWindowViewModel
             {
                 ProfileViewModel = new ProfileViewModel
                 {
-                    DefaultLogFolder = defaultLogFolder, DefaultCollectorType = defaultCollectorType,
+                    DefaultLogFolder = defaultLogFolder,
+                    DefaultCollectorType = defaultCollectorType,
                 };
 
                 profileFile = file;
@@ -94,7 +95,8 @@ public partial class MainWindowViewModel
         {
             ProfileViewModel = new ProfileViewModel
             {
-                DefaultLogFolder = defaultLogFolder, DefaultCollectorType = defaultCollectorType,
+                DefaultLogFolder = defaultLogFolder,
+                DefaultCollectorType = defaultCollectorType,
             };
 
             profileFile = file;
@@ -157,17 +159,23 @@ public partial class MainWindowViewModel
 
     private void OpenApplicationSettingsCommandHandler()
     {
-        var vm = new ApplicationSettingsDialogViewModel(ApplicationOptions);
-        var dialogResult = new ApplicationSettingsDialog(vm).ShowDialog();
-        if (!dialogResult.HasValue)
+        var dialogBox = new BasicApplicationSettingsDialogBox
+        {
+            DataContext = new BasicApplicationSettingsDialogBoxViewModel(ApplicationOptions),
+        };
+
+        var dialogResult = dialogBox.ShowDialog();
+        if (!dialogResult.HasValue ||
+            !dialogResult.Value ||
+            dialogBox.DataContext is not BasicApplicationSettingsDialogBoxViewModel vm)
         {
             return;
         }
 
-        if (dialogResult.Value)
-        {
-            ApplicationOptions = vm.ApplicationOptions.Clone();
-        }
+        ApplicationOptions = vm.ApplicationSettings.Clone();
+        var applicationOptionsAsJson = vm.ToJson();
+        var customAppSettingsFile = new FileInfo(Path.Combine(App.LogViewerCommonApplicationDataDirectory.FullName, AtcFileNameConstants.AppSettingsCustom));
+        FileHelper.WriteAllText(customAppSettingsFile, applicationOptionsAsJson);
     }
 
     private static bool CanOpenApplicationCheckForUpdatesCommandHandler()

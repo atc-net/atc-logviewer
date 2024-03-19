@@ -326,6 +326,7 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate DataType="{x:Type models:AtcLogEntryEx}">
                                                 <TextBlock
+                                                    Padding="5"
                                                     Background="{Binding Path=HighlightBackground}"
                                                     Foreground="{Binding Path=HighlightForeground}"
                                                     Text="{Binding Path=MessageShort}"

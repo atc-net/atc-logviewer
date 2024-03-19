@@ -1,4 +1,6 @@
 // ReSharper disable NotAccessedField.Local
+using Atc.Wpf.Theming.Helpers;
+
 namespace Atc.LogViewer.Wpf.App;
 
 /// <summary>
@@ -50,16 +52,16 @@ public partial class App
                 {
                     configuration = configurationBuilder
                         .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile(Constants.AppSettingsFileName, optional: false, reloadOnChange: true)
-                        .AddJsonFile(Constants.CustomAppSettingsFileName, optional: true, reloadOnChange: true)
+                        .AddJsonFile(AtcFileNameConstants.AppSettings, optional: false, reloadOnChange: true)
+                        .AddJsonFile(AtcFileNameConstants.AppSettingsCustom, optional: true, reloadOnChange: true)
                         .AddEnvironmentVariables()
                         .Build();
                 })
             .ConfigureServices((_, services) =>
             {
                 services
-                    .AddOptions<ApplicationOptions>()
-                    .Bind(configuration!.GetRequiredSection(ApplicationOptions.SectionName))
+                    .AddOptions<BasicApplicationOptions>()
+                    .Bind(configuration!.GetRequiredSection(BasicApplicationOptions.SectionName))
                     .ValidateDataAnnotations()
                     .ValidateOnStart();
 
@@ -174,20 +176,14 @@ public partial class App
             .StartAsync()
             .ConfigureAwait(continueOnCapturedContext: false);
 
-        var applicationOptions = new ApplicationOptions();
+        var applicationOptions = new BasicApplicationOptions();
         configuration!
-            .GetRequiredSection(ApplicationOptions.SectionName)
+            .GetRequiredSection(BasicApplicationOptions.SectionName)
             .Bind(applicationOptions);
 
-        CultureManager.SetCultures(
-            GlobalizationConstants.EnglishCultureInfo,
-            GlobalizationConstants.EnglishCultureInfo);
+        CultureManager.SetCultures("en-US");
 
-        var theme = string.IsNullOrEmpty(applicationOptions.Theme)
-            ? "Light.Steel"
-            : applicationOptions.Theme;
-
-        ThemeManager.Current.ChangeTheme(Current, theme);
+        ThemeManagerHelper.SetThemeAndAccent(Current, applicationOptions.Theme);
 
         if (!Directory.Exists(LogViewerCommonApplicationDataDirectory.FullName))
         {
@@ -225,8 +221,8 @@ public partial class App
 
     private static void RestoreInstallerCustomAppSettingsIfNeeded()
     {
-        var currentFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.CustomAppSettingsFileName));
-        var backupFile = new FileInfo(Path.Combine(LogViewerCommonApplicationDataDirectory.FullName, Constants.CustomAppSettingsFileName));
+        var currentFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, AtcFileNameConstants.AppSettingsCustom));
+        var backupFile = new FileInfo(Path.Combine(LogViewerCommonApplicationDataDirectory.FullName, AtcFileNameConstants.AppSettingsCustom));
         if (!currentFile.Exists ||
             !backupFile.Exists ||
             currentFile.LastWriteTime == backupFile.LastWriteTime)

@@ -156,7 +156,7 @@ public class ChartTimelineViewModel : ViewModelBase
                 DataLabelsPosition = DataLabelsPosition.Middle,
                 DataLabelsRotation = -90,
                 DataLabelsFormatter = point
-                    => point.Coordinate.PrimaryValue == 0
+                    => point.Coordinate.PrimaryValue.IsZero()
                         ? string.Empty
                         : $"{logLevel}: {point.Coordinate.PrimaryValue}",
             };
@@ -224,7 +224,7 @@ public class ChartTimelineViewModel : ViewModelBase
                 DataLabelsSize = 14,
                 DataLabelsPosition = DataLabelsPosition.Middle,
                 DataLabelsRotation = -90,
-                DataLabelsFormatter = point => point.Coordinate.PrimaryValue == 0 ? string.Empty : $"{logLevel}: {point.Coordinate.PrimaryValue}",
+                DataLabelsFormatter = point => point.Coordinate.PrimaryValue.IsZero() ? string.Empty : $"{logLevel}: {point.Coordinate.PrimaryValue}",
             };
 
             seriesCollection.Add(stackedColumnSeries);

@@ -1,4 +1,5 @@
 // ReSharper disable SuggestBaseTypeForParameter
+// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace Atc.LogViewer.Wpf.App;
 
 [SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - partial class")]
@@ -39,39 +40,12 @@ public partial class MainWindowViewModel
 
     private void LoadRecentOpenFiles()
     {
-        var recentOpenFilesFile = Path.Combine(App.LogViewerProgramDataRecentProfilesDirectory.FullName, Constants.RecentOpenFilesFileName);
-        if (!File.Exists(recentOpenFilesFile))
-        {
-            return;
-        }
+        var recentOpenFileViewModels = RecentOpenFileHelper.Load(App.LogViewerProgramDataRecentProfilesDirectory);
 
-        try
-        {
-            var json = File.ReadAllText(recentOpenFilesFile);
-
-            var recentOpenFilesOption = JsonSerializer.Deserialize<RecentOpenFilesOption>(
-                json,
-                App.JsonSerializerOptions) ?? throw new IOException($"Invalid format in {recentOpenFilesFile}");
-
-            RecentOpenFiles.Clear();
-
-            RecentOpenFiles.SuppressOnChangedNotification = true;
-            foreach (var recentOpenFile in recentOpenFilesOption.RecentOpenFiles.OrderByDescending(x => x.TimeStamp))
-            {
-                if (!File.Exists(recentOpenFile.FilePath))
-                {
-                    continue;
-                }
-
-                RecentOpenFiles.Add(new RecentOpenFileViewModel(App.LogViewerProgramDataRecentProfilesDirectory, recentOpenFile.TimeStamp, recentOpenFile.FilePath));
-            }
-
-            RecentOpenFiles.SuppressOnChangedNotification = false;
-        }
-        catch
-        {
-            // Skip
-        }
+        RecentOpenFiles.Clear();
+        RecentOpenFiles.SuppressOnChangedNotification = true;
+        RecentOpenFiles.AddRange(recentOpenFileViewModels);
+        RecentOpenFiles.SuppressOnChangedNotification = false;
     }
 
     private void AddLoadedProfileFileToRecentOpenFiles(
@@ -101,7 +75,7 @@ public partial class MainWindowViewModel
             recentOpenFilesOption.RecentOpenFiles.Add(item);
         }
 
-        var recentOpenFilesFilePath = Path.Combine(App.LogViewerProgramDataRecentProfilesDirectory.FullName, Constants.RecentOpenFilesFileName);
+        var recentOpenFilesFilePath = Path.Combine(App.LogViewerProgramDataRecentProfilesDirectory.FullName, AtcFileNameConstants.RecentOpenFilesFileName);
         if (!Directory.Exists(App.LogViewerProgramDataProfilesDirectory.FullName))
         {
             Directory.CreateDirectory(App.LogViewerProgramDataRecentProfilesDirectory.FullName);

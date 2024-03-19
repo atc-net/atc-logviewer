@@ -521,7 +521,7 @@ dotnet_diagnostic.CA1819.severity = none           	# Properties should not retu
 dotnet_diagnostic.CA1848.severity = none           	# Logging performance
 dotnet_diagnostic.CA2227.severity = none           	# Change 'XXX' to be read-only by removing the property setter
 dotnet_diagnostic.CA2254.severity = none           	# Logging performance
-	
+
 dotnet_diagnostic.MA0046.severity = none           	# The delegate must have 2 parameters
 dotnet_diagnostic.MA0049.severity = none           	# File should match
 dotnet_diagnostic.MA0134.severity = none            # Observe result of async calls
@@ -530,9 +530,11 @@ dotnet_diagnostic.S1450.severity = none             # Remove the field 'XXX' and
 dotnet_diagnostic.S2094.severity = none             # Remove this empty class, write its code or make it an "interface"
 dotnet_diagnostic.S2234.severity = none             # Parameters to '.ctor' have the same names but not the same order as the method arguments
 dotnet_diagnostic.S2589.severity = none             # Change this condition so that it does not always evaluate to 'True'
+dotnet_diagnostic.S2629.severity = none             # Don't use string interpolation in logging message template
 dotnet_diagnostic.S3267.severity = none            	# Loops should be simplified with 'LINQ' expressions
 dotnet_diagnostic.S4136.severity = none             # All 'XXX' method overloads should be adjacent
 dotnet_diagnostic.S4487.severity = none             # Remove unread private field
+dotnet_diagnostic.S6667.severity = none             # Logging in a catch clause should pass the caught exception as a parameter
 
 dotnet_diagnostic.CS0067.severity = none            # The event 'XXX' is never used
 
@@ -541,4 +543,3 @@ dotnet_diagnostic.SA1010.severity = none            # Opening square brackets sh
 dotnet_diagnostic.CA1040.severity = none            # For DEV - Not Imp. - Avoid empty interfaces
 dotnet_diagnostic.CA1823.severity = none            # For DEV - Not Imp. - Avoid unused private fields
 dotnet_diagnostic.S1144.severity = none             # For DEV - Not Imp. - Avoid unused private fields
-
