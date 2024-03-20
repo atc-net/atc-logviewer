@@ -14,5 +14,9 @@ public interface IFileCollector
         bool useMonitoring,
         CancellationToken cancellationToken);
 
+    void MonitorFileÍfNeeded(
+        FileInfo fileInfo,
+        long lastLineNumber = 0);
+
     void StopMonitoring();
 }

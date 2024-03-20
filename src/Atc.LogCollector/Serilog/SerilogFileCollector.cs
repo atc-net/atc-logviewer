@@ -59,16 +59,21 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
             if (useMonitoring)
             {
-                StartTailIfNeeded(file, lastLineNumber);
+                MonitorFileÍfNeeded(file, lastLineNumber);
             }
         }).ConfigureAwait(continueOnCapturedContext: false);
 
         CollectedFilesDone?.Invoke([.. files]);
     }
 
-    private void OnLineAdded(
+    public override void OnLineAdded(
         TailLine obj)
     {
+        if (obj is null)
+        {
+            return;
+        }
+
         var sourceIdentifier = Path.GetFileNameWithoutExtension(obj.File.FullName);
         var sourceSystem = GetSourceSystemFromSourceIdentifier(sourceIdentifier);
 
@@ -146,21 +151,5 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         }
 
         return (hasAnyValidLines, numberOfLines);
-    }
-
-    private void StartTailIfNeeded(
-        FileInfo fileInfo,
-        long lastLineNumber)
-    {
-        if (!fileInfo.IsCreatedToday())
-        {
-            return;
-        }
-
-        var tailFile = new TailFile(fileInfo, lastLineNumber);
-        tailFile.LineAdded += OnLineAdded;
-        tailFile.Start();
-
-        MonitoredFiles.TryAdd(fileInfo.FullName, tailFile);
     }
 }

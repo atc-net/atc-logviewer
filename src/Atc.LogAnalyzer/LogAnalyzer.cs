@@ -3,7 +3,7 @@
 // ReSharper disable InvertIf
 namespace Atc.LogAnalyzer;
 
-public sealed class LogAnalyzer : ILogAnalyzer
+public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
 {
     private readonly ILog4NetFileCollector log4NetFileCollector;
     private readonly INLogFileCollector nlogFileCollector;
@@ -11,8 +11,10 @@ public sealed class LogAnalyzer : ILogAnalyzer
     private readonly ISyslogFileCollector syslogFileCollector;
     private readonly ConcurrentBag<AtcLogEntry> logEntries = [];
     private readonly ConcurrentBag<AtcLogEntry> logEntryBuffer = [];
+    private FileSystemWatcher? fileSystemWatcher;
     private int logEntryBufferSize = 1;
     private LogFilter logFilter;
+    private LogFileCollectorType activeLogFileCollectorType;
 
     public LogAnalyzer(
         ILog4NetFileCollector log4NetFileCollector,
@@ -75,7 +77,15 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
         logEntryBufferSize = 10_000_000;
 
-        switch (logFileCollectorType)
+        if (fileSystemWatcher is not null)
+        {
+            fileSystemWatcher.Created -= OnFileCreated;
+            fileSystemWatcher.Dispose();
+        }
+
+        activeLogFileCollectorType = logFileCollectorType;
+
+        switch (activeLogFileCollectorType)
         {
             case LogFileCollectorType.Log4Net:
                 await log4NetFileCollector
@@ -119,6 +129,9 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
         logEntryBufferSize = 1;
         NotifyAndClearBuffer();
+
+        fileSystemWatcher = new FileSystemWatcher(directory.FullName) { EnableRaisingEvents = true, };
+        fileSystemWatcher.Created += OnFileCreated;
     }
 
     public void SetFilter(
@@ -265,6 +278,38 @@ public sealed class LogAnalyzer : ILogAnalyzer
         FileInfo[] files)
         => NotifyAndClearBuffer();
 
+    private void OnFileCreated(
+        object sender,
+        FileSystemEventArgs e)
+    {
+        var fileInfo = new FileInfo(e.FullPath);
+        var isCreatedToday = fileInfo.IsCreatedToday();
+
+        if (!isCreatedToday)
+        {
+            // TODO: Later - possibly collect entries from dumped logs
+            return;
+        }
+
+        switch (activeLogFileCollectorType)
+        {
+            case LogFileCollectorType.Log4Net:
+                log4NetFileCollector.MonitorFileÍfNeeded(fileInfo);
+                break;
+            case LogFileCollectorType.NLog:
+                nlogFileCollector.MonitorFileÍfNeeded(fileInfo);
+                break;
+            case LogFileCollectorType.Serilog:
+                serilogFileCollector.MonitorFileÍfNeeded(fileInfo);
+                break;
+            case LogFileCollectorType.Syslog:
+                syslogFileCollector.MonitorFileÍfNeeded(fileInfo);
+                break;
+            default:
+                throw new SwitchCaseDefaultException(activeLogFileCollectorType);
+        }
+    }
+
     private void NotifyAndClearBuffer()
     {
         if (CollectedEntries is not null)
@@ -278,4 +323,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
         logEntryBuffer.Clear();
     }
+
+    public void Dispose()
+        => fileSystemWatcher?.Dispose();
 }

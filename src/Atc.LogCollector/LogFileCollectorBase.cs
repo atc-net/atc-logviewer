@@ -30,6 +30,28 @@ public abstract class LogFileCollectorBase : LogCollectorBase
             .ToList();
     }
 
+    public void MonitorFileÍfNeeded(
+        FileInfo fileInfo,
+        long lastLineNumber)
+    {
+        if (!fileInfo.IsCreatedToday() ||
+            MonitoredFiles.ContainsKey(fileInfo.FullName))
+        {
+            return;
+        }
+
+        var tailFile = new TailFile(fileInfo, lastLineNumber);
+        tailFile.LineAdded += OnLineAdded;
+        tailFile.Start();
+
+        MonitoredFiles.TryAdd(fileInfo.FullName, tailFile);
+    }
+
+    public virtual void OnLineAdded(
+        TailLine obj)
+    {
+    }
+
     public void StopMonitoring()
     {
         foreach (var monitoredFile in MonitoredFiles)
