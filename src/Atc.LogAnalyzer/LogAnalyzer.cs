@@ -63,10 +63,11 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     public event Action<AtcLogEntry[]>? CollectedEntries;
 
-    public async Task CollectAndMonitorFolder(
+    public async Task CollectFolder(
         LogFileCollectorType logFileCollectorType,
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
+        bool useMonitoring,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(directory);
@@ -77,29 +78,40 @@ public sealed class LogAnalyzer : ILogAnalyzer
         switch (logFileCollectorType)
         {
             case LogFileCollectorType.Log4Net:
-                CollectAndMonitorFolderForLog4Net(
-                    directory,
-                    config,
-                    cancellationToken);
-                break;
-            case LogFileCollectorType.NLog:
-                CollectAndMonitorFolderForNLog(
-                    directory,
-                    config,
-                    cancellationToken);
-                break;
-            case LogFileCollectorType.Serilog:
-                await CollectAndMonitorFolderForSerilog(
+                await log4NetFileCollector
+                    .CollectFolder(
                         directory,
                         config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                break;
+            case LogFileCollectorType.NLog:
+                await nlogFileCollector
+                    .CollectFolder(
+                        directory,
+                        config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                break;
+            case LogFileCollectorType.Serilog:
+                await serilogFileCollector
+                    .CollectFolder(
+                        directory,
+                        config,
+                        useMonitoring,
                         cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 break;
             case LogFileCollectorType.Syslog:
-                CollectAndMonitorFolderForSyslog(
-                    directory,
-                    config,
-                    cancellationToken);
+                await syslogFileCollector
+                    .CollectFolder(
+                        directory,
+                        config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 break;
             default:
                 throw new SwitchCaseDefaultException(logFileCollectorType);
@@ -169,13 +181,12 @@ public sealed class LogAnalyzer : ILogAnalyzer
     public void ClearLogEntries()
         => logEntries.Clear();
 
-    public void StopMonitorFolderAndClearLogEntries(
-        DirectoryInfo directory)
+    public void StopMonitoringAndClearLogEntries()
     {
-        StopMonitorFolderForLog4Net(directory);
-        StopMonitorFolderForNLog(directory);
-        StopMonitorFolderForSerilog(directory);
-        StopMonitorFolderForSyslog(directory);
+        log4NetFileCollector.StopMonitoring();
+        nlogFileCollector.StopMonitoring();
+        serilogFileCollector.StopMonitoring();
+        syslogFileCollector.StopMonitoring();
         ClearLogEntries();
     }
 
@@ -267,57 +278,4 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
         logEntryBuffer.Clear();
     }
-
-    private void CollectAndMonitorFolderForLog4Net(
-        DirectoryInfo directory,
-        LogFileCollectorConfiguration config,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void CollectAndMonitorFolderForNLog(
-        DirectoryInfo directory,
-        LogFileCollectorConfiguration config,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    private Task CollectAndMonitorFolderForSerilog(
-        DirectoryInfo directory,
-        LogFileCollectorConfiguration config,
-        CancellationToken cancellationToken)
-        => serilogFileCollector.CollectAndMonitorFolder(
-            directory,
-            config,
-            cancellationToken);
-
-    private void CollectAndMonitorFolderForSyslog(
-        DirectoryInfo directory,
-        LogFileCollectorConfiguration config,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void StopMonitorFolderForLog4Net(
-        DirectoryInfo directory)
-        => log4NetFileCollector.StopMonitorFolder(
-            directory);
-
-    private void StopMonitorFolderForNLog(
-        DirectoryInfo directory)
-        => nlogFileCollector.StopMonitorFolder(
-            directory);
-
-    private void StopMonitorFolderForSerilog(
-        DirectoryInfo directory)
-        => serilogFileCollector.StopMonitorFolder(
-            directory);
-
-    private void StopMonitorFolderForSyslog(
-        DirectoryInfo directory)
-        => syslogFileCollector.StopMonitorFolder(
-            directory);
 }

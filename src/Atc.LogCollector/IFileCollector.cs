@@ -8,11 +8,11 @@ public interface IFileCollector
 
     public event Action<FileInfo[]>? CollectedFilesDone;
 
-    Task CollectAndMonitorFolder(
+    Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
+        bool useMonitoring,
         CancellationToken cancellationToken);
 
-    void StopMonitorFolder(
-        DirectoryInfo directory);
+    void StopMonitoring();
 }

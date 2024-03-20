@@ -21,9 +21,10 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
     public event Action<FileInfo[]>? CollectedFilesDone;
 
-    public async Task CollectAndMonitorFolder(
+    public async Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
+        bool useMonitoring,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(directory);
@@ -35,17 +36,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             return;
         }
 
-        foreach (var file in files.Select(x => x.FullName))
-        {
-            if (!MonitoredFiles.TryGetValue(file, out var oldTailFile))
-            {
-                continue;
-            }
-
-            oldTailFile.Stop();
-            oldTailFile.Dispose();
-            MonitoredFiles.TryRemove(file, out _);
-        }
+        StopMonitoring();
 
         var options = new ParallelOptions { CancellationToken = cancellationToken };
 
@@ -66,88 +57,13 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
             CollectedFileDone?.Invoke(file);
 
-            StartTailIfNeeded(file, lastLineNumber);
+            if (useMonitoring)
+            {
+                StartTailIfNeeded(file, lastLineNumber);
+            }
         }).ConfigureAwait(continueOnCapturedContext: false);
 
         CollectedFilesDone?.Invoke([.. files]);
-    }
-
-    public void MonitorFolder(
-        DirectoryInfo directory)
-    {
-        ArgumentNullException.ThrowIfNull(directory);
-
-        var files = directory.GetFiles("*.log")
-            .Concat(directory.GetFiles("*.txt"))
-            .OrderBy(x => x.CreationTime)
-            .ToList();
-
-        if (files.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var file in files)
-        {
-            if (MonitoredFiles.TryGetValue(file.FullName, out var oldTailFile))
-            {
-                oldTailFile.Stop();
-                oldTailFile.Dispose();
-                MonitoredFiles.TryRemove(file.FullName, out _);
-            }
-
-            if (!DateTime.Now.ToShortDateString().Equals(file.CreationTime.ToShortDateString(), StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            var tailFile = new TailFile(file); // TODO: lastLineNumber
-            tailFile.LineAdded += OnLineAdded;
-            tailFile.Start();
-
-            MonitoredFiles.TryAdd(file.FullName, tailFile);
-        }
-    }
-
-    public void DeMonitorFolder(
-        DirectoryInfo directory)
-    {
-        ArgumentNullException.ThrowIfNull(directory);
-
-        foreach (var monitoredFile in MonitoredFiles.Keys)
-        {
-            var file = new FileInfo(monitoredFile);
-            if (file.Directory!.FullName != directory.FullName)
-            {
-                continue;
-            }
-
-            if (!MonitoredFiles.TryGetValue(file.FullName, out var oldTailFile))
-            {
-                continue;
-            }
-
-            oldTailFile.Stop();
-            oldTailFile.Dispose();
-            MonitoredFiles.TryRemove(file.FullName, out _);
-        }
-    }
-
-    public void DeMonitorAll()
-    {
-        foreach (var monitoredFile in MonitoredFiles.Keys)
-        {
-            var file = new FileInfo(monitoredFile);
-
-            if (!MonitoredFiles.TryGetValue(file.FullName, out var oldTailFile))
-            {
-                continue;
-            }
-
-            oldTailFile.Stop();
-            oldTailFile.Dispose();
-            MonitoredFiles.TryRemove(file.FullName, out _);
-        }
     }
 
     private void OnLineAdded(

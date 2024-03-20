@@ -3,7 +3,6 @@ namespace Atc.LogCollector;
 
 [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "OK.")]
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "OK.")]
-[SuppressMessage("Style", "IDE0028:Simplify collection initialization", Justification = "OK.")]
 public abstract class LogFileCollectorBase : LogCollectorBase
 {
     internal readonly ConcurrentDictionary<string, TailFile> MonitoredFiles = new(StringComparer.Ordinal);
@@ -31,14 +30,14 @@ public abstract class LogFileCollectorBase : LogCollectorBase
             .ToList();
     }
 
-    public void StopMonitorFolder(
-        DirectoryInfo directory)
+    public void StopMonitoring()
     {
-        // TODO: Filter
-        ////foreach (var monitoredFile in MonitoredFiles)
-        ////{
-        ////    monitoredFile.Value.Stop();
-        ////    monitoredFile.Value.Dispose();
-        ////}
+        foreach (var monitoredFile in MonitoredFiles)
+        {
+            monitoredFile.Value.Stop();
+            monitoredFile.Value.Dispose();
+        }
+
+        MonitoredFiles.Clear();
     }
 }

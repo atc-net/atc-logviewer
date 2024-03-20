@@ -6,10 +6,11 @@ public interface ILogAnalyzer
 
     event Action<AtcLogEntry[]>? CollectedEntries;
 
-    Task CollectAndMonitorFolder(
+    Task CollectFolder(
         LogFileCollectorType logFileCollectorType,
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
+        bool useMonitoring,
         CancellationToken cancellationToken);
 
     public void SetFilter(
@@ -23,6 +24,5 @@ public interface ILogAnalyzer
 
     void ClearLogEntries();
 
-    void StopMonitorFolderAndClearLogEntries(
-        DirectoryInfo directory);
+    void StopMonitoringAndClearLogEntries();
 }

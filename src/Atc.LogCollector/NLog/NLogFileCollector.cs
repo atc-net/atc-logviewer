@@ -19,9 +19,10 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
         this.nlogFileExtractor = nlogFileExtractor;
     }
 
-    public Task CollectAndMonitorFolder(
+    public Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
+        bool useMonitoring,
         CancellationToken cancellationToken)
         => throw new NotImplementedException();
 }

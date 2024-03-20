@@ -158,23 +158,17 @@ public partial class MainWindowViewModel
     {
         IsBusy = true;
 
-        logAnalyzer.StopMonitorFolderAndClearLogEntries(directory);
+        logAnalyzer.StopMonitoringAndClearLogEntries();
         LogEntries.Clear();
 
-        if (config.MonitorFiles)
-        {
-            await logAnalyzer
-                .CollectAndMonitorFolder(
-                    ProfileViewModel.CollectorType,
-                    directory,
-                    config,
-                    cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
-        }
-        else
-        {
-            throw new NotImplementedException("logAnalyzer.CollectFolder");
-        }
+        await logAnalyzer
+            .CollectFolder(
+                ProfileViewModel.CollectorType,
+                directory,
+                config,
+                config.MonitorFiles,
+                cancellationToken)
+            .ConfigureAwait(continueOnCapturedContext: false);
 
         IsBusy = false;
     }
