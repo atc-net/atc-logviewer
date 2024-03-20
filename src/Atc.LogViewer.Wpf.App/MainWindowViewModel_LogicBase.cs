@@ -158,7 +158,7 @@ public partial class MainWindowViewModel
     {
         IsBusy = true;
 
-        logAnalyzer.ClearLogEntries();
+        logAnalyzer.StopMonitorFolderAndClearLogEntries(directory);
         LogEntries.Clear();
 
         if (config.MonitorFiles)

@@ -30,4 +30,15 @@ public abstract class LogFileCollectorBase : LogCollectorBase
             .OrderBy(x => x.CreationTime)
             .ToList();
     }
+
+    public void StopMonitorFolder(
+        DirectoryInfo directory)
+    {
+        // TODO: Filter
+        ////foreach (var monitoredFile in MonitoredFiles)
+        ////{
+        ////    monitoredFile.Value.Stop();
+        ////    monitoredFile.Value.Dispose();
+        ////}
+    }
 }

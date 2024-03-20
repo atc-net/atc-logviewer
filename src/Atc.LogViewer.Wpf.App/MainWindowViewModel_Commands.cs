@@ -150,17 +150,24 @@ public partial class MainWindowViewModel
     private bool CanSaveProfileCommandHandler()
         => profileFile is not null;
 
-    private Task SaveProfileCommandHandler()
+    private async Task SaveProfileCommandHandler()
     {
         if (!CanSaveProfileCommandHandler())
         {
-            return Task.CompletedTask;
+            return;
         }
 
-        return SaveProfileFile(
-            profileFile!,
-            ProfileViewModel,
-            CancellationToken.None);
+        await SaveProfileFile(
+                profileFile!,
+                ProfileViewModel,
+                CancellationToken.None)
+            .ConfigureAwait(continueOnCapturedContext: false);
+
+        await LoadLogFolder(
+                new DirectoryInfo(ProfileViewModel.LogFolder),
+                ProfileViewModel.CollectorConfiguration,
+                CancellationToken.None)
+            .ConfigureAwait(continueOnCapturedContext: false);
     }
 
     private void OpenApplicationSettingsCommandHandler()

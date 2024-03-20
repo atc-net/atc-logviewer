@@ -169,6 +169,16 @@ public sealed class LogAnalyzer : ILogAnalyzer
     public void ClearLogEntries()
         => logEntries.Clear();
 
+    public void StopMonitorFolderAndClearLogEntries(
+        DirectoryInfo directory)
+    {
+        StopMonitorFolderForLog4Net(directory);
+        StopMonitorFolderForNLog(directory);
+        StopMonitorFolderForSerilog(directory);
+        StopMonitorFolderForSyslog(directory);
+        ClearLogEntries();
+    }
+
     private void OnCollectedEntry(
         AtcLogEntry logEntry)
     {
@@ -290,4 +300,24 @@ public sealed class LogAnalyzer : ILogAnalyzer
     {
         throw new NotImplementedException();
     }
+
+    private void StopMonitorFolderForLog4Net(
+        DirectoryInfo directory)
+        => log4NetFileCollector.StopMonitorFolder(
+            directory);
+
+    private void StopMonitorFolderForNLog(
+        DirectoryInfo directory)
+        => nlogFileCollector.StopMonitorFolder(
+            directory);
+
+    private void StopMonitorFolderForSerilog(
+        DirectoryInfo directory)
+        => serilogFileCollector.StopMonitorFolder(
+            directory);
+
+    private void StopMonitorFolderForSyslog(
+        DirectoryInfo directory)
+        => syslogFileCollector.StopMonitorFolder(
+            directory);
 }

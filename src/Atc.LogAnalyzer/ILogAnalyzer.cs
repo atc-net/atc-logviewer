@@ -22,4 +22,7 @@ public interface ILogAnalyzer
     LogStatistics GetLogStatistics();
 
     void ClearLogEntries();
+
+    void StopMonitorFolderAndClearLogEntries(
+        DirectoryInfo directory);
 }

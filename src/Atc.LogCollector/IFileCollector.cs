@@ -12,4 +12,7 @@ public interface IFileCollector
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
         CancellationToken cancellationToken);
+
+    void StopMonitorFolder(
+        DirectoryInfo directory);
 }

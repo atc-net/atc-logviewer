@@ -37,6 +37,7 @@ public static class OptionsExtensions
 
         return new ProfileViewModel
         {
+            Name = profileOptions.Name,
             LogFolder = profileOptions.LogFolder,
             CollectorType = profileOptions.CollectorType,
             Highlights = profileOptions.Highlights.ToViewModels(),
