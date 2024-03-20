@@ -9,7 +9,7 @@ public static class DialogBoxExtractor
 
         var data = dialogBox.Data.GetKeyValues();
 
-        var name = data[Constance.Forms.Profile.Name].ToString()!;
+        var name = data[Constants.Forms.Profile.Name].ToString()!;
         if (!name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
         {
             name += ".json";
@@ -26,7 +26,7 @@ public static class DialogBoxExtractor
         var data = dialogBox.Data.GetKeyValues();
 
         if (!Enum<LogFileCollectorType>.TryParse(
-                data[Constance.Forms.Profile.Collector].ToString()!,
+                data[Constants.Forms.Profile.Collector].ToString()!,
                 ignoreCase: false,
                 out var defaultCollectorType))
         {
@@ -37,7 +37,7 @@ public static class DialogBoxExtractor
 
         var maxDaysBack = 0;
         if (NumberHelper.TryParseToInt(
-                data[Constance.Forms.Profile.MaxDaysBack].ToString()!,
+                data[Constants.Forms.Profile.MaxDaysBack].ToString()!,
                 out var maxDaysBackAsInt))
         {
             maxDaysBack = maxDaysBackAsInt;
@@ -45,7 +45,7 @@ public static class DialogBoxExtractor
 
         var monitorFiles = false;
         if (bool.TryParse(
-                data[Constance.Forms.Profile.MonitorFiles].ToString()!,
+                data[Constants.Forms.Profile.MonitorFiles].ToString()!,
                 out var monitorFilesResult))
         {
             monitorFiles = monitorFilesResult;
@@ -54,8 +54,8 @@ public static class DialogBoxExtractor
         return (
             new ProfileViewModel
             {
-                Name = data[Constance.Forms.Profile.Name].ToString()!,
-                LogFolder = data[Constance.Forms.Profile.LogFolder].ToString()!,
+                Name = data[Constants.Forms.Profile.Name].ToString()!,
+                LogFolder = data[Constants.Forms.Profile.LogFolder].ToString()!,
                 CollectorType = defaultCollectorType,
                 CollectorConfiguration = new LogFileCollectorConfiguration
                 {

@@ -1,7 +1,7 @@
 namespace Atc.LogViewer.Wpf.App;
 
 [SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "OK.")]
-public static class Constance
+public static class Constants
 {
     public static class Forms
     {

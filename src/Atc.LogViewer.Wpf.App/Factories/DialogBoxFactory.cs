@@ -21,20 +21,20 @@ public static class DialogBoxFactory
 
         var labelControls = BuildProfileLabelControls();
 
-        var labelControlName = (LabelTextBox)labelControls.Find(x => x.Identifier == Constance.Forms.Profile.Name)!;
+        var labelControlName = (LabelTextBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.Name)!;
         labelControlName.IsEnabled = false;
         labelControlName.Text = profileViewModel.Name;
 
-        var lcLogFolder = (LabelDirectoryPicker)labelControls.Find(x => x.Identifier == Constance.Forms.Profile.LogFolder)!;
+        var lcLogFolder = (LabelDirectoryPicker)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.LogFolder)!;
         lcLogFolder.Value = new DirectoryInfo(profileViewModel.LogFolder);
 
-        var lcDefaultCollector = (LabelComboBox)labelControls.Find(x => x.Identifier == Constance.Forms.Profile.Collector)!;
+        var lcDefaultCollector = (LabelComboBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.Collector)!;
         lcDefaultCollector.SelectedKey = profileViewModel.CollectorType.ToString();
 
-        var lcMaxDaysBack = (LabelIntegerBox)labelControls.Find(x => x.Identifier == Constance.Forms.Profile.MaxDaysBack)!;
+        var lcMaxDaysBack = (LabelIntegerBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.MaxDaysBack)!;
         lcMaxDaysBack.Value = profileViewModel.CollectorConfiguration.MaxDaysBack;
 
-        var lcMonitorFiles = (LabelCheckBox)labelControls.Find(x => x.Identifier == Constance.Forms.Profile.MonitorFiles)!;
+        var lcMonitorFiles = (LabelCheckBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.MonitorFiles)!;
         lcMonitorFiles.IsChecked = profileViewModel.CollectorConfiguration.MonitorFiles;
 
         var labelControlsForm = new LabelControlsForm();
@@ -72,20 +72,20 @@ public static class DialogBoxFactory
             new LabelTextBox
             {
                 LabelText = "Name",
-                Tag = Constance.Forms.Profile.Name,
+                Tag = Constants.Forms.Profile.Name,
                 IsMandatory = true,
                 MinLength = 2,
             },
             new LabelDirectoryPicker
             {
                 LabelText = "Log folder",
-                Tag = Constance.Forms.Profile.LogFolder,
+                Tag = Constants.Forms.Profile.LogFolder,
                 IsMandatory = true,
             },
             new LabelComboBox
             {
                 LabelText = "Collector type",
-                Tag = Constance.Forms.Profile.Collector,
+                Tag = Constants.Forms.Profile.Collector,
                 IsMandatory = true,
                 SelectedKey = nameof(DropDownFirstItemType.PleaseSelect),
                 Items = Enum<LogFileCollectorType>.ToDictionaryWithStringKey(
@@ -97,7 +97,7 @@ public static class DialogBoxFactory
             new LabelIntegerBox
             {
                 LabelText = "Max days back",
-                Tag = Constance.Forms.Profile.MaxDaysBack,
+                Tag = Constants.Forms.Profile.MaxDaysBack,
                 Minimum = 0,
                 Maximum = 365,
                 Value = 10,
@@ -105,7 +105,7 @@ public static class DialogBoxFactory
             new LabelCheckBox
             {
                 LabelText = "Monitor files",
-                Tag = Constance.Forms.Profile.MonitorFiles,
+                Tag = Constants.Forms.Profile.MonitorFiles,
                 IsChecked = true,
             },
         };
