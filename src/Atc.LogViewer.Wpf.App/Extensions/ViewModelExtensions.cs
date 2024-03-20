@@ -33,9 +33,11 @@ public static class ViewModelExtensions
 
         return new ProfileOptions
         {
-            DefaultLogFolder = profileViewModel.DefaultLogFolder,
-            DefaultCollectorType = profileViewModel.DefaultCollectorType,
+            Name = profileViewModel.Name,
+            LogFolder = profileViewModel.LogFolder,
+            CollectorType = profileViewModel.CollectorType,
             Highlights = profileViewModel.Highlights.ToOptions(),
+            CollectorConfiguration = profileViewModel.CollectorConfiguration,
         };
     }
 }

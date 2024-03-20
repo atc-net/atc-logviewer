@@ -108,12 +108,12 @@ public partial class MainWindowViewModel
 
             AddLoadedProfileFileToRecentOpenFiles(file);
 
-            var defaultDirectory = new DirectoryInfo(ProfileViewModel.DefaultLogFolder);
+            var defaultDirectory = new DirectoryInfo(ProfileViewModel.LogFolder);
             if (defaultDirectory.Exists)
             {
                 await LoadLogFolder(
                     defaultDirectory,
-                    ProfileViewModel.LogFileCollectorConfigViewModel.LogFileCollectorConfig,
+                    ProfileViewModel.CollectorConfiguration,
                     cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
@@ -153,24 +153,28 @@ public partial class MainWindowViewModel
 
     private async Task LoadLogFolder(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
     {
-        // TODO: Analyze files or/and show Dialog
-        var useLogCollectorType = LogFileCollectorType.Serilog;
-
         IsBusy = true;
 
         logAnalyzer.ClearLogEntries();
         LogEntries.Clear();
 
-        await logAnalyzer
-            .CollectAndMonitorFolder(
-                useLogCollectorType,
-                directory,
-                config,
-                cancellationToken)
-            .ConfigureAwait(continueOnCapturedContext: false);
+        if (config.MonitorFiles)
+        {
+            await logAnalyzer
+                .CollectAndMonitorFolder(
+                    ProfileViewModel.CollectorType,
+                    directory,
+                    config,
+                    cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+        else
+        {
+            throw new NotImplementedException("logAnalyzer.CollectFolder");
+        }
 
         IsBusy = false;
     }

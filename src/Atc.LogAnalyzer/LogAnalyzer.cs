@@ -66,10 +66,11 @@ public sealed class LogAnalyzer : ILogAnalyzer
     public async Task CollectAndMonitorFolder(
         LogFileCollectorType logFileCollectorType,
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(directory);
+        ArgumentNullException.ThrowIfNull(config);
 
         logEntryBufferSize = 10_000_000;
 
@@ -259,7 +260,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     private void CollectAndMonitorFolderForLog4Net(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -267,7 +268,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     private void CollectAndMonitorFolderForNLog(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -275,7 +276,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     private Task CollectAndMonitorFolderForSerilog(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
         => serilogFileCollector.CollectAndMonitorFolder(
             directory,
@@ -284,7 +285,7 @@ public sealed class LogAnalyzer : ILogAnalyzer
 
     private void CollectAndMonitorFolderForSyslog(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

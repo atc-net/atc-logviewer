@@ -23,7 +23,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
     public async Task CollectAndMonitorFolder(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(directory);

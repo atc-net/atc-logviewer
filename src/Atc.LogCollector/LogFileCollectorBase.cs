@@ -10,10 +10,13 @@ public abstract class LogFileCollectorBase : LogCollectorBase
 
     internal static IList<FileInfo> GetFiles(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         string[] logExtensions)
     {
-        var createdStartDate = DateTime.Now.AddDays(-config.MaxDaysBack);
+        var createdStartDate = config.MaxDaysBack == 0
+            ? DateTime.Now.AddDays(-365)
+            : DateTime.Now.AddDays(-config.MaxDaysBack);
+
         var files = new List<FileInfo>();
 
         foreach (var extension in logExtensions)

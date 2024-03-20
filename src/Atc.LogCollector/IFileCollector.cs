@@ -10,6 +10,6 @@ public interface IFileCollector
 
     Task CollectAndMonitorFolder(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken);
 }

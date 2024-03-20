@@ -9,7 +9,7 @@ public interface ILogAnalyzer
     Task CollectAndMonitorFolder(
         LogFileCollectorType logFileCollectorType,
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken);
 
     public void SetFilter(

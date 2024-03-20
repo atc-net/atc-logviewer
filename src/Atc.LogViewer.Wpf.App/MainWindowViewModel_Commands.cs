@@ -8,15 +8,17 @@ namespace Atc.LogViewer.Wpf.App;
 [SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "OK.")]
 public partial class MainWindowViewModel
 {
-    public IRelayCommandAsync NewProfileCommand => new RelayCommandAsync(NewProfileCommandHandler);
-
     public IRelayCommandAsync OpenProfileCommand => new RelayCommandAsync(OpenProfileCommandHandler);
 
     public IRelayCommandAsync OpenLastUsedProfileCommand => new RelayCommandAsync(OpenLastUsedProfileCommandHandler, CanOpenLastUsedProfileCommandHandler);
 
-    public IRelayCommandAsync SaveProfileCommand => new RelayCommandAsync(SaveProfileCommandHandler, CanSaveProfileCommandHandler);
-
     public IRelayCommandAsync OpenLogFolderCommand => new RelayCommandAsync(OpenLogFolderCommandHandler);
+
+    public IRelayCommandAsync NewProfileCommand => new RelayCommandAsync(NewProfileCommandHandler);
+
+    public IRelayCommandAsync EditProfileCommand => new RelayCommandAsync(EditProfileCommandHandler, CanEditProfileCommandHandler);
+
+    public IRelayCommandAsync SaveProfileCommand => new RelayCommandAsync(SaveProfileCommandHandler, CanSaveProfileCommandHandler);
 
     public IRelayCommand OpenApplicationSettingsCommand => new RelayCommand(OpenApplicationSettingsCommandHandler);
 
@@ -39,71 +41,6 @@ public partial class MainWindowViewModel
     public IRelayCommandAsync EditHighlightsCommand => new RelayCommandAsync(EditHighlightsCommandHandler, CanEditHighlightsCommandHandler);
 
     public IRelayCommand<ViewMode> ChangeViewModeCommand => new RelayCommand<ViewMode>(ChangeViewModeCommandHandler, CanChangeViewModeCommandHandler);
-
-    private async Task NewProfileCommandHandler()
-    {
-        var dialogBox = DialogBoxFactory.CreateNewProfile();
-        var dialogResult = dialogBox.ShowDialog();
-
-        if (dialogResult != true)
-        {
-            return;
-        }
-
-        var data = dialogBox.Data.GetKeyValues();
-
-        var name = data["Name"].ToString()!;
-        if (!name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-        {
-            name += ".json";
-        }
-
-        var defaultLogFolder = data["DefaultLogFolder"].ToString()!;
-
-        if (!Enum<LogFileCollectorType>.TryParse(
-                data["DefaultCollector"].ToString()!,
-                ignoreCase: false,
-                out var defaultCollectorType))
-        {
-            var warningDialogBox = DialogBoxFactory.CreateWarningOption("Default Collector - was not selected");
-            warningDialogBox.ShowDialog();
-            return;
-        }
-
-        var file = new FileInfo(Path.Combine(App.LogViewerProgramDataProfilesDirectory.FullName, name));
-        if (file.Exists)
-        {
-            var overrideDialogBox = new QuestionDialogBox(
-                Application.Current.MainWindow!,
-                "File exist - override it?");
-
-            var overrideDialogResult = overrideDialogBox.ShowDialog();
-            if (overrideDialogResult != true)
-            {
-                ProfileViewModel = new ProfileViewModel
-                {
-                    DefaultLogFolder = defaultLogFolder,
-                    DefaultCollectorType = defaultCollectorType,
-                };
-
-                profileFile = file;
-                await SaveProfileCommandHandler()
-                    .ConfigureAwait(continueOnCapturedContext: false);
-            }
-        }
-        else
-        {
-            ProfileViewModel = new ProfileViewModel
-            {
-                DefaultLogFolder = defaultLogFolder,
-                DefaultCollectorType = defaultCollectorType,
-            };
-
-            profileFile = file;
-            await SaveProfileCommandHandler()
-                .ConfigureAwait(continueOnCapturedContext: false);
-        }
-    }
 
     private async Task OpenProfileCommandHandler()
     {
@@ -138,6 +75,75 @@ public partial class MainWindowViewModel
         await LoadProfileFile(
             new FileInfo(RecentOpenFiles[0].File),
             CancellationToken.None)
+            .ConfigureAwait(continueOnCapturedContext: false);
+    }
+
+    private async Task NewProfileCommandHandler()
+    {
+        var dialogBox = DialogBoxFactory.CreateNewProfile();
+        var dialogResult = dialogBox.ShowDialog();
+
+        if (dialogResult != true)
+        {
+            return;
+        }
+
+        var fileName = DialogBoxExtractor.ExtractProfileFileName(dialogBox);
+
+        var file = new FileInfo(Path.Combine(App.LogViewerProgramDataProfilesDirectory.FullName, fileName));
+        if (file.Exists)
+        {
+            var overrideDialogBox = new QuestionDialogBox(
+                Application.Current.MainWindow!,
+                "File exist - override it?");
+
+            var overrideDialogResult = overrideDialogBox.ShowDialog();
+            if (overrideDialogResult is null ||
+                !overrideDialogResult.Value)
+            {
+                return;
+            }
+        }
+
+        var (extractProfileViewModel, warningMessage) = DialogBoxExtractor.ExtractProfileViewModel(dialogBox);
+        if (extractProfileViewModel is null)
+        {
+            var warningDialogBox = DialogBoxFactory.CreateWarningOption(warningMessage!);
+            warningDialogBox.ShowDialog();
+            return;
+        }
+
+        ProfileViewModel = extractProfileViewModel;
+
+        profileFile = file;
+        await SaveProfileCommandHandler()
+            .ConfigureAwait(continueOnCapturedContext: false);
+    }
+
+    private bool CanEditProfileCommandHandler()
+        => ProfileViewModel.CollectorType != LogFileCollectorType.None;
+
+    private async Task EditProfileCommandHandler()
+    {
+        var dialogBox = DialogBoxFactory.CreateEditProfile(ProfileViewModel);
+        var dialogResult = dialogBox.ShowDialog();
+
+        if (dialogResult != true)
+        {
+            return;
+        }
+
+        var (extractProfileViewModel, warningMessage) = DialogBoxExtractor.ExtractProfileViewModel(dialogBox);
+        if (extractProfileViewModel is null)
+        {
+            var warningDialogBox = DialogBoxFactory.CreateWarningOption(warningMessage!);
+            warningDialogBox.ShowDialog();
+            return;
+        }
+
+        ProfileViewModel = extractProfileViewModel;
+
+        await SaveProfileCommandHandler()
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
@@ -184,14 +190,6 @@ public partial class MainWindowViewModel
     private void OpenApplicationCheckForUpdatesCommandHandler()
         => new CheckForUpdatesBoxDialog(checkForUpdatesBoxDialogViewModel).ShowDialog();
 
-    private void OpenApplicationAboutCommandHandler()
-    {
-        // ReSharper disable once UseObjectOrCollectionInitializer
-        var aboutBoxDialog = new AboutBoxDialog();
-        aboutBoxDialog.IconImage.Source = App.DefaultIcon;
-        aboutBoxDialog.ShowDialog();
-    }
-
     private async Task OpenLogFolderCommandHandler()
     {
         var openFolderDialog = new OpenFolderDialog
@@ -207,10 +205,18 @@ public partial class MainWindowViewModel
         }
 
         await LoadLogFolder(
-            new DirectoryInfo(openFolderDialog.FolderName),
-            ProfileViewModel.LogFileCollectorConfigViewModel.LogFileCollectorConfig,
-            CancellationToken.None)
+                new DirectoryInfo(openFolderDialog.FolderName),
+                ProfileViewModel.CollectorConfiguration,
+                CancellationToken.None)
             .ConfigureAwait(true);
+    }
+
+    private void OpenApplicationAboutCommandHandler()
+    {
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        var aboutBoxDialog = new AboutBoxDialog();
+        aboutBoxDialog.IconImage.Source = App.DefaultIcon;
+        aboutBoxDialog.ShowDialog();
     }
 
     private void SetMessageToFilterTextCommandHandler(

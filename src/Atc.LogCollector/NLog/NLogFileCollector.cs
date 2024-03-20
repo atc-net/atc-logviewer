@@ -21,7 +21,7 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
 
     public Task CollectAndMonitorFolder(
         DirectoryInfo directory,
-        LogFileCollectorConfig config,
+        LogFileCollectorConfiguration config,
         CancellationToken cancellationToken)
         => throw new NotImplementedException();
 }

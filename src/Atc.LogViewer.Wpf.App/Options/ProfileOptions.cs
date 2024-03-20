@@ -3,12 +3,16 @@ namespace Atc.LogViewer.Wpf.App.Options;
 
 public class ProfileOptions
 {
-    public string DefaultLogFolder { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-    public LogFileCollectorType DefaultCollectorType { get; set; }
+    public string LogFolder { get; set; } = string.Empty;
+
+    public LogFileCollectorType CollectorType { get; set; }
 
     public IList<HighlightOptions> Highlights { get; set; } = new List<HighlightOptions>();
 
+    public LogFileCollectorConfiguration CollectorConfiguration { get; set; } = new();
+
     public override string ToString()
-        => $"{nameof(DefaultLogFolder)}: {DefaultLogFolder}, {nameof(DefaultCollectorType)}: {DefaultCollectorType}, {nameof(Highlights)}.Count: {Highlights?.Count}";
+        => $"{nameof(Name)}: {Name}, {nameof(LogFolder)}: {LogFolder}, {nameof(CollectorType)}: {CollectorType}, {nameof(Highlights)}.Count: {Highlights?.Count}";
 }

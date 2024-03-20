@@ -1,7 +1,3 @@
-using Atc.Wpf.Controls.SettingsControls;
-using Atc.Wpf.Theming;
-using Atc.Wpf.Theming.Helpers;
-
 namespace Atc.LogViewer.Wpf.App;
 
 public partial class MainWindowViewModel : MainWindowViewModelBase

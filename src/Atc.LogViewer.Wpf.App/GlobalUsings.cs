@@ -23,6 +23,7 @@ global using Atc.LogCollector.Serilog;
 global using Atc.LogCollector.Syslog;
 global using Atc.LogViewer.Wpf.App.Dialogs;
 global using Atc.LogViewer.Wpf.App.Extensions;
+global using Atc.LogViewer.Wpf.App.Extractors;
 global using Atc.LogViewer.Wpf.App.Factories;
 global using Atc.LogViewer.Wpf.App.Models;
 global using Atc.LogViewer.Wpf.App.Options;
@@ -36,6 +37,7 @@ global using Atc.Wpf.Controls.Helpers;
 global using Atc.Wpf.Controls.LabelControls;
 global using Atc.Wpf.Controls.LabelControls.Abstractions;
 global using Atc.Wpf.Controls.Options;
+global using Atc.Wpf.Controls.SettingsControls;
 global using Atc.Wpf.Controls.ViewModels;
 global using Atc.Wpf.Data;
 global using Atc.Wpf.Diagnostics;
@@ -43,10 +45,10 @@ global using Atc.Wpf.Helpers;
 global using Atc.Wpf.Messaging;
 global using Atc.Wpf.Mvvm;
 global using Atc.Wpf.Serialization.JsonConverters;
+global using Atc.Wpf.Theming;
+global using Atc.Wpf.Theming.Helpers;
 global using Atc.Wpf.Theming.Themes.Dialogs;
 global using Atc.Wpf.Translation;
-
-global using ControlzEx.Theming;
 
 global using LiveChartsCore;
 global using LiveChartsCore.Measure;

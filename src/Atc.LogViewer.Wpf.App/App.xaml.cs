@@ -1,6 +1,4 @@
 // ReSharper disable NotAccessedField.Local
-using Atc.Wpf.Theming.Helpers;
-
 namespace Atc.LogViewer.Wpf.App;
 
 /// <summary>

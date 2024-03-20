@@ -65,11 +65,6 @@
                     <fluent:Backstage Header="Application" KeyTip="A">
                         <fluent:BackstageTabControl>
                             <fluent:Button
-                                Command="{Binding Path=NewProfileCommand}"
-                                Header="New profile"
-                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.ContactAdd}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
-                                KeyTip="N" />
-                            <fluent:Button
                                 Command="{Binding Path=OpenProfileCommand}"
                                 Header="Open profile"
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
@@ -80,15 +75,26 @@
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.EnvelopeOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
                                 KeyTip="R" />
                             <fluent:Button
-                                Command="{Binding Path=SaveProfileCommand}"
-                                Header="Save profile"
-                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.Save}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
-                                KeyTip="S" />
-                            <fluent:Button
                                 Command="{Binding Path=OpenLogFolderCommand}"
                                 Header="Open log folder"
                                 Icon="{Binding Source={x:Static fontIcons:FontAwesomeRegularType.FolderOpen}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
                                 KeyTip="O" />
+                            <Separator />
+                            <fluent:Button
+                                Command="{Binding Path=NewProfileCommand}"
+                                Header="New profile"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.ContactAdd}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="N" />
+                            <fluent:Button
+                                Command="{Binding Path=EditProfileCommand}"
+                                Header="Edit profile"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.UiEdit}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="E" />
+                            <fluent:Button
+                                Command="{Binding Path=SaveProfileCommand}"
+                                Header="Save profile"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.Save}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="S" />
                             <Separator />
                             <fluent:Button
                                 Command="{Binding Path=OpenApplicationSettingsCommand}"
