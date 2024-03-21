@@ -21,20 +21,20 @@ public static class DialogBoxFactory
 
         var labelControls = BuildProfileLabelControls();
 
-        var labelControlName = (LabelTextBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.Name)!;
-        labelControlName.IsEnabled = false;
-        labelControlName.Text = profileViewModel.Name;
+        var lcName = labelControls.FindByIdentifier<LabelTextBox>(Constants.Forms.Profile.Name)!;
+        lcName.IsEnabled = false;
+        lcName.Text = profileViewModel.Name;
 
-        var lcLogFolder = (LabelDirectoryPicker)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.LogFolder)!;
+        var lcLogFolder = labelControls.FindByIdentifier<LabelDirectoryPicker>(Constants.Forms.Profile.LogFolder)!;
         lcLogFolder.Value = new DirectoryInfo(profileViewModel.LogFolder);
 
-        var lcDefaultCollector = (LabelComboBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.Collector)!;
+        var lcDefaultCollector = labelControls.FindByIdentifier<LabelComboBox>(Constants.Forms.Profile.Collector)!;
         lcDefaultCollector.SelectedKey = profileViewModel.CollectorType.ToString();
 
-        var lcMaxDaysBack = (LabelIntegerBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.MaxDaysBack)!;
+        var lcMaxDaysBack = labelControls.FindByIdentifier<LabelIntegerBox>(Constants.Forms.Profile.MaxDaysBack)!;
         lcMaxDaysBack.Value = profileViewModel.CollectorConfiguration.MaxDaysBack;
 
-        var lcMonitorFiles = (LabelCheckBox)labelControls.Find(x => x.Identifier == Constants.Forms.Profile.MonitorFiles)!;
+        var lcMonitorFiles = labelControls.FindByIdentifier<LabelCheckBox>(Constants.Forms.Profile.MonitorFiles)!;
         lcMonitorFiles.IsChecked = profileViewModel.CollectorConfiguration.MonitorFiles;
 
         var labelControlsForm = new LabelControlsForm();
