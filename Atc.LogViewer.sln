@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7B4313B5-B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogCollector", "src\Atc.LogCollector\Atc.LogCollector.csproj", "{E9D38F07-542C-4288-99E9-CAAE64E56CA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.LogAnalyzer", "src\Atc.LogAnalyzer\Atc.LogAnalyzer.csproj", "{1CB55D7B-A14F-4E3D-9029-41EDA48B1E5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogAnalyzer", "src\Atc.LogAnalyzer\Atc.LogAnalyzer.csproj", "{1CB55D7B-A14F-4E3D-9029-41EDA48B1E5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
