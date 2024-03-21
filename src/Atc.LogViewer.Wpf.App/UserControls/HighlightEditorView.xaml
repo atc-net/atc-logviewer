@@ -16,7 +16,7 @@
     <UserControl.Resources>
         <atcValueConverters:FontIconImageSourceValueConverter x:Key="FontIconImageConverter" />
         <atcValueConverters:ObjectNotNullToVisibilityVisibleValueConverter x:Key="ObjectNotNullToVisibilityVisibleConverter" />
-        <atcValueConverters:HexColorToColorKeyValueConverter x:Key="HexColorToColorKeyConverter" />
+        <atcValueConverters:HexBrushToBrushKeyValueConverter x:Key="HexBrushToBrushKeyConverter" />
     </UserControl.Resources>
 
     <DockPanel>
@@ -59,9 +59,9 @@
 
                     <atc:LabelCheckBox IsChecked="{Binding Path=SelectedHighlight.IgnoreCasing, FallbackValue=False}" LabelText="Ignore Casing" />
 
-                    <atc:LabelWellKnownColorSelector LabelText="Foreground" SelectedKey="{Binding Path=SelectedHighlight.Foreground, FallbackValue=Transparent, Converter={StaticResource HexColorToColorKeyConverter}}" />
+                    <atc:LabelWellKnownColorSelector LabelText="Foreground" SelectedKey="{Binding Path=SelectedHighlight.Foreground, FallbackValue=Transparent, Converter={StaticResource HexBrushToBrushKeyConverter}}" />
 
-                    <atc:LabelWellKnownColorSelector LabelText="Background" SelectedKey="{Binding Path=SelectedHighlight.Background, FallbackValue=Transparent, Converter={StaticResource HexColorToColorKeyConverter}}" />
+                    <atc:LabelWellKnownColorSelector LabelText="Background" SelectedKey="{Binding Path=SelectedHighlight.Background, FallbackValue=Transparent, Converter={StaticResource HexBrushToBrushKeyConverter}}" />
 
                 </atc:UniformSpacingPanel>
             </GroupBox>
