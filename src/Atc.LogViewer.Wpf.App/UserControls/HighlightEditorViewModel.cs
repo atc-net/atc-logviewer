@@ -18,7 +18,7 @@ public class HighlightEditorViewModel()
         }
     }
 
-    public ObservableCollectionEx<HighlightViewModel> Highlights { get; set; } = new();
+    public ObservableCollectionEx<HighlightViewModel> Highlights { get; set; } = [];
 
     public HighlightViewModel? SelectedHighlight
     {
@@ -30,12 +30,21 @@ public class HighlightEditorViewModel()
         }
     }
 
-    public ICommand AddCommand => new RelayCommand(AddCommandHandler);
+    public ICommand AddCommand => new RelayCommand(AddCommandHandler, CanAddCommandHandler);
 
     public ICommand DeleteCommand => new RelayCommand(DeleteCommandHandler, CanDeleteCommandHandler);
 
+    private bool CanAddCommandHandler()
+        => SelectedHighlight is null ||
+           !string.IsNullOrEmpty(SelectedHighlight.Text);
+
     private void AddCommandHandler()
     {
+        if (!CanAddCommandHandler())
+        {
+            return;
+        }
+
         var newHighlight = new HighlightViewModel();
         Highlights.Add(newHighlight);
         SelectedHighlight = newHighlight;

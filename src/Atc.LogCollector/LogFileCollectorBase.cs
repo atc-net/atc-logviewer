@@ -21,7 +21,25 @@ public abstract class LogFileCollectorBase : LogCollectorBase
         foreach (var extension in logExtensions)
         {
             var searchPattern = $"*.{extension.TrimStart('.')}";
-            files.AddRange(directory.GetFiles(searchPattern));
+            if (config.FileNameTerms.Count == 0)
+            {
+                files.AddRange(directory.GetFiles(searchPattern));
+            }
+            else
+            {
+                var filesByExtension = directory.GetFiles(searchPattern);
+                foreach (var file in filesByExtension)
+                {
+                    foreach (var term in config.FileNameTerms)
+                    {
+                        if (file.Name.Contains(term, StringComparison.OrdinalIgnoreCase) &&
+                            !files.Contains(file))
+                        {
+                            files.Add(file);
+                        }
+                    }
+                }
+            }
         }
 
         return files

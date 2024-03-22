@@ -51,6 +51,12 @@ public static class DialogBoxExtractor
             monitorFiles = monitorFilesResult;
         }
 
+        var fileNameTerms = new List<string>();
+        if (data[Constants.Forms.Profile.FileNameTerms] is TermsViewModel termsViewModel)
+        {
+            fileNameTerms.AddRange(termsViewModel.Terms);
+        }
+
         return (
             new ProfileViewModel
             {
@@ -60,7 +66,7 @@ public static class DialogBoxExtractor
                 CollectorConfiguration = new LogFileCollectorConfiguration
                 {
                     MaxDaysBack = (ushort)maxDaysBack,
-                    FileNameTerms = new List<string>(),
+                    FileNameTerms = fileNameTerms,
                     MonitorFiles = monitorFiles,
                 },
             },

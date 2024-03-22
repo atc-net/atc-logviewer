@@ -195,6 +195,7 @@
                                         SelectedDate="{Binding Path=FilterDateTimeTo, Mode=TwoWay}" />
                                 </atc:UniformSpacingPanel>
                                 <atc:LabelComboBox
+                                    Width="300"
                                     HideAreas="All"
                                     Items="{Binding Path=SourceSystems}"
                                     LabelText="SourceSystem"

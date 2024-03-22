@@ -118,6 +118,12 @@ public partial class MainWindowViewModel
         profileFile = file;
         await SaveProfileCommandHandler()
             .ConfigureAwait(continueOnCapturedContext: false);
+
+        await LoadLogFolder(
+                new DirectoryInfo(ProfileViewModel.LogFolder),
+                ProfileViewModel.CollectorConfiguration,
+                CancellationToken.None)
+            .ConfigureAwait(continueOnCapturedContext: false);
     }
 
     private bool CanEditProfileCommandHandler()
@@ -144,6 +150,12 @@ public partial class MainWindowViewModel
         ProfileViewModel = extractProfileViewModel;
 
         await SaveProfileCommandHandler()
+            .ConfigureAwait(continueOnCapturedContext: false);
+
+        await LoadLogFolder(
+                new DirectoryInfo(ProfileViewModel.LogFolder),
+                ProfileViewModel.CollectorConfiguration,
+                CancellationToken.None)
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
@@ -172,9 +184,11 @@ public partial class MainWindowViewModel
 
     private void OpenApplicationSettingsCommandHandler()
     {
+        var asDbVm = new BasicApplicationSettingsDialogBoxViewModel(ApplicationOptions);
+        asDbVm.SetHeaderControlInsteadOfTitleBarText();
         var dialogBox = new BasicApplicationSettingsDialogBox
         {
-            DataContext = new BasicApplicationSettingsDialogBoxViewModel(ApplicationOptions),
+            DataContext = asDbVm,
         };
 
         var dialogResult = dialogBox.ShowDialog();

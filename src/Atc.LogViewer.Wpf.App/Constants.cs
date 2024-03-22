@@ -12,6 +12,7 @@ public static class Constants
             public static readonly string Collector = "Collector";
             public static readonly string MaxDaysBack = "MaxDaysBack";
             public static readonly string MonitorFiles = "MonitorFiles";
+            public static readonly string FileNameTerms = "FileNameTerms";
         }
     }
 }

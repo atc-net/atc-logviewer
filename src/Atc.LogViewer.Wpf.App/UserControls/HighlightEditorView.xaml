@@ -55,7 +55,7 @@
                     <atc:LabelTextBox
                         IsMandatory="True"
                         LabelText="Text"
-                        Text="{Binding Path=SelectedHighlight.Text, FallbackValue=''}" />
+                        Text="{Binding Path=SelectedHighlight.Text, UpdateSourceTrigger=PropertyChanged, FallbackValue=''}" />
 
                     <atc:LabelCheckBox IsChecked="{Binding Path=SelectedHighlight.IgnoreCasing, FallbackValue=False}" LabelText="Ignore Casing" />
 

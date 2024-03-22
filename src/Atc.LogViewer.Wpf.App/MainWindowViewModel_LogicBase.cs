@@ -108,13 +108,13 @@ public partial class MainWindowViewModel
 
             AddLoadedProfileFileToRecentOpenFiles(file);
 
-            var defaultDirectory = new DirectoryInfo(ProfileViewModel.LogFolder);
-            if (defaultDirectory.Exists)
+            var logDirectory = new DirectoryInfo(ProfileViewModel.LogFolder);
+            if (logDirectory.Exists)
             {
                 await LoadLogFolder(
-                    defaultDirectory,
-                    ProfileViewModel.CollectorConfiguration,
-                    cancellationToken)
+                        logDirectory,
+                        ProfileViewModel.CollectorConfiguration,
+                        cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
