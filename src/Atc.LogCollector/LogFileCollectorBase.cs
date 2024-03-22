@@ -48,7 +48,7 @@ public abstract class LogFileCollectorBase : LogCollectorBase
             .ToList();
     }
 
-    public void MonitorFileÍfNeeded(
+    public void MonitorFileIfNeeded(
         FileInfo fileInfo,
         long lastLineNumber)
     {
@@ -70,7 +70,7 @@ public abstract class LogFileCollectorBase : LogCollectorBase
     {
     }
 
-    public void StopMonitoring()
+    public void StopMonitoringAllFiles()
     {
         foreach (var monitoredFile in MonitoredFiles)
         {
@@ -79,5 +79,19 @@ public abstract class LogFileCollectorBase : LogCollectorBase
         }
 
         MonitoredFiles.Clear();
+    }
+
+    public void StopMonitoringFile(
+        FileInfo file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        if (!MonitoredFiles.TryRemove(file.FullName, out var monitoredFile))
+        {
+            return;
+        }
+
+        monitoredFile.Stop();
+        monitoredFile.Dispose();
     }
 }

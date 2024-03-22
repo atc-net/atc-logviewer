@@ -15,6 +15,7 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
     private int logEntryBufferSize = 1;
     private LogFilter logFilter;
     private LogFileCollectorType activeLogFileCollectorType;
+    private LogFileCollectorConfiguration? activeLogFileCollectorConfiguration;
 
     public LogAnalyzer(
         ILog4NetFileCollector log4NetFileCollector,
@@ -84,6 +85,7 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
         }
 
         activeLogFileCollectorType = logFileCollectorType;
+        activeLogFileCollectorConfiguration = config;
 
         switch (activeLogFileCollectorType)
         {
@@ -196,10 +198,10 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
 
     public void StopMonitoringAndClearLogEntries()
     {
-        log4NetFileCollector.StopMonitoring();
-        nlogFileCollector.StopMonitoring();
-        serilogFileCollector.StopMonitoring();
-        syslogFileCollector.StopMonitoring();
+        log4NetFileCollector.StopMonitoringAllFiles();
+        nlogFileCollector.StopMonitoringAllFiles();
+        serilogFileCollector.StopMonitoringAllFiles();
+        syslogFileCollector.StopMonitoringAllFiles();
         ClearLogEntries();
     }
 
@@ -282,28 +284,42 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
         object sender,
         FileSystemEventArgs e)
     {
-        var fileInfo = new FileInfo(e.FullPath);
-        var isCreatedToday = fileInfo.IsCreatedToday();
-
-        if (!isCreatedToday)
+        if (activeLogFileCollectorConfiguration is null)
         {
-            // TODO: Later - possibly collect entries from dumped logs
             return;
         }
+
+        var fileInfo = new FileInfo(e.FullPath);
 
         switch (activeLogFileCollectorType)
         {
             case LogFileCollectorType.Log4Net:
-                log4NetFileCollector.MonitorFileÍfNeeded(fileInfo);
+                log4NetFileCollector.CollectFile(
+                    fileInfo,
+                    activeLogFileCollectorConfiguration,
+                    useMonitoring: true,
+                    CancellationToken.None);
                 break;
             case LogFileCollectorType.NLog:
-                nlogFileCollector.MonitorFileÍfNeeded(fileInfo);
+                nlogFileCollector.CollectFile(
+                    fileInfo,
+                    activeLogFileCollectorConfiguration,
+                    useMonitoring: true,
+                    CancellationToken.None);
                 break;
             case LogFileCollectorType.Serilog:
-                serilogFileCollector.MonitorFileÍfNeeded(fileInfo);
+                serilogFileCollector.CollectFile(
+                    fileInfo,
+                    activeLogFileCollectorConfiguration,
+                    useMonitoring: true,
+                    CancellationToken.None);
                 break;
             case LogFileCollectorType.Syslog:
-                syslogFileCollector.MonitorFileÍfNeeded(fileInfo);
+                syslogFileCollector.CollectFile(
+                    fileInfo,
+                    activeLogFileCollectorConfiguration,
+                    useMonitoring: true,
+                    CancellationToken.None);
                 break;
             default:
                 throw new SwitchCaseDefaultException(activeLogFileCollectorType);

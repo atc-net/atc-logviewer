@@ -21,6 +21,37 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
     public event Action<FileInfo[]>? CollectedFilesDone;
 
+    public async Task CollectFile(
+        FileInfo file,
+        LogFileCollectorConfiguration config,
+        bool useMonitoring,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(config);
+
+        StopMonitoringFile(file);
+
+        var (isSuccessFul, lastLineNumber) = await ReadAndParseLines(
+                file,
+                cancellationToken)
+            .ConfigureAwait(continueOnCapturedContext: false);
+
+        if (!isSuccessFul)
+        {
+            return;
+        }
+
+        CollectedFileDone?.Invoke(file);
+
+        if (useMonitoring)
+        {
+            MonitorFileIfNeeded(file, lastLineNumber);
+        }
+
+        CollectedFilesDone?.Invoke([file]);
+    }
+
     public async Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
@@ -36,7 +67,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             return;
         }
 
-        StopMonitoring();
+        StopMonitoringAllFiles();
 
         var options = new ParallelOptions { CancellationToken = cancellationToken };
 
@@ -59,7 +90,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
             if (useMonitoring)
             {
-                MonitorFileÍfNeeded(file, lastLineNumber);
+                MonitorFileIfNeeded(file, lastLineNumber);
             }
         }).ConfigureAwait(continueOnCapturedContext: false);
 

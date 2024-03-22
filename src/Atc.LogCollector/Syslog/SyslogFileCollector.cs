@@ -19,6 +19,13 @@ public class SyslogFileCollector : LogFileCollectorBase, ISyslogFileCollector
         this.syslogFileExtractor = syslogFileExtractor;
     }
 
+    public Task CollectFile(
+        FileInfo file,
+        LogFileCollectorConfiguration config,
+        bool useMonitoring,
+        CancellationToken cancellationToken)
+        => throw new NotImplementedException();
+
     public Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,

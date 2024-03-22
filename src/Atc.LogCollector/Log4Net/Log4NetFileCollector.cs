@@ -19,6 +19,13 @@ public class Log4NetFileCollector : LogFileCollectorBase, ILog4NetFileCollector
         this.log4NetFileExtractor = log4NetFileExtractor;
     }
 
+    public Task CollectFile(
+        FileInfo file,
+        LogFileCollectorConfiguration config,
+        bool useMonitoring,
+        CancellationToken cancellationToken)
+        => throw new NotImplementedException();
+
     public Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
