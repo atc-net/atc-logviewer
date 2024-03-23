@@ -58,8 +58,8 @@ public partial class MainWindowViewModel
         }
 
         await LoadProfileFile(
-            new FileInfo(openFileDialog.FileName),
-            CancellationToken.None).ConfigureAwait(true);
+                new FileInfo(openFileDialog.FileName))
+            .ConfigureAwait(true);
     }
 
     private bool CanOpenLastUsedProfileCommandHandler()
@@ -73,8 +73,7 @@ public partial class MainWindowViewModel
         }
 
         await LoadProfileFile(
-            new FileInfo(RecentOpenFiles[0].File),
-            CancellationToken.None)
+                new FileInfo(RecentOpenFiles[0].File))
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
@@ -119,10 +118,8 @@ public partial class MainWindowViewModel
         await SaveProfileCommandHandler()
             .ConfigureAwait(continueOnCapturedContext: false);
 
-        await LoadLogFolder(
-                new DirectoryInfo(ProfileViewModel.LogFolder),
-                ProfileViewModel.CollectorConfiguration,
-                CancellationToken.None)
+        await ClearDataAndCollectFromFolder(
+                new DirectoryInfo(ProfileViewModel.LogFolder))
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
@@ -152,10 +149,8 @@ public partial class MainWindowViewModel
         await SaveProfileCommandHandler()
             .ConfigureAwait(continueOnCapturedContext: false);
 
-        await LoadLogFolder(
-                new DirectoryInfo(ProfileViewModel.LogFolder),
-                ProfileViewModel.CollectorConfiguration,
-                CancellationToken.None)
+        await ClearDataAndCollectFromFolder(
+                new DirectoryInfo(ProfileViewModel.LogFolder))
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
@@ -171,14 +166,11 @@ public partial class MainWindowViewModel
 
         await SaveProfileFile(
                 profileFile!,
-                ProfileViewModel,
-                CancellationToken.None)
+                ProfileViewModel)
             .ConfigureAwait(continueOnCapturedContext: false);
 
-        await LoadLogFolder(
-                new DirectoryInfo(ProfileViewModel.LogFolder),
-                ProfileViewModel.CollectorConfiguration,
-                CancellationToken.None)
+        await ClearDataAndCollectFromFolder(
+                new DirectoryInfo(ProfileViewModel.LogFolder))
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
@@ -225,10 +217,8 @@ public partial class MainWindowViewModel
             return;
         }
 
-        await LoadLogFolder(
-                new DirectoryInfo(openFolderDialog.FolderName),
-                ProfileViewModel.CollectorConfiguration,
-                CancellationToken.None)
+        await ClearDataAndCollectFromFolder(
+                new DirectoryInfo(openFolderDialog.FolderName))
             .ConfigureAwait(true);
     }
 

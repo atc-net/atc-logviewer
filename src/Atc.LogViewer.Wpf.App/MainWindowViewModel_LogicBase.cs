@@ -89,7 +89,7 @@ public partial class MainWindowViewModel
 
     private async Task LoadProfileFile(
         FileInfo file,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         try
         {
@@ -111,9 +111,8 @@ public partial class MainWindowViewModel
             var logDirectory = new DirectoryInfo(ProfileViewModel.LogFolder);
             if (logDirectory.Exists)
             {
-                await LoadLogFolder(
+                await ClearDataAndCollectFromFolder(
                         logDirectory,
-                        ProfileViewModel.CollectorConfiguration,
                         cancellationToken)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
@@ -128,7 +127,7 @@ public partial class MainWindowViewModel
     private async Task SaveProfileFile(
         FileInfo file,
         ProfileViewModel profile,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         try
         {
@@ -151,12 +150,38 @@ public partial class MainWindowViewModel
         }
     }
 
-    private async Task LoadLogFolder(
-        DirectoryInfo directory,
-        LogFileCollectorConfiguration config,
-        CancellationToken cancellationToken)
+    private async Task CollectFromFile(
+        FileInfo file)
     {
         IsBusy = true;
+
+        if (ProfileViewModel.CollectorType == LogFileCollectorType.None)
+        {
+            ProfileViewModel.CollectorType = LogFileCollectorType.Serilog;
+        }
+
+        await logAnalyzer
+            .CollectFile(
+                ProfileViewModel.CollectorType,
+                file,
+                ProfileViewModel.CollectorConfiguration,
+                useMonitoring: true,
+                CancellationToken.None)
+            .ConfigureAwait(continueOnCapturedContext: false);
+
+        IsBusy = false;
+    }
+
+    private async Task ClearDataAndCollectFromFolder(
+        DirectoryInfo directory,
+        CancellationToken cancellationToken = default)
+    {
+        IsBusy = true;
+
+        if (ProfileViewModel.CollectorType == LogFileCollectorType.None)
+        {
+            ProfileViewModel.CollectorType = LogFileCollectorType.Serilog;
+        }
 
         logAnalyzer.StopMonitoringAndClearLogEntries();
         LogEntries.Clear();
@@ -165,8 +190,8 @@ public partial class MainWindowViewModel
             .CollectFolder(
                 ProfileViewModel.CollectorType,
                 directory,
-                config,
-                config.MonitorFiles,
+                ProfileViewModel.CollectorConfiguration,
+                ProfileViewModel.CollectorConfiguration.MonitorFiles,
                 cancellationToken)
             .ConfigureAwait(continueOnCapturedContext: false);
 

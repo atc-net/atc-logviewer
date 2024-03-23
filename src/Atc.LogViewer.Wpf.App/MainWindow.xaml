@@ -21,6 +21,7 @@
     MinWidth="700"
     MinHeight="400"
     d:DataContext="{d:DesignInstance Type=app:MainWindowViewModel}"
+    AllowDrop="True"
     WindowState="{Binding Path=WindowState}"
     mc:Ignorable="d">
 
@@ -28,6 +29,7 @@
         <ResourceDictionary>
             <atcValueConverters:FontIconImageSourceValueConverter x:Key="FontIconImageConverter" />
             <atcValueConverters:LogLevelToBrushValueConverter x:Key="LogLevelToBrushConverter" />
+            <atcValueConverters:StringNullOrEmptyToVisibilityCollapsedValueConverter x:Key="StringNullOrEmptyToVisibilityCollapsedConverter" />
             <valueConverters:JsonFormatVisibilityVisibleValueConverter x:Key="JsonFormatVisibilityConverter" />
             <valueConverters:ViewModeVisibilityValueConverter x:Key="ViewModeVisibilityConverter" />
 
@@ -269,7 +271,7 @@
                 <StackPanel
                     Grid.Row="0"
                     Background="DarkOrange"
-                    Visibility="{Binding Path=NewVersionIsAvailable, Converter={StaticResource StringNullOrEmptyToVisibilityCollapsedValueConverter}}">
+                    Visibility="{Binding Path=NewVersionIsAvailable, Converter={StaticResource StringNullOrEmptyToVisibilityCollapsedConverter}}">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <atc:ImageButton Command="{Binding Path=OpenApplicationCheckForUpdatesCommand}" Content="{Binding Path=NewVersionIsAvailable, FallbackValue='New version of LogViewer is available'}">
                             <atc:ImageButton.Resources>

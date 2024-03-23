@@ -30,7 +30,10 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         ArgumentNullException.ThrowIfNull(file);
         ArgumentNullException.ThrowIfNull(config);
 
-        StopMonitoringFile(file);
+        if (IsFileMonitoring(file))
+        {
+            return;
+        }
 
         var (isSuccessFul, lastLineNumber) = await ReadAndParseLines(
                 file,

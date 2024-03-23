@@ -66,6 +66,56 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
 
     public event Action<AtcLogEntry[]>? CollectedEntries;
 
+    public async Task CollectFile(
+        LogFileCollectorType logFileCollectorType,
+        FileInfo file,
+        LogFileCollectorConfiguration config,
+        bool useMonitoring,
+        CancellationToken cancellationToken)
+    {
+        switch (logFileCollectorType)
+        {
+            case LogFileCollectorType.Log4Net:
+                await log4NetFileCollector
+                    .CollectFile(
+                        file,
+                        config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                break;
+            case LogFileCollectorType.NLog:
+                await nlogFileCollector
+                    .CollectFile(
+                        file,
+                        config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                break;
+            case LogFileCollectorType.Serilog:
+                await serilogFileCollector
+                    .CollectFile(
+                        file,
+                        config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                break;
+            case LogFileCollectorType.Syslog:
+                await syslogFileCollector
+                    .CollectFile(
+                        file,
+                        config,
+                        useMonitoring,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                break;
+            default:
+                throw new SwitchCaseDefaultException(activeLogFileCollectorType);
+        }
+    }
+
     public async Task CollectFolder(
         LogFileCollectorType logFileCollectorType,
         DirectoryInfo directory,
@@ -291,39 +341,13 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
 
         var fileInfo = new FileInfo(e.FullPath);
 
-        switch (activeLogFileCollectorType)
-        {
-            case LogFileCollectorType.Log4Net:
-                log4NetFileCollector.CollectFile(
-                    fileInfo,
-                    activeLogFileCollectorConfiguration,
-                    useMonitoring: true,
-                    CancellationToken.None);
-                break;
-            case LogFileCollectorType.NLog:
-                nlogFileCollector.CollectFile(
-                    fileInfo,
-                    activeLogFileCollectorConfiguration,
-                    useMonitoring: true,
-                    CancellationToken.None);
-                break;
-            case LogFileCollectorType.Serilog:
-                serilogFileCollector.CollectFile(
-                    fileInfo,
-                    activeLogFileCollectorConfiguration,
-                    useMonitoring: true,
-                    CancellationToken.None);
-                break;
-            case LogFileCollectorType.Syslog:
-                syslogFileCollector.CollectFile(
-                    fileInfo,
-                    activeLogFileCollectorConfiguration,
-                    useMonitoring: true,
-                    CancellationToken.None);
-                break;
-            default:
-                throw new SwitchCaseDefaultException(activeLogFileCollectorType);
-        }
+        TaskHelper.FireAndForget(
+            CollectFile(
+                activeLogFileCollectorType,
+                fileInfo,
+                activeLogFileCollectorConfiguration,
+                useMonitoring: true,
+                CancellationToken.None));
     }
 
     private void NotifyAndClearBuffer()

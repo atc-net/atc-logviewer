@@ -70,15 +70,12 @@ public abstract class LogFileCollectorBase : LogCollectorBase
     {
     }
 
-    public void StopMonitoringAllFiles()
+    public bool IsFileMonitoring(
+        FileInfo file)
     {
-        foreach (var monitoredFile in MonitoredFiles)
-        {
-            monitoredFile.Value.Stop();
-            monitoredFile.Value.Dispose();
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
-        MonitoredFiles.Clear();
+        return MonitoredFiles.ContainsKey(file.FullName);
     }
 
     public void StopMonitoringFile(
@@ -93,5 +90,16 @@ public abstract class LogFileCollectorBase : LogCollectorBase
 
         monitoredFile.Stop();
         monitoredFile.Dispose();
+    }
+
+    public void StopMonitoringAllFiles()
+    {
+        foreach (var monitoredFile in MonitoredFiles)
+        {
+            monitoredFile.Value.Stop();
+            monitoredFile.Value.Dispose();
+        }
+
+        MonitoredFiles.Clear();
     }
 }

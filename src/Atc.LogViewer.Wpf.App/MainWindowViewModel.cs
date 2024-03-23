@@ -314,6 +314,39 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         }
     }
 
+    public void OnDrop(
+        object sender,
+        DragEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+
+        if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            return;
+        }
+
+        var data = e.Data.GetData(DataFormats.FileDrop, autoConvert: true);
+        if (data is not string[] droppedItems ||
+            droppedItems.Length == 0)
+        {
+            return;
+        }
+
+        foreach (var item in droppedItems)
+        {
+            if (item.Contains('.', StringComparison.Ordinal))
+            {
+                var file = new FileInfo(item);
+                TaskHelper.FireAndForget(CollectFromFile(file));
+            }
+            else
+            {
+                var folder = new DirectoryInfo(item);
+                TaskHelper.FireAndForget(ClearDataAndCollectFromFolder(folder));
+            }
+        }
+    }
+
     private void OnCollectedEntry(
         AtcLogEntry logEntry)
     {

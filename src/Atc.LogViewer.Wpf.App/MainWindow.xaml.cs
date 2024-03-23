@@ -15,6 +15,7 @@ public partial class MainWindow
         Closing += OnClosing;
         KeyDown += OnKeyDown;
         KeyUp += OnKeyUp;
+        Drop += OnDrop;
     }
 
     private void OnLoaded(
@@ -47,6 +48,14 @@ public partial class MainWindow
     {
         var vm = DataContext as MainWindowViewModel;
         vm!.OnKeyUp(this, e);
+    }
+
+    private void OnDrop(
+        object sender,
+        DragEventArgs e)
+    {
+        var vm = DataContext as MainWindowViewModel;
+        vm!.OnDrop(this, e);
     }
 
     private void OnFilterTextKeyDown(
