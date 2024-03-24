@@ -2,7 +2,7 @@ namespace Atc.LogCollector.NLog;
 
 public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
 {
-    private readonly INLogFileExtractor nlogFileExtractor;
+    private readonly INLogFileExtractor fileExtractor;
     private readonly string[] defaultLogExtensions = ["log"];
 
     public event Action<AtcLogEntry>? CollectedEntry;
@@ -16,7 +16,7 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
     {
         ArgumentNullException.ThrowIfNull(nlogFileExtractor);
 
-        this.nlogFileExtractor = nlogFileExtractor;
+        fileExtractor = nlogFileExtractor;
     }
 
     public bool CanParseFileFormat(
@@ -30,8 +30,6 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
         {
             return false;
         }
-
-        var extractor = new NLogFileExtractor();
 
         try
         {
@@ -49,7 +47,7 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
                     return false;
                 }
 
-                if (extractor.ParseRootLine(string.Empty, string.Empty, 0, line) is not null)
+                if (fileExtractor.ParseRootLine(string.Empty, string.Empty, 0, line) is not null)
                 {
                     return true;
                 }

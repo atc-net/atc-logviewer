@@ -3,7 +3,7 @@ namespace Atc.LogCollector.Serilog;
 
 public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 {
-    private readonly ISerilogFileExtractor serilogFileExtractor;
+    private readonly ISerilogFileExtractor fileExtractor;
     private readonly string[] defaultLogExtensions = ["log", "txt"];
 
     public SerilogFileCollector(
@@ -11,7 +11,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
     {
         ArgumentNullException.ThrowIfNull(serilogFileExtractor);
 
-        this.serilogFileExtractor = serilogFileExtractor;
+        fileExtractor = serilogFileExtractor;
     }
 
     public event Action<AtcLogEntry>? CollectedEntry;
@@ -32,8 +32,6 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             return false;
         }
 
-        var extractor = new SerilogFileExtractor();
-
         try
         {
             using var sr = new StreamReader(file.FullName);
@@ -50,7 +48,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
                     return false;
                 }
 
-                if (extractor.ParseRootLine(string.Empty, string.Empty, 0, line) is not null)
+                if (fileExtractor.ParseRootLine(string.Empty, string.Empty, 0, line) is not null)
                 {
                     return true;
                 }
@@ -164,7 +162,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         var sourceIdentifier = Path.GetFileNameWithoutExtension(obj.File.FullName);
         var sourceSystem = GetSourceSystemFromSourceIdentifier(sourceIdentifier);
 
-        var logEntry = serilogFileExtractor.ParseRootLine(
+        var logEntry = fileExtractor.ParseRootLine(
             sourceIdentifier,
             sourceSystem,
             obj.LineNumber,
