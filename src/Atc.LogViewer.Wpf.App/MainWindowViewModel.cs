@@ -332,19 +332,22 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
             return;
         }
 
-        foreach (var item in droppedItems)
+        Task.Run(async () =>
         {
-            if (item.Contains('.', StringComparison.Ordinal))
+            foreach (var item in droppedItems)
             {
-                var file = new FileInfo(item);
-                TaskHelper.FireAndForget(CollectFromFile(file));
+                if (item.Contains('.', StringComparison.Ordinal))
+                {
+                    var file = new FileInfo(item);
+                    await CollectFromFile(file).ConfigureAwait(false);
+                }
+                else
+                {
+                    var folder = new DirectoryInfo(item);
+                    await ClearDataAndCollectFromFolder(folder).ConfigureAwait(false);
+                }
             }
-            else
-            {
-                var folder = new DirectoryInfo(item);
-                TaskHelper.FireAndForget(ClearDataAndCollectFromFolder(folder));
-            }
-        }
+        });
     }
 
     private void OnCollectedEntry(
