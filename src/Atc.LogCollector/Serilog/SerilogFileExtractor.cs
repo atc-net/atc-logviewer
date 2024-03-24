@@ -19,7 +19,16 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
         {
             var dateTimeString = line[..30];
             var dateTime = DateTime.Parse(dateTimeString, GlobalizationConstants.EnglishCultureInfo);
-            var logLevelString = line.Substring(32, 3).Trim('[', ']');
+            var indexOfLogLevelStart = line.IndexOf('[', 31) + 1;
+            var indexOfLogLevelEnd = line.IndexOf(']', indexOfLogLevelStart);
+            if (indexOfLogLevelStart < 0 || indexOfLogLevelStart >= line.Length)
+            {
+                return null;
+            }
+
+            var logLevelString = line[indexOfLogLevelStart..indexOfLogLevelEnd];
+            var message = line[(indexOfLogLevelEnd + 2)..];
+
             var logLevel = logLevelString switch
             {
                 "VRB" => LogLevel.Trace,
@@ -30,8 +39,6 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
                 "FTL" => LogLevel.Critical,
                 _ => throw new SwitchCaseDefaultException($"Unknown log level: {logLevelString}"),
             };
-
-            var message = line[37..];
 
             return new AtcLogEntry(
                 sourceIdentifier,

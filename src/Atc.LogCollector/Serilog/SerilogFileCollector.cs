@@ -3,7 +3,6 @@ namespace Atc.LogCollector.Serilog;
 
 public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 {
-    private const int MessageShortMaxLength = 160;
     private readonly ISerilogFileExtractor serilogFileExtractor;
     private readonly string[] defaultLogExtensions = ["log", "txt"];
 

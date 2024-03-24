@@ -5,6 +5,8 @@ namespace Atc.LogCollector;
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "OK.")]
 public abstract class LogFileCollectorBase : LogCollectorBase
 {
+    internal const int MessageShortMaxLength = 160;
+
     internal readonly ConcurrentDictionary<string, TailFile> MonitoredFiles = new(StringComparer.Ordinal);
 
     internal static IList<FileInfo> GetFiles(

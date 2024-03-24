@@ -8,7 +8,7 @@ public class SerilogCollectorIntegrationTestBase : CollectorIntegrationTestBase
     private Microsoft.Extensions.Logging.ILogger? logger;
     private FileInfo? logFile;
 
-    public FileInfo CurrentLogFile => logFile!;
+    public FileInfo CurrentLogFile => logFile ?? throw new InvalidOperationException("Log file has not been initialized.");
 
     [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "OK.")]
     public override async Task InitializeAsync()
