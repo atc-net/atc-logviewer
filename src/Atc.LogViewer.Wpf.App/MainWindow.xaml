@@ -233,15 +233,15 @@
                             Style="{StaticResource ButtonStyle}" />
                         <Grid Width="70" Margin="2,0">
                             <StackPanel
-                                Width="55"
+                                Width="60"
                                 Margin="0,9,0,0"
                                 Orientation="Vertical">
                                 <atc:ToggleSwitch
                                     Margin="5,-2,0,0"
-                                    IsOn="{Binding Path=FollowTail}"
+                                    IsOn="{Binding Path=EnableAutoScrollToEnd}"
                                     OffContent=""
                                     OnContent="" />
-                                <TextBlock Margin="0,2,0,0" Text="Follow Tail" />
+                                <TextBlock Margin="0,2,0,0" Text="Auto Scroll" />
                             </StackPanel>
                         </Grid>
                     </fluent:RibbonGroupBox>
@@ -319,7 +319,7 @@
                             SelectedItem="{Binding Path=SelectedLogEntry}"
                             SelectionMode="Single">
                             <b:Interaction.Behaviors>
-                                <behaviors:AutoScrollListViewBehavior IsEnabled="{Binding Path=FollowTail}" ScrollDirection="Bottom" />
+                                <behaviors:AutoScrollListViewBehavior IsEnabled="{Binding Path=EnableAutoScrollToEnd}" ScrollDirection="Bottom" />
                             </b:Interaction.Behaviors>
                             <ListView.View>
                                 <GridView>

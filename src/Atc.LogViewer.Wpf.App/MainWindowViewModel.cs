@@ -9,7 +9,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
     private string? newVersionIsAvailable;
     private BitmapImage? icon;
     private FileInfo? profileFile;
-    private bool followTail = true;
+    private bool enableAutoScrollToEnd = true;
     private AtcLogEntryEx? selectedLogEntry;
     private ViewMode viewMode;
     private bool isTraceEnabled = true;
@@ -155,12 +155,12 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
         }
     }
 
-    public bool FollowTail
+    public bool EnableAutoScrollToEnd
     {
-        get => followTail;
+        get => enableAutoScrollToEnd;
         set
         {
-            followTail = value;
+            enableAutoScrollToEnd = value;
             RaisePropertyChanged();
         }
     }
