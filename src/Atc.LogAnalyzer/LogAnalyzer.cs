@@ -117,6 +117,20 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
         bool useMonitoring,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(config);
+
+        logEntryBufferSize = 10_000_000;
+
+        if (fileSystemWatcher is not null)
+        {
+            fileSystemWatcher.Created -= OnFileCreated;
+            fileSystemWatcher.Dispose();
+        }
+
+        activeLogFileCollectorType = logFileCollectorType;
+        activeLogFileCollectorConfiguration = config;
+
         switch (logFileCollectorType)
         {
             case LogFileCollectorType.Log4Net:
@@ -158,6 +172,12 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
             default:
                 throw new SwitchCaseDefaultException(activeLogFileCollectorType);
         }
+
+        logEntryBufferSize = 1;
+        NotifyAndClearBuffer();
+
+        fileSystemWatcher = new FileSystemWatcher(file.Directory!.FullName) { EnableRaisingEvents = true, };
+        fileSystemWatcher.Created += OnFileCreated;
     }
 
     public async Task CollectFolder(

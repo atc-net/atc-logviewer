@@ -179,7 +179,7 @@ public partial class MainWindowViewModel
                 ProfileViewModel.CollectorType,
                 file,
                 ProfileViewModel.CollectorConfiguration,
-                useMonitoring: true,
+                ProfileViewModel.CollectorConfiguration.MonitorFiles,
                 CancellationToken.None)
             .ConfigureAwait(continueOnCapturedContext: false);
 
