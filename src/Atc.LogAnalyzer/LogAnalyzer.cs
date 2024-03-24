@@ -92,14 +92,14 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
             return LogFileCollectorType.Serilog;
         }
 
-        if (log4NetFileCollector.CanParseFileFormat(file))
-        {
-            return LogFileCollectorType.Log4Net;
-        }
-
         if (nlogFileCollector.CanParseFileFormat(file))
         {
             return LogFileCollectorType.NLog;
+        }
+
+        if (log4NetFileCollector.CanParseFileFormat(file))
+        {
+            return LogFileCollectorType.Log4Net;
         }
 
         if (syslogFileCollector.CanParseFileFormat(file))
