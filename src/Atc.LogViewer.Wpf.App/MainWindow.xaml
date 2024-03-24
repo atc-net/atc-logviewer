@@ -121,7 +121,7 @@
                         <StackPanel Orientation="Horizontal">
                             <fluent:SplitButton
                                 Header="Severity"
-                                IsCheckable="True"
+                                IsCheckable="False"
                                 IsChecked="False"
                                 LargeIcon="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.NotesMedical}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}">
                                 <fluent:MenuItem
