@@ -178,7 +178,7 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         }
     }
 
-    private async Task<(bool IsSuccessFul, long LastLineNumber)> ReadAndParseLines(
+    internal async Task<(bool IsSuccessFul, long LastLineNumber)> ReadAndParseLines(
         FileInfo file,
         CancellationToken cancellationToken)
     {
