@@ -44,11 +44,6 @@
                 <Setter Property="Margin" Value="2,0" />
                 <Setter Property="MinWidth" Value="60" />
             </Style>
-
-            <Style x:Key="ToggleButtonStyle" TargetType="{x:Type fluent:ToggleButton}">
-                <Setter Property="Margin" Value="2,0" />
-                <Setter Property="MinWidth" Value="60" />
-            </Style>
         </ResourceDictionary>
     </atc:NiceWindow.Resources>
 
@@ -124,36 +119,48 @@
                 <fluent:RibbonTabItem Header="Home" KeyTip="H">
                     <fluent:RibbonGroupBox Header="Filter">
                         <StackPanel Orientation="Horizontal">
-                            <fluent:ToggleButton
-                                Header="Trace"
-                                IsChecked="{Binding Path=IsTraceEnabled}"
-                                LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.BearTracks}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource TraceBrush}}"
-                                Style="{StaticResource ToggleButtonStyle}" />
-                            <fluent:ToggleButton
-                                Header="Debug"
-                                IsChecked="{Binding Path=IsDebugEnabled}"
-                                LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.FrogTracks}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource DebugBrush}}"
-                                Style="{StaticResource ToggleButtonStyle}" />
-                            <fluent:ToggleButton
-                                Header="Info"
-                                IsChecked="{Binding Path=IsInfoEnabled}"
-                                LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.InfoCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource InformationBrush}}"
-                                Style="{StaticResource ToggleButtonStyle}" />
-                            <fluent:ToggleButton
-                                Header="Warning"
-                                IsChecked="{Binding Path=IsWarningEnabled}"
-                                LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.Warning}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource WarningBrush}}"
-                                Style="{StaticResource ToggleButtonStyle}" />
-                            <fluent:ToggleButton
-                                Header="Error"
-                                IsChecked="{Binding Path=IsErrorEnabled}"
-                                LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.Bug}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource ErrorBrush}}"
-                                Style="{StaticResource ToggleButtonStyle}" />
-                            <fluent:ToggleButton
-                                Header="Critical"
-                                IsChecked="{Binding Path=IsCriticalEnabled}"
-                                LargeIcon="{Binding Source={x:Static fontIcons:IcoFontType.AngryMonster}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource CriticalBrush}}"
-                                Style="{StaticResource ToggleButtonStyle}" />
+                            <fluent:SplitButton
+                                Header="Severity"
+                                IsCheckable="True"
+                                IsChecked="False"
+                                LargeIcon="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.NotesMedical}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.Bootstrap.Orange500}}">
+                                <fluent:MenuItem
+                                    Margin="3"
+                                    Header="Trace"
+                                    Icon="{Binding Source={x:Static fontIcons:IcoFontType.BearTracks}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource TraceBrush}}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding Path=IsTraceEnabled}" />
+                                <fluent:MenuItem
+                                    Margin="3"
+                                    Header="Debug"
+                                    Icon="{Binding Source={x:Static fontIcons:IcoFontType.FrogTracks}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource DebugBrush}}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding Path=IsDebugEnabled}" />
+                                <fluent:MenuItem
+                                    Margin="3"
+                                    Header="Info"
+                                    Icon="{Binding Source={x:Static fontIcons:IcoFontType.InfoCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource InformationBrush}}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding Path=IsInfoEnabled}" />
+                                <fluent:MenuItem
+                                    Margin="3"
+                                    Header="Warning"
+                                    Icon="{Binding Source={x:Static fontIcons:IcoFontType.Warning}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource WarningBrush}}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding Path=IsWarningEnabled}" />
+                                <fluent:MenuItem
+                                    Margin="3"
+                                    Header="Error"
+                                    Icon="{Binding Source={x:Static fontIcons:IcoFontType.Bug}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource ErrorBrush}}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding Path=IsErrorEnabled}" />
+                                <fluent:MenuItem
+                                    Margin="3"
+                                    Header="Critical"
+                                    Icon="{Binding Source={x:Static fontIcons:IcoFontType.AngryMonster}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource CriticalBrush}}"
+                                    IsCheckable="True"
+                                    IsChecked="{Binding Path=IsCriticalEnabled}" />
+                            </fluent:SplitButton>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Margin="10" Orientation="Horizontal">
                                     <TextBox
