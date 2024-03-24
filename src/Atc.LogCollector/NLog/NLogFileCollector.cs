@@ -19,6 +19,13 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
         this.nlogFileExtractor = nlogFileExtractor;
     }
 
+    public bool CanParseFileFormat(
+        FileInfo file)
+    {
+        // TODO: Implement this.
+        return false;
+    }
+
     public Task CollectFile(
         FileInfo file,
         LogFileCollectorConfiguration config,

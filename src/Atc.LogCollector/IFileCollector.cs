@@ -8,6 +8,9 @@ public interface IFileCollector
 
     public event Action<FileInfo[]>? CollectedFilesDone;
 
+    bool CanParseFileFormat(
+        FileInfo file);
+
     Task CollectFile(
         FileInfo file,
         LogFileCollectorConfiguration config,

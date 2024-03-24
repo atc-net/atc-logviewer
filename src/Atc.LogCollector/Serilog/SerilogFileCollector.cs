@@ -21,6 +21,50 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
 
     public event Action<FileInfo[]>? CollectedFilesDone;
 
+    public bool CanParseFileFormat(
+        FileInfo file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        if (!defaultLogExtensions.Contains(
+                file.Extension.Replace(".", string.Empty, StringComparison.Ordinal),
+                StringComparer.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var extractor = new SerilogFileExtractor();
+
+        try
+        {
+            using var sr = new StreamReader(file.FullName);
+            for (var i = 0; i < 3; i++)
+            {
+                if (sr.EndOfStream)
+                {
+                    break;
+                }
+
+                var line = sr.ReadLine();
+                if (line is null)
+                {
+                    return false;
+                }
+
+                if (extractor.ParseRootLine(string.Empty, string.Empty, 0, line) is not null)
+                {
+                    return true;
+                }
+            }
+        }
+        catch
+        {
+            return false;
+        }
+
+        return false;
+    }
+
     public async Task CollectFile(
         FileInfo file,
         LogFileCollectorConfiguration config,
@@ -31,6 +75,11 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
         ArgumentNullException.ThrowIfNull(config);
 
         if (IsFileMonitoring(file))
+        {
+            return;
+        }
+
+        if (!CanParseFileFormat(file))
         {
             return;
         }
@@ -79,6 +128,11 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             options,
             async (file, _) =>
         {
+            if (!CanParseFileFormat(file))
+            {
+                return;
+            }
+
             var (isSuccessFul, lastLineNumber) = await ReadAndParseLines(
                     file,
                     cancellationToken)

@@ -19,6 +19,13 @@ public class SyslogFileCollector : LogFileCollectorBase, ISyslogFileCollector
         this.syslogFileExtractor = syslogFileExtractor;
     }
 
+    public bool CanParseFileFormat(
+        FileInfo file)
+    {
+        // TODO: Implement this.
+        return false;
+    }
+
     public Task CollectFile(
         FileInfo file,
         LogFileCollectorConfiguration config,

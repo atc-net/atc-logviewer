@@ -155,10 +155,24 @@ public partial class MainWindowViewModel
     {
         IsBusy = true;
 
-        if (ProfileViewModel.CollectorType == LogFileCollectorType.None)
+        var logFileCollectorType = logAnalyzer.DetermineCollectorType(file);
+        if (logFileCollectorType == LogFileCollectorType.None)
         {
-            ProfileViewModel.CollectorType = LogFileCollectorType.Serilog;
+            IsBusy = false;
+
+            var dialogBox = new InfoDialogBox(
+                Application.Current.MainWindow!,
+                new DialogBoxSettings(DialogBoxType.Ok, LogCategoryType.Warning)
+                {
+                    TitleBarText = "Invalid log file",
+                },
+                "This is not a valid log file");
+
+            dialogBox.ShowDialog();
+            return;
         }
+
+        ProfileViewModel.CollectorType = logFileCollectorType;
 
         await logAnalyzer
             .CollectFile(
@@ -178,9 +192,21 @@ public partial class MainWindowViewModel
     {
         IsBusy = true;
 
-        if (ProfileViewModel.CollectorType == LogFileCollectorType.None)
+        var logFileCollectorType = logAnalyzer.DetermineCollectorType(directory);
+        if (logFileCollectorType == LogFileCollectorType.None)
         {
-            ProfileViewModel.CollectorType = LogFileCollectorType.Serilog;
+            IsBusy = false;
+
+            var dialogBox = new InfoDialogBox(
+                Application.Current.MainWindow!,
+                new DialogBoxSettings(DialogBoxType.Ok, LogCategoryType.Warning)
+                {
+                    TitleBarText = "Invalid log folder",
+                },
+                "There is no valid log files in this folder");
+
+            dialogBox.ShowDialog();
+            return;
         }
 
         logAnalyzer.StopMonitoringAndClearLogEntries();

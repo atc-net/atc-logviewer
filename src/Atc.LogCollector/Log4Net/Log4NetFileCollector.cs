@@ -19,6 +19,13 @@ public class Log4NetFileCollector : LogFileCollectorBase, ILog4NetFileCollector
         this.log4NetFileExtractor = log4NetFileExtractor;
     }
 
+    public bool CanParseFileFormat(
+        FileInfo file)
+    {
+        // TODO: Implement this.
+        return false;
+    }
+
     public Task CollectFile(
         FileInfo file,
         LogFileCollectorConfiguration config,

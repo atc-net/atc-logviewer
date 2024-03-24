@@ -1,6 +1,7 @@
-// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
-// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+// ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable InvertIf
+// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 namespace Atc.LogAnalyzer;
 
 public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
@@ -65,6 +66,49 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
     public event Action<AtcLogEntry>? CollectedEntry;
 
     public event Action<AtcLogEntry[]>? CollectedEntries;
+
+    public LogFileCollectorType DetermineCollectorType(
+        DirectoryInfo directory)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+
+        var files = Directory
+            .GetFiles(directory.FullName)
+            .Select(x => new FileInfo(x))
+            .OrderByDescending(x => x.CreationTime);
+
+        return files
+            .Select(DetermineCollectorType)
+            .FirstOrDefault(x => x != LogFileCollectorType.None);
+    }
+
+    public LogFileCollectorType DetermineCollectorType(
+        FileInfo file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        if (serilogFileCollector.CanParseFileFormat(file))
+        {
+            return LogFileCollectorType.Serilog;
+        }
+
+        if (log4NetFileCollector.CanParseFileFormat(file))
+        {
+            return LogFileCollectorType.Log4Net;
+        }
+
+        if (nlogFileCollector.CanParseFileFormat(file))
+        {
+            return LogFileCollectorType.NLog;
+        }
+
+        if (syslogFileCollector.CanParseFileFormat(file))
+        {
+            return LogFileCollectorType.Syslog;
+        }
+
+        return LogFileCollectorType.None;
+    }
 
     public async Task CollectFile(
         LogFileCollectorType logFileCollectorType,

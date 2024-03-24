@@ -6,6 +6,12 @@ public interface ILogAnalyzer
 
     event Action<AtcLogEntry[]>? CollectedEntries;
 
+    LogFileCollectorType DetermineCollectorType(
+        DirectoryInfo directory);
+
+    LogFileCollectorType DetermineCollectorType(
+        FileInfo file);
+
     Task CollectFile(
         LogFileCollectorType logFileCollectorType,
         FileInfo file,
