@@ -6,5 +6,4 @@ public enum LogFileCollectorType
     Log4Net,
     NLog,
     Serilog,
-    Syslog,
 }

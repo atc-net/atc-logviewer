@@ -9,7 +9,6 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
     private readonly ILog4NetFileCollector log4NetFileCollector;
     private readonly INLogFileCollector nlogFileCollector;
     private readonly ISerilogFileCollector serilogFileCollector;
-    private readonly ISyslogFileCollector syslogFileCollector;
     private readonly ConcurrentBag<AtcLogEntry> logEntries = [];
     private readonly ConcurrentBag<AtcLogEntry> logEntryBuffer = [];
     private FileSystemWatcher? fileSystemWatcher;
@@ -21,18 +20,15 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
     public LogAnalyzer(
         ILog4NetFileCollector log4NetFileCollector,
         INLogFileCollector nlogFileCollector,
-        ISerilogFileCollector serilogFileCollector,
-        ISyslogFileCollector syslogFileCollector)
+        ISerilogFileCollector serilogFileCollector)
     {
         ArgumentNullException.ThrowIfNull(log4NetFileCollector);
         ArgumentNullException.ThrowIfNull(nlogFileCollector);
         ArgumentNullException.ThrowIfNull(serilogFileCollector);
-        ArgumentNullException.ThrowIfNull(syslogFileCollector);
 
         this.log4NetFileCollector = log4NetFileCollector;
         this.nlogFileCollector = nlogFileCollector;
         this.serilogFileCollector = serilogFileCollector;
-        this.syslogFileCollector = syslogFileCollector;
 
         logFilter = new LogFilter(
             LogLevelTrace: true,
@@ -57,10 +53,6 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
         this.serilogFileCollector.CollectedEntry += OnCollectedEntry;
         this.serilogFileCollector.CollectedFileDone += OnCollectedFileDone;
         this.serilogFileCollector.CollectedFilesDone += OnCollectedFilesDone;
-
-        this.syslogFileCollector.CollectedEntry += OnCollectedEntry;
-        this.syslogFileCollector.CollectedFileDone += OnCollectedFileDone;
-        this.syslogFileCollector.CollectedFilesDone += OnCollectedFilesDone;
     }
 
     public event Action<AtcLogEntry>? CollectedEntry;
@@ -100,11 +92,6 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
         if (log4NetFileCollector.CanParseFileFormat(file))
         {
             return LogFileCollectorType.Log4Net;
-        }
-
-        if (syslogFileCollector.CanParseFileFormat(file))
-        {
-            return LogFileCollectorType.Syslog;
         }
 
         return LogFileCollectorType.None;
@@ -153,15 +140,6 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
                 break;
             case LogFileCollectorType.Serilog:
                 await serilogFileCollector
-                    .CollectFile(
-                        file,
-                        config,
-                        useMonitoring,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-                break;
-            case LogFileCollectorType.Syslog:
-                await syslogFileCollector
                     .CollectFile(
                         file,
                         config,
@@ -223,15 +201,6 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
                 break;
             case LogFileCollectorType.Serilog:
                 await serilogFileCollector
-                    .CollectFolder(
-                        directory,
-                        config,
-                        useMonitoring,
-                        cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
-                break;
-            case LogFileCollectorType.Syslog:
-                await syslogFileCollector
                     .CollectFolder(
                         directory,
                         config,
@@ -315,7 +284,6 @@ public sealed class LogAnalyzer : ILogAnalyzer, IDisposable
         log4NetFileCollector.StopMonitoringAllFiles();
         nlogFileCollector.StopMonitoringAllFiles();
         serilogFileCollector.StopMonitoringAllFiles();
-        syslogFileCollector.StopMonitoringAllFiles();
         ClearLogEntries();
     }
 
