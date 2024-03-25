@@ -27,8 +27,11 @@ public class SerilogCollectorIntegrationTestBase : CollectorIntegrationTestBase
                 formatProvider: GlobalizationConstants.EnglishCultureInfo)
             .CreateLogger();
 
-        var loggerFactory = new LoggerFactory()
-            .AddSerilog();
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.SetMinimumLevel(LogLevel.Trace);
+            builder.AddSerilog();
+        });
 
         logger = loggerFactory
             .CreateLogger<SerilogCollectorIntegrationTestBase>();
@@ -38,7 +41,7 @@ public class SerilogCollectorIntegrationTestBase : CollectorIntegrationTestBase
 
     public override async Task DisposeAsync()
     {
-        await Log.CloseAndFlushAsync();
+        await CloseAndFlushLogger();
 
         await base.DisposeAsync();
     }

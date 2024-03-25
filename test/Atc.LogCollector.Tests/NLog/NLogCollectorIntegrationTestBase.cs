@@ -37,12 +37,13 @@ public class NLogCollectorIntegrationTestBase : CollectorIntegrationTestBase
 
         LogManager.Configuration = config;
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        var factory = new LoggerFactory()
-            .AddNLog();
-#pragma warning restore CS0618 // Type or member is obsolete
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            builder.AddNLog();
+        });
 
-        logger = factory
+        logger = loggerFactory
             .CreateLogger<NLogCollectorIntegrationTestBase>();
 
         await Task.CompletedTask;
@@ -50,7 +51,7 @@ public class NLogCollectorIntegrationTestBase : CollectorIntegrationTestBase
 
     public override Task DisposeAsync()
     {
-        LogManager.Shutdown();
+        FlushAndShutdownLogger();
 
         return base.DisposeAsync();
     }

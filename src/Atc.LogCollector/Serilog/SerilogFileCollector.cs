@@ -189,23 +189,21 @@ public class SerilogFileCollector : LogFileCollectorBase, ISerilogFileCollector
             return (false, 0);
         }
 
-        var extractor = new SerilogFileExtractor();
-
         var sourceIdentifier = Path.GetFileNameWithoutExtension(file.FullName);
         var sourceSystem = GetSourceSystemFromSourceIdentifier(sourceIdentifier);
         var hasAnyValidLines = false;
         for (var lineNumber = 0; lineNumber < lines.Length; lineNumber++)
         {
             var line = lines[lineNumber];
-            var logEntry = extractor.ParseRootLine(sourceIdentifier, sourceSystem, lineNumber + 1, line);
+            var logEntry = fileExtractor.ParseRootLine(sourceIdentifier, sourceSystem, lineNumber + 1, line);
             if (logEntry is null)
             {
                 continue;
             }
 
-            if (extractor.HasSubLines(lines, lineNumber))
+            if (fileExtractor.HasSubLines(lines, lineNumber))
             {
-                var errorMessageWithSubLines = extractor.GetMessageWithSubLines(
+                var errorMessageWithSubLines = fileExtractor.GetMessageWithSubLines(
                     logEntry.MessageShort,
                     lines,
                     ref lineNumber);

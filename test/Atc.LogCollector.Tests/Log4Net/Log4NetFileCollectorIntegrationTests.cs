@@ -1,11 +1,11 @@
-using Atc.LogCollector.NLog;
+using Atc.LogCollector.Log4Net;
 
-namespace Atc.LogCollector.Tests.NLog;
+namespace Atc.LogCollector.Tests.Log4Net;
 
 [Collection(nameof(TestCollection))]
 [Trait(Traits.Category, Traits.Categories.Integration)]
 [Trait(Traits.Category, Traits.Categories.SkipWhenLiveUnitTesting)]
-public class NLogFileCollectorIntegrationTests : NLogCollectorIntegrationTestBase
+public class Log4NetFileCollectorIntegrationTests : Log4NetCollectorIntegrationTestBase
 {
     [Fact]
     public void CanParseFileFormat()
@@ -14,8 +14,8 @@ public class NLogFileCollectorIntegrationTests : NLogCollectorIntegrationTestBas
         SendLogItemsToLogger();
         FlushAndShutdownLogger();
 
-        var extractor = new NLogFileExtractor();
-        var collector = new NLogFileCollector(extractor);
+        var extractor = new Log4NetFileExtractor();
+        var collector = new Log4NetFileCollector(extractor);
 
         // Atc
         var actual = collector.CanParseFileFormat(
@@ -32,8 +32,8 @@ public class NLogFileCollectorIntegrationTests : NLogCollectorIntegrationTestBas
         SendLogItemsToLogger();
         FlushAndShutdownLogger();
 
-        var extractor = new NLogFileExtractor();
-        var collector = new NLogFileCollector(extractor);
+        var extractor = new Log4NetFileExtractor();
+        var collector = new Log4NetFileCollector(extractor);
 
         // Atc
         var (isSuccessFul, lastLineNumber) = await collector.ReadAndParseLines(

@@ -20,9 +20,18 @@ public class CollectorIntegrationTestBase : IAsyncLifetime
 
     public virtual Task DisposeAsync()
     {
-        if (Directory.Exists(WorkingDirectory.FullName))
+        if (!Directory.Exists(WorkingDirectory.FullName))
+        {
+            return Task.CompletedTask;
+        }
+
+        try
         {
             Directory.Delete(WorkingDirectory.FullName, recursive: true);
+        }
+        catch
+        {
+            // Dummy
         }
 
         return Task.CompletedTask;
