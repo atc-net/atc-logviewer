@@ -2,8 +2,6 @@ namespace Atc.LogCollector.Log4Net;
 
 public class Log4NetFileExtractor : ILog4NetFileExtractor
 {
-    private readonly char[] trimChars = ['-', ' '];
-
     public AtcLogEntry? ParseRootLine(
         string sourceIdentifier,
         string sourceSystem,
@@ -21,15 +19,20 @@ public class Log4NetFileExtractor : ILog4NetFileExtractor
 
         try
         {
-            var parts = line.Split([' '], 5);
-            if (parts.Length < 5)
+            var threadStartIndex = line.IndexOf('[', StringComparison.Ordinal) + 1;
+            var threadEndIndex = line.IndexOf(']', threadStartIndex);
+            if (threadStartIndex == 0 || threadEndIndex == -1)
             {
                 return null;
             }
 
-            var dateTimeString = $"{parts[0]} {parts[1]}";
+            var dateTimeString = line[..(threadStartIndex - 2)];
             var dateTime = DateTime.Parse(dateTimeString, GlobalizationConstants.EnglishCultureInfo);
-            var logLevelString = parts[3].TrimEnd(trimChars);
+
+            var lineAfterThread = line[(threadEndIndex + 2)..];
+            var logLevelEndIndex = lineAfterThread.IndexOf(' ', StringComparison.Ordinal);
+            var logLevelString = lineAfterThread[..logLevelEndIndex];
+
             var logLevel = logLevelString switch
             {
                 "TRACE" => LogLevel.Trace,
@@ -46,7 +49,13 @@ public class Log4NetFileExtractor : ILog4NetFileExtractor
                 return null;
             }
 
-            var message = parts[4];
+            var messageStartIndex = lineAfterThread.IndexOf('-', StringComparison.Ordinal) + 2;
+            if (messageStartIndex < 3)
+            {
+                return null;
+            }
+
+            var message = lineAfterThread[messageStartIndex..];
 
             return new AtcLogEntry(
                 sourceIdentifier,
