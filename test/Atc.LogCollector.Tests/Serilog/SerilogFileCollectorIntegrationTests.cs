@@ -40,6 +40,6 @@ public class SerilogFileCollectorIntegrationTests : SerilogCollectorIntegrationT
 
         // Assert
         Assert.True(isSuccessFul);
-        Assert.Equal(LogItems.Count, lastLineNumber);
+        Assert.Equal(GetLineNumbersFromLogItems(), lastLineNumber);
     }
 }

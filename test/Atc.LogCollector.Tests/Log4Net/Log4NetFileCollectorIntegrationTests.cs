@@ -42,6 +42,6 @@ public class Log4NetFileCollectorIntegrationTests : Log4NetCollectorIntegrationT
 
         // Assert
         Assert.True(isSuccessFul);
-        Assert.Equal(LogItems.Count, lastLineNumber);
+        Assert.Equal(GetLineNumbersFromLogItems(), lastLineNumber);
     }
 }

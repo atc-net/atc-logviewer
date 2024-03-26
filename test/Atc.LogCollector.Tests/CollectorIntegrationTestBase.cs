@@ -37,7 +37,7 @@ public class CollectorIntegrationTestBase : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    public IReadOnlyList<LogItem> LogItems { get; } =
+    public virtual IReadOnlyList<LogItem> LogItems { get; } =
     [
         LogItemFactory.CreateInformation("App started"),
         LogItemFactory.CreateTrace("Log trace"),
@@ -46,9 +46,15 @@ public class CollectorIntegrationTestBase : IAsyncLifetime
         LogItemFactory.CreateWarning("Log warning"),
         LogItemFactory.CreateError("Log error"),
         LogItemFactory.CreateCritical("Log critical"),
+        LogItemFactory.CreateError("Log error - Exception"),
         LogItemFactory.CreateInformation("App ended"),
     ];
 
+    public virtual int GetLineNumbersFromLogItems()
+        => LogItems.Count + LogItems.Count(x => x.Severity == LogCategoryType.Error &&
+                                                x.Message.Contains('-', StringComparison.Ordinal));
+
+    [SuppressMessage("Design", "CA2201:Do not raise reserved exception types", Justification = "OK.")]
     public void SendLogItemsToLogger(
         ILogger logger)
     {
@@ -60,7 +66,17 @@ public class CollectorIntegrationTestBase : IAsyncLifetime
                     logger.LogCritical(logItem.Message);
                     break;
                 case LogCategoryType.Error:
-                    logger.LogError(logItem.Message);
+                    if (logItem.Message.Contains('-', StringComparison.Ordinal))
+                    {
+                        var sa = logItem.Message.Split('-', StringSplitOptions.RemoveEmptyEntries);
+                        var exception = new Exception(sa[1].Trim());
+                        logger.LogError(exception, sa[0].Trim());
+                    }
+                    else
+                    {
+                        logger.LogError(logItem.Message);
+                    }
+
                     break;
                 case LogCategoryType.Warning:
                     logger.LogWarning(logItem.Message);

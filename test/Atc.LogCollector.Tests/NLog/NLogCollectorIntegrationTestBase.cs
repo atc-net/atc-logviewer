@@ -56,6 +56,9 @@ public class NLogCollectorIntegrationTestBase : CollectorIntegrationTestBase
         return base.DisposeAsync();
     }
 
+    public override int GetLineNumbersFromLogItems()
+        => LogItems.Count;
+
     public void SendLogItemsToLogger()
         => SendLogItemsToLogger(logger ?? throw new InvalidOperationException("Logger has not been initialized."));
 

@@ -42,6 +42,6 @@ public class NLogFileCollectorIntegrationTests : NLogCollectorIntegrationTestBas
 
         // Assert
         Assert.True(isSuccessFul);
-        Assert.Equal(LogItems.Count, lastLineNumber);
+        Assert.Equal(GetLineNumbersFromLogItems(), lastLineNumber);
     }
 }
