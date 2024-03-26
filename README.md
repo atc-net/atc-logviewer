@@ -2,6 +2,12 @@
 
 Atc.LogViewer is a windows application...
 
+| Light-Mode                                                                   | Dark-Mode                                                                    |
+|------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| List mode ![Img](docs/images/lm-list.png)                                    | List mode ![Img](docs/images/dm-list.png)                                    |
+| Graph: Log Level Distribution ![Img](docs/images/lm-graph-pie.png)           | Graph: Log Level Distribution  ![Img](docs/images/dm-graph-pie.png)          |
+| Graph: Timeline Distribution ![Img](docs/images/lm-graph-bar.png)            | Graph: Timeline Distribution  ![Img](docs/images/dm-graph-bar.png)           |
+
 ## Microsoft ILogger
 
 | LogLevel    | Value | Method         | Description       |
