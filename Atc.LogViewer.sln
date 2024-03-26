@@ -22,6 +22,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogCollector.Tests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogAnalyzer.Tests", "test\Atc.LogAnalyzer.Tests\Atc.LogAnalyzer.Tests.csproj", "{098955E6-595F-4CC0-8036-D043980B18FE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample-data", "sample-data", "{7BCB3570-E693-4EAB-B21A-44CAF1EBF661}"
+	ProjectSection(SolutionItems) = preProject
+		sample-data\sample-log4net.log = sample-data\sample-log4net.log
+		sample-data\sample-nlog.log = sample-data\sample-nlog.log
+		sample-data\sample-serilog.log = sample-data\sample-serilog.log
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

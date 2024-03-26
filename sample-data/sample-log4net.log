@@ -1,0 +1,20 @@
+2024-03-26 09:15:01,123 [8] INFO  Root - Application Start
+2024-03-26 09:15:03,456 [8] DEBUG ModuleLoader - Loading modules
+2024-03-26 09:15:04,789 [8] INFO  ModuleA - Module A initialized
+2024-03-26 09:15:05,012 [8] DEBUG ModuleB - Module B initialization started
+2024-03-26 09:15:05,234 [8] INFO  ModuleB - Module B initialized
+2024-03-26 09:15:06,345 [8] WARN  ModuleC - Module C is deprecated
+2024-03-26 09:15:07,456 [8] INFO  ModuleC - Module C initialized anyway
+2024-03-26 09:15:08,567 [8] DEBUG DatabaseConnection - Attempting connection to database
+2024-03-26 09:15:09,678 [8] ERROR DatabaseConnection - Database connection failed due to timeout
+2024-03-26 09:15:10,789 [8] INFO  DatabaseRetry - Retrying database connection
+2024-03-26 09:15:11,890 [8] DEBUG DatabaseConnection - Database connection attempt 2
+2024-03-26 09:15:12,901 [8] INFO  Database - Database connected
+2024-03-26 09:15:13,012 [8] WARN  SystemCheck - Low disk space
+2024-03-26 09:15:14,123 [8] ERROR FileSave - Failed to save file due to disk quota exceeded
+2024-03-26 09:15:15,234 [8] INFO  UserAuth - User login attempt
+2024-03-26 09:15:16,345 [8] INFO  UserAuth - User logged in successfully
+2024-03-26 09:15:17,456 [8] DEBUG SessionManager - Session started for user: User123
+2024-03-26 09:15:18,567 [8] WARN  SessionManager - User session already active
+2024-03-26 09:15:19,678 [8] INFO  HealthCheck - Application health check OK
+2024-03-26 09:15:20,789 [8] INFO  Root - Application End
