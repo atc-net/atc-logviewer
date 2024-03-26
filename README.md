@@ -18,6 +18,11 @@ Atc.LogViewer is a windows application...
 
 ### log4net
 
+* [Project page to log4net](https://logging.apache.org/log4net/)
+* [Github link to log4net](https://github.com/apache/logging-log4net)
+
+#### Supported layout formats:
+
 ```csharp
 layout = "%date [%thread] %-5level %logger - %message%newline%exception"
 ```
@@ -45,7 +50,12 @@ layout = "%date [%thread] %-5level %logger - %message%newline%exception"
 2024-02-16 09:15:20,789 [8] INFO  Root - Application End
 ```
 
-### nlog
+### NLog
+
+* [Project page to NLog](https://nlog-project.org)
+* [Github link to NLog](https://github.com/NLog/NLog)
+
+#### Supported layout formats:
 
 ```csharp
 layout = "${longdate} ${uppercase:${level}} ${message:withexception=true}"
@@ -74,7 +84,12 @@ layout = "${longdate} ${uppercase:${level}} ${message:withexception=true}"
 2024-02-16 09:15:20.789 INFO Application End
 ```
 
-### serilog
+### Serilog
+
+* [Project page to Serilog](https://serilog.net)
+* [Github link to Serilog](https://github.com/serilog/serilog)
+
+#### Supported layout formats:
 
 ```csharp
 layout = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message}{NewLine}{Exception}"
