@@ -1,12 +1,38 @@
 # Atc-logviewer
 
-Atc.LogViewer is a windows application...
+Atc.LogViewer is a free open source program to receive and view log messages.
+
+Atc.LogViewer for Windows has a live messages view. 
+
+* It can tail files.
+* It has helpful color highlighting.
+* It has useful message filtering on:
+    * term/phrases, 
+    * start/end time.
+
+
+## Features
+
+* Log messages are displayed in real-time (Tail-files)
+* File format support:
+    * log4net
+    * NLog
+    * Serilog
+* Multi sources (files and folders)
+* Drag and drop files and folders from Windows-Explore
+* Customizable color highlighting
+* Lightweight and very fast
+* Run as a Windows application
+* Support dark mode
+* Auto scroll
+
 
 | Light-Mode                                                                   | Dark-Mode                                                                    |
 |------------------------------------------------------------------------------|------------------------------------------------------------------------------|
 | List mode ![Img](docs/images/lm-list.png)                                    | List mode ![Img](docs/images/dm-list.png)                                    |
 | Graph: Log Level Distribution ![Img](docs/images/lm-graph-pie.png)           | Graph: Log Level Distribution  ![Img](docs/images/dm-graph-pie.png)          |
 | Graph: Timeline Distribution ![Img](docs/images/lm-graph-bar.png)            | Graph: Timeline Distribution  ![Img](docs/images/dm-graph-bar.png)           |
+
 
 ## Microsoft ILogger
 
