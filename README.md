@@ -118,7 +118,7 @@ layout = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message}{NewLine
 2024-02-16 09:15:20.789 [INF] Application End
 ```
 
-### LogLevel mapping
+#### LogLevel mapping between Serilog and Ilogger
 
 | Ilogger        |  Serilog      |
 |----------------|---------------|
