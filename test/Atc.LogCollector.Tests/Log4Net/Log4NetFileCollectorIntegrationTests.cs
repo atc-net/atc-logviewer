@@ -1,5 +1,3 @@
-using Atc.LogCollector.Log4Net;
-
 namespace Atc.LogCollector.Tests.Log4Net;
 
 [Collection(nameof(TestCollection))]

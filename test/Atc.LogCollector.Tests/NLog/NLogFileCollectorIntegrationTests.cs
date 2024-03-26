@@ -1,5 +1,3 @@
-using Atc.LogCollector.NLog;
-
 namespace Atc.LogCollector.Tests.NLog;
 
 [Collection(nameof(TestCollection))]

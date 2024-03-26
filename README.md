@@ -94,26 +94,26 @@ layout = "${longdate} ${uppercase:${level}} ${message:withexception=true}"
 ```
 
 ```text
-2024-02-16 09:15:01.123 INFO Application Start
-2024-02-16 09:15:03.456 DEBUG Loading modules
-2024-02-16 09:15:04.789 INFO Module A initialized
-2024-02-16 09:15:05.012 DEBUG Module B initialization started
-2024-02-16 09:15:05.234 INFO Module B initialized
-2024-02-16 09:15:06.345 WARN Module C is deprecated
-2024-02-16 09:15:07.456 INFO Module C initialized anyway
-2024-02-16 09:15:08.567 DEBUG Attempting connection to database
-2024-02-16 09:15:09.678 ERROR Database connection failed
-2024-02-16 09:15:10.789 INFO Retrying database connection
-2024-02-16 09:15:11.890 DEBUG Database connection attempt 2
-2024-02-16 09:15:12.901 INFO Database connected
-2024-02-16 09:15:13.012 WARN Low disk space
-2024-02-16 09:15:14.123 ERROR Failed to save file
-2024-02-16 09:15:15.234 INFO User login attempt
-2024-02-16 09:15:16.345 INFO User logged in successfully
-2024-02-16 09:15:17.456 DEBUG Session started for user
-2024-02-16 09:15:18.567 WARN User session already active
-2024-02-16 09:15:19.678 INFO Application health check OK
-2024-02-16 09:15:20.789 INFO Application End
+2024-02-16 09:15:01.1231 INFO Application Start
+2024-02-16 09:15:03.4562 DEBUG Loading modules
+2024-02-16 09:15:04.7893 INFO Module A initialized
+2024-02-16 09:15:05.0124 DEBUG Module B initialization started
+2024-02-16 09:15:05.2345 INFO Module B initialized
+2024-02-16 09:15:06.3456 WARN Module C is deprecated
+2024-02-16 09:15:07.4567 INFO Module C initialized anyway
+2024-02-16 09:15:08.5678 DEBUG Attempting connection to database
+2024-02-16 09:15:09.6789 ERROR Database connection failed
+2024-02-16 09:15:10.7891 INFO Retrying database connection
+2024-02-16 09:15:11.8902 DEBUG Database connection attempt 2
+2024-02-16 09:15:12.9013 INFO Database connected
+2024-02-16 09:15:13.0124 WARN Low disk space
+2024-02-16 09:15:14.1235 ERROR Failed to save file
+2024-02-16 09:15:15.2346 INFO User login attempt
+2024-02-16 09:15:16.3457 INFO User logged in successfully
+2024-02-16 09:15:17.4568 DEBUG Session started for user
+2024-02-16 09:15:18.5679 WARN User session already active
+2024-02-16 09:15:19.6781 INFO Application health check OK
+2024-02-16 09:15:20.7892 INFO Application End
 ```
 
 ### Serilog

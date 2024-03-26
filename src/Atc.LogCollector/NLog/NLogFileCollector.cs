@@ -61,19 +61,94 @@ public class NLogFileCollector : LogFileCollectorBase, INLogFileCollector
         return false;
     }
 
-    public Task CollectFile(
+    public async Task CollectFile(
         FileInfo file,
         LogFileCollectorConfiguration config,
         bool useMonitoring,
         CancellationToken cancellationToken)
-        => throw new NotImplementedException();
+    {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(config);
 
-    public Task CollectFolder(
+        if (IsFileMonitoring(file))
+        {
+            return;
+        }
+
+        if (!CanParseFileFormat(file))
+        {
+            return;
+        }
+
+        var (isSuccessFul, lastLineNumber) = await ReadAndParseLines(
+                file,
+                cancellationToken)
+            .ConfigureAwait(continueOnCapturedContext: false);
+
+        if (!isSuccessFul)
+        {
+            return;
+        }
+
+        CollectedFileDone?.Invoke(file);
+
+        if (useMonitoring)
+        {
+            MonitorFileIfNeeded(file, lastLineNumber);
+        }
+
+        CollectedFilesDone?.Invoke([file]);
+    }
+
+    public async Task CollectFolder(
         DirectoryInfo directory,
         LogFileCollectorConfiguration config,
         bool useMonitoring,
         CancellationToken cancellationToken)
-        => throw new NotImplementedException();
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        ArgumentNullException.ThrowIfNull(config);
+
+        var files = GetFiles(directory, config, defaultLogExtensions);
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        StopMonitoringAllFiles();
+
+        var options = new ParallelOptions { CancellationToken = cancellationToken };
+
+        await Parallel.ForEachAsync(
+            files,
+            options,
+            async (file, _) =>
+            {
+                if (!CanParseFileFormat(file))
+                {
+                    return;
+                }
+
+                var (isSuccessFul, lastLineNumber) = await ReadAndParseLines(
+                        file,
+                        cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                if (!isSuccessFul)
+                {
+                    return;
+                }
+
+                CollectedFileDone?.Invoke(file);
+
+                if (useMonitoring)
+                {
+                    MonitorFileIfNeeded(file, lastLineNumber);
+                }
+            }).ConfigureAwait(continueOnCapturedContext: false);
+
+        CollectedFilesDone?.Invoke([.. files]);
+    }
 
     internal async Task<(bool IsSuccessFul, long LastLineNumber)> ReadAndParseLines(
         FileInfo file,
