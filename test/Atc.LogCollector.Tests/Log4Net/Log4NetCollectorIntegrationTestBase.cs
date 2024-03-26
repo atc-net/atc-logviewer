@@ -26,7 +26,7 @@ public class Log4NetCollectorIntegrationTestBase : CollectorIntegrationTestBase
             RollingStyle = RollingFileAppender.RollingMode.Size,
             MaxSizeRollBackups = 1,
             MaximumFileSize = FileSizeLimit500Mb,
-            Layout = new PatternLayout("%date [%thread] %-5level %logger - %message%newline"),
+            Layout = new PatternLayout("%date [%thread] %-5level %logger - %message%newline%exception"),
         };
 
         appender.ActivateOptions();

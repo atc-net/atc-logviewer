@@ -24,7 +24,8 @@ public class SerilogCollectorIntegrationTestBase : CollectorIntegrationTestBase
                 rollingInterval: RollingInterval.Infinite,
                 fileSizeLimitBytes: FileSizeLimit500Mb,
                 rollOnFileSizeLimit: true,
-                formatProvider: GlobalizationConstants.EnglishCultureInfo)
+                formatProvider: GlobalizationConstants.EnglishCultureInfo,
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message}{NewLine}{Exception}")
             .CreateLogger();
 
         var loggerFactory = LoggerFactory.Create(builder =>

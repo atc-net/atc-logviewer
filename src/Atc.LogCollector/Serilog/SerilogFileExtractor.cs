@@ -8,6 +8,8 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
         long lineNumber,
         string line)
     {
+        //// layout = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message}{NewLine}{Exception}",
+
         if (line is null ||
             line.Length < 38 ||
             !char.IsDigit(line[0]))
@@ -17,18 +19,13 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
 
         try
         {
-            var dateTimeString = line[..30];
-            var dateTime = DateTime.Parse(dateTimeString, GlobalizationConstants.EnglishCultureInfo);
-            var indexOfLogLevelStart = line.IndexOf('[', 31) + 1;
+            var indexOfLogLevelStart = line.IndexOf('[', StringComparison.Ordinal) + 1;
             var indexOfLogLevelEnd = line.IndexOf(']', indexOfLogLevelStart);
-            if (indexOfLogLevelStart < 0 || indexOfLogLevelStart >= line.Length)
-            {
-                return null;
-            }
+
+            var dateTimeString = line[..(indexOfLogLevelStart - 2)];
+            var dateTime = DateTime.Parse(dateTimeString, GlobalizationConstants.EnglishCultureInfo);
 
             var logLevelString = line[indexOfLogLevelStart..indexOfLogLevelEnd];
-            var message = line[(indexOfLogLevelEnd + 2)..];
-
             var logLevel = logLevelString switch
             {
                 "VRB" => LogLevel.Trace,
@@ -37,8 +34,15 @@ public sealed class SerilogFileExtractor : ISerilogFileExtractor
                 "WRN" => LogLevel.Warning,
                 "ERR" => LogLevel.Error,
                 "FTL" => LogLevel.Critical,
-                _ => throw new SwitchCaseDefaultException($"Unknown log level: {logLevelString}"),
+                _ => LogLevel.None,
             };
+
+            if (logLevel == LogLevel.None)
+            {
+                return null;
+            }
+
+            var message = line[(indexOfLogLevelEnd + 2)..];
 
             return new AtcLogEntry(
                 sourceIdentifier,

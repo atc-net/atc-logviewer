@@ -8,7 +8,7 @@ public class Log4NetFileExtractor : ILog4NetFileExtractor
         long lineNumber,
         string line)
     {
-        //// Based on: ConversionPattern = "%date [%thread] %-5level %logger - %message%newline",
+        //// layout = "%date [%thread] %-5level %logger - %message%newline%exception",
 
         if (line is null ||
             line.Length < 36 ||
@@ -19,20 +19,16 @@ public class Log4NetFileExtractor : ILog4NetFileExtractor
 
         try
         {
-            var threadStartIndex = line.IndexOf('[', StringComparison.Ordinal) + 1;
-            var threadEndIndex = line.IndexOf(']', threadStartIndex);
-            if (threadStartIndex == 0 || threadEndIndex == -1)
-            {
-                return null;
-            }
+            var indexOfThreadStart = line.IndexOf('[', StringComparison.Ordinal) + 1;
+            var indexOfThreadEnd = line.IndexOf(']', indexOfThreadStart);
 
-            var dateTimeString = line[..(threadStartIndex - 2)];
+            var dateTimeString = line[..(indexOfThreadStart - 2)];
             var dateTime = DateTime.Parse(dateTimeString, GlobalizationConstants.EnglishCultureInfo);
 
-            var lineAfterThread = line[(threadEndIndex + 2)..];
-            var logLevelEndIndex = lineAfterThread.IndexOf(' ', StringComparison.Ordinal);
-            var logLevelString = lineAfterThread[..logLevelEndIndex];
+            var lineAfterThread = line[(indexOfThreadEnd + 2)..];
+            var indexOfLogLevelEnd = lineAfterThread.IndexOf(' ', StringComparison.Ordinal);
 
+            var logLevelString = lineAfterThread[..indexOfLogLevelEnd];
             var logLevel = logLevelString switch
             {
                 "TRACE" => LogLevel.Trace,
@@ -49,13 +45,13 @@ public class Log4NetFileExtractor : ILog4NetFileExtractor
                 return null;
             }
 
-            var messageStartIndex = lineAfterThread.IndexOf('-', StringComparison.Ordinal) + 2;
-            if (messageStartIndex < 3)
+            var indexOfMessageStart = lineAfterThread.IndexOf('-', StringComparison.Ordinal) + 2;
+            if (indexOfMessageStart < 3)
             {
                 return null;
             }
 
-            var message = lineAfterThread[messageStartIndex..];
+            var message = lineAfterThread[indexOfMessageStart..];
 
             return new AtcLogEntry(
                 sourceIdentifier,

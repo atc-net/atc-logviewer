@@ -30,7 +30,7 @@ public class NLogCollectorIntegrationTestBase : CollectorIntegrationTestBase
             ArchiveAboveSize = FileSizeLimit500Mb,
             ArchiveNumbering = ArchiveNumberingMode.Rolling,
             MaxArchiveFiles = 1,
-            Layout = "${longdate} ${uppercase:${level}} ${message}",
+            Layout = "${longdate} ${uppercase:${level}} ${message:withexception=true}",
         };
 
         config.AddRule(LogLevel.Trace, LogLevel.Fatal, fileTarget);
