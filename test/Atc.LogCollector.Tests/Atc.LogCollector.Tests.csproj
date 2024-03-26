@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atc.XUnit" Version="2.0.433" />
-    <PackageReference Include="log4net" Version="2.0.16" />
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="loggly-csharp" Version="4.6.1.116" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />

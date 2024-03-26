@@ -24,10 +24,10 @@
 
   <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.433" />
-    <PackageReference Include="Atc.Wpf" Version="2.0.493" />
-    <PackageReference Include="Atc.Wpf.Controls" Version="2.0.493" />
-    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.493" />
-    <PackageReference Include="Atc.Wpf.Theming" Version="2.0.493" />
+    <PackageReference Include="Atc.Wpf" Version="2.0.495" />
+    <PackageReference Include="Atc.Wpf.Controls" Version="2.0.495" />
+    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.495" />
+    <PackageReference Include="Atc.Wpf.Theming" Version="2.0.495" />
     <PackageReference Include="Fluent.Ribbon" Version="10.0.4" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
