@@ -344,7 +344,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase
                 else
                 {
                     var folder = new DirectoryInfo(item);
-                    await ClearDataAndCollectFromFolder(folder).ConfigureAwait(false);
+                    await CollectFromFolder(folder).ConfigureAwait(false);
                 }
             }
         });

@@ -186,6 +186,16 @@ public partial class MainWindowViewModel
         IsBusy = false;
     }
 
+    private async Task CollectFromFolder(
+        DirectoryInfo directory)
+    {
+        var files = directory.GetFiles();
+        foreach (var file in files)
+        {
+            await CollectFromFile(file);
+        }
+    }
+
     private async Task ClearDataAndCollectFromFolder(
         DirectoryInfo directory,
         CancellationToken cancellationToken = default)
