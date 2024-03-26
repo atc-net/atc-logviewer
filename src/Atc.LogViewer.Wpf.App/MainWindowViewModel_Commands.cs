@@ -20,6 +20,8 @@ public partial class MainWindowViewModel
 
     public IRelayCommandAsync SaveProfileCommand => new RelayCommandAsync(SaveProfileCommandHandler, CanSaveProfileCommandHandler);
 
+    public IRelayCommand ClearDataCommand => new RelayCommand(ClearDataCommandHandler, CanClearDataCommandHandler);
+
     public IRelayCommand OpenApplicationSettingsCommand => new RelayCommand(OpenApplicationSettingsCommandHandler);
 
     public IRelayCommand OpenApplicationCheckForUpdatesCommand => new RelayCommand(OpenApplicationCheckForUpdatesCommandHandler, CanOpenApplicationCheckForUpdatesCommandHandler);
@@ -174,6 +176,16 @@ public partial class MainWindowViewModel
             .ConfigureAwait(continueOnCapturedContext: false);
     }
 
+    private bool CanClearDataCommandHandler()
+        => LogEntries.Count > 0;
+
+    public void ClearDataCommandHandler()
+    {
+        logAnalyzer.StopMonitoringAndClearLogEntries();
+        _ = ApplyFilter();
+        ClearFilterCommandHandler();
+    }
+
     private void OpenApplicationSettingsCommandHandler()
     {
         var asDbVm = new BasicApplicationSettingsDialogBoxViewModel(ApplicationOptions);
@@ -255,7 +267,14 @@ public partial class MainWindowViewModel
         => !string.IsNullOrEmpty(FilterText);
 
     private void ClearFilterTextCommandHandler()
-        => FilterText = string.Empty;
+    {
+        if (!CanClearFilterTextCommandHandler())
+        {
+            return;
+        }
+
+        FilterText = string.Empty;
+    }
 
     private bool CanClearFilterCommandHandler()
         => !string.IsNullOrEmpty(FilterText) ||
@@ -265,6 +284,11 @@ public partial class MainWindowViewModel
 
     private void ClearFilterCommandHandler()
     {
+        if (!CanClearFilterCommandHandler())
+        {
+            return;
+        }
+
         filterText = string.Empty;
         filterDateTimeFrom = null;
         filterDateTimeTo = null;

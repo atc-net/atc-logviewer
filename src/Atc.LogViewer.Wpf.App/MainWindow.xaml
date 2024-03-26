@@ -94,6 +94,12 @@
                                 KeyTip="S" />
                             <Separator />
                             <fluent:Button
+                                Command="{Binding Path=ClearDataCommand}"
+                                Header="Clear Data"
+                                Icon="{Binding Source={x:Static fontIcons:IcoFontType.Recycle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="C" />
+                            <Separator />
+                            <fluent:Button
                                 Command="{Binding Path=OpenApplicationSettingsCommand}"
                                 Header="Application settings"
                                 Icon="{Binding Source={x:Static fontIcons:IcoFontType.UiSettings}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}" />
