@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A036BC7D-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{7B4313B5-B5D9-4A7F-85F0-E8E4D4FEE02F}"
 	ProjectSection(SolutionItems) = preProject
-		sample-data\log-examples.md = sample-data\log-examples.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -19,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogCollector", "src\Atc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogAnalyzer", "src\Atc.LogAnalyzer\Atc.LogAnalyzer.csproj", "{1CB55D7B-A14F-4E3D-9029-41EDA48B1E5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.LogCollector.Tests", "test\Atc.LogCollector.Tests\Atc.LogCollector.Tests.csproj", "{F2DAEABA-84B0-442E-A3B1-30975161FDD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogCollector.Tests", "test\Atc.LogCollector.Tests\Atc.LogCollector.Tests.csproj", "{F2DAEABA-84B0-442E-A3B1-30975161FDD7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.LogAnalyzer.Tests", "test\Atc.LogAnalyzer.Tests\Atc.LogAnalyzer.Tests.csproj", "{098955E6-595F-4CC0-8036-D043980B18FE}"
 EndProject
