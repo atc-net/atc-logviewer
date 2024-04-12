@@ -192,7 +192,7 @@ public partial class MainWindowViewModel
         var files = directory.GetFiles();
         foreach (var file in files)
         {
-            await CollectFromFile(file);
+            await CollectFromFile(file).ConfigureAwait(false);
         }
     }
 
